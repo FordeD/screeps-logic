@@ -1,10 +1,9 @@
-var Spawn1 = require('spawn1_controller');
+var Spawn_1 = require('spawn1_controller');
 
 module.exports = {
   processing : function() {
-      if(Game.spawns.Spawn1) {
-        Spawn1.processing();
-      }
-      
+    if(Game.spawns.Spawn1) {
+      Spawn_1.processing();
+    } 
   }
 };
