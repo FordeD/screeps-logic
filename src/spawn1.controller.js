@@ -37,6 +37,10 @@ var HARVESTER_COUNT    = 0;
 var CL_UPGRADER_COUNT  = 0;
 var EX_BUILDER_COUNT   = 0;
 
+var HARVESTER_QUEUE_COUNT    = 0;
+var CL_UPGRADER_QUEUE_COUNT  = 0;
+var EX_BUILDER_QUEUE_COUNT   = 0;
+
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
@@ -231,15 +235,28 @@ module.exports = {
           continue;
         }        
       }
+
+      for(var currQueue in SPAWN_QUEUE) {
+        if (currQueue.role == 'harvester') {
+          ++HARVESTER_QUEUE_COUNT;
+          continue;
+        } else if (currQueue.role == 'cl_upgrader') {
+          ++CL_UPGRADER_QUEUE_COUNT;
+          continue;
+        } else if (currQueue.role == 'ex_builder') {
+          ++EX_BUILDER_QUEUE_COUNT;
+          continue;
+        }
+      }
       
-      if(HARVESTER_COUNT < HARVESTER_MAX_COUNT) {
-        console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT)
+      if((HARVESTER_COUNT+HARVESTER_QUEUE_COUNT) < HARVESTER_MAX_COUNT) {
+        console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT+" queue:"+HARVESTER_QUEUE_COUNT)
         this.create_harvester();
-      } else if(CL_UPGRADER_COUNT < CL_UPGRADER_MAX_COUNT) {
-        console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT)
+      } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT) {
+        console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT+" queue:"+CL_UPGRADER_QUEUE_COUNT)
         this.create_controller_upgrader();
-      } else if(EX_BUILDER_COUNT < EX_BUILDER_MAX_COUNT) {
-        console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT)
+      } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT) {
+        console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT+" queue:"+EX_BUILDER_QUEUE_COUNT)
         this.create_builder_extension();
       }
     }     
