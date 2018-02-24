@@ -13,12 +13,16 @@ TOUGH           10
 Controller level    - 1
     spawn energy        - 300
         
-        harvester           - [MOVE, WORK, WORK,  CARRY]
-        cl_upgrader         - [MOVE, WORK, CARRY, CARRY, CARRY]
+        HARVESTER_BODY      = [MOVE, WORK, WORK,  CARRY]
+        CL_UPGRADER_BODY    = [MOVE, WORK, CARRY, CARRY, CARRY]
+        EX_BUILDER_BODY     = [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
 const SPAWN_NAME  = "Spawn1";
 var   SPAWN_OBJ = null;
+var   SPAWN_QUEUE = null;
+
+const SPAWN_QUEUE_MAX = 10;
 
 const HARVESTER_BODY = [MOVE, WORK, WORK,  CARRY];
 const CL_UPGRADER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
@@ -35,32 +39,36 @@ var EX_BUILDER_COUNT   = 0;
 
 module.exports = {
   create_harvester:function() {
-    var res;
-    res = SPAWN_OBJ.createCreep(HARVESTER_BODY, null,  {role : 'harvester', isTransfer : false});
-    if(_.isString(res)) {
-      console.log("Creating a harvester '" + res + "' was startes");
-    } else {
-      console.log("Harvester spawn error: " + res);
-    } 
+    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE.push({body: HARVESTER_BODY, memory: {role : 'harvester', isTransfer : false}});
+      console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
+    }
   },
 
   create_controller_upgrader:function() {
-    var res;
-    res = SPAWN_OBJ.createCreep(CL_UPGRADER_BODY, null,  {role : 'cl_upgrader', isTransfer : false});
-    if(_.isString(res)) {
-      console.log("Creating a controller upgrader '" + res + "' was started");
-    } else {
-      console.log("Controller upgrader spawn error: " + res);
+    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY, memory: {role : 'cl_upgrader', isTransfer : false}});
+      console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
-    var res;
-    res = SPAWN_OBJ.createCreep(EX_BUILDER_BODY, null,  {role : 'ex_builder', isTransfer : false, isBuilding : false});
-    if(_.isString(res)) {
-      console.log("Creating a extensions builder '" + res + "' was started");
-    } else {
-      console.log("extensions builde spawn error: " + res);
+    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY, memory: {role : 'ex_builder', isTransfer : false, isBuilding : false}});
+      console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
+    }
+  },
+
+  spawnQueqe:function() {
+    if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300 && SPAWN_QUEUE.length > 0) {
+      var creep = SPAWN_QUEUE.shift();
+      var res;
+      res = SPAWN_OBJ.createCreep(creep.body, null,  creep.memory);
+      if(_.isString(res)) {
+        console.log("Creating a " + creep.memory.role + " '" + res + "' was started. Queue: "+SPAWN_QUEUE.length);
+      } else {
+        console.log(creep.memory.role + " spawn error: " + res);
+      }
     }
   },
 
@@ -255,7 +263,12 @@ module.exports = {
 
   processing : function(spawn_obj) {
     SPAWN_OBJ = spawn_obj;
+    SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
+    if (!SPAWN_QUEUE) {
+      SPAWN_QUEUE = [];
+    }
     this.check_and_spawnd_creep();
     this.creep_doing();
+    this.spawnQueqe();
   }
 };
