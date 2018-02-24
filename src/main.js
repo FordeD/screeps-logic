@@ -1,86 +1,154 @@
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
+/*          CREEP BODY
+MOVE            50
+WORK            100
+CARRY           50
+ATTACK          80
+RANGED_ATTACK   150
+HEAL            250
+CLAIM           600
+TOUGH           10
+*/
 
-var workers = [], upgraders = [], builder = [];
+/*
+Controller level    - 1
+    spawn energy        - 300
+        
+        harvester           - [MOVE, WORK, WORK,  CARRY]
+        cl_upgrader         - [MOVE, WORK, CARRY, CARRY, CARRY]
+*/
 
-module.exports.loop = function () {
+const spawn_1_name  = "s1";
+var   s1_obj        = null;
+
+const harvester_1_body   = [MOVE, WORK, WORK,  CARRY];
+const cl_upgrader_1_body = [MOVE, WORK, CARRY, CARRY, CARRY];
+
+
+const harvester_max    = 4;
+const cl_upgrader_max  = 4;
+
+var harvester_count    = 0;
+var cl_upgrader_count  = 0;
+
+module.exports.loop = function()
+{
+    if(Game.spawns[spawn_1_name])
+    {
+        s1_obj = Game.spawns[spawn_1_name];
+        
+        // CHECK AND CREATE WORKERS  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        if( !s1_obj.spawning && s1_obj.energy >= 300)
+        {
+            harvester_count    = 0;
+            cl_upgrader_count  = 0;
+
+            for(var i in Game.creeps)
+            {
+                var cr = Game.creeps[i];
+                if(cr.memory.role == 'harvester')
+                {
+                    ++harvester_count;
+                    continue;
+                }
+                
+                if(cr.memory.role == 'cl_upgrader')
+                {
+                    ++cl_upgrader_count;
+                    continue;
+                }
+            }
+            
+            if(harvester_count < harvester_max)
+            {
+                if(s1_obj.canCreateCreep(harvester_1_body) == OK)
+                {
+                    var res;
+                    res = s1_obj.createCreep(harvester_1_body, null,  {role : 'harvester', isTransfer : false});
+                    if(_.isString(res))
+                        console.log("Creating a harvester '" + res + "' was startes");
+                    else
+                        console.log("Harvester spawn error: " + res);
+                }
+            }
+            else
+            if(cl_upgrader_count < cl_upgrader_max)
+            {
+                if(s1_obj.canCreateCreep(cl_upgrader_1_body) == OK)
+                {
+                    var res;
+                    res = s1_obj.createCreep(cl_upgrader_1_body, null,  {role : 'cl_upgrader', isTransfer : false});
+                    if(_.isString(res))
+                        console.log("Creating a controller upgrader '" + res + "' was started");
+                    else
+                        console.log("Controller upgrader spawn error: " + res);
+                }
+            }
+        }
+        
+        // WORKERS PROCESSING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        
+        for(var i in Game.creeps)
+        {
+            var cr    = Game.creeps[i];
+            var total = _.sum(cr.carry);
+
+
+            if(total == 0 )
+                cr.memory.isTransfer = false;
+                
+            if( (total < cr.carryCapacity) && (!cr.memory.isTransfer))
+            {
+                var pos = cr.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+                if(pos)
+                {
+                    if(cr.harvest(pos) == ERR_NOT_IN_RANGE)
+                        cr.moveTo(pos);
+                }
+            }
+            
+            if(total >= cr.carryCapacity)
+                cr.memory.isTransfer = true;            
+
+            if(cr.memory.isTransfer)
+            {            
+                switch(cr.memory.role)
+                {
+                    case 'harvester':
+                    {
+                        if(s1_obj.energy < s1_obj.energyCapacity)
+                        {
+                            var res;
+                            res = cr.transfer(s1_obj, RESOURCE_ENERGY);
+                            if(res == ERR_NOT_IN_RANGE)
+                                cr.moveTo(s1_obj);
+                        }
+                        else
+                        {
+                            if(cr.room.controller)
+                            {
+                                
+                                var res = cr.upgradeController(cr.room.controller);
+                                if(res == ERR_NOT_IN_RANGE)
+                                    cr.moveTo(cr.room.controller);
+                            }
+                            
+                        }
+                        break;
+                    }
+                    case 'cl_upgrader':
+                    {
+                        if(cr.room.controller)
+                        {
+                            
+                            var res = cr.upgradeController(cr.room.controller);
+                            if(res == ERR_NOT_IN_RANGE)
+                                cr.moveTo(cr.room.controller);
+                        }
+                    }
+                }
+            }
+        }
     
-    for(var name in Memory.creeps) {
-        if(!Game.creeps[name]) {
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-        }
-    }
-    
-    var tower = Game.getObjectById('TOWER_ID');
-    if(tower) {
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax
-        });
-        if(closestDamagedStructure) {
-            tower.repair(closestDamagedStructure);
-        }
-
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        }
-    }
-    
-    var creepsCount = Game.creeps.length ? Game.creeps.length : 1;
-
-    workers = _.filter(Game.creeps, (creep) => creep.memory.role == 'worker');
-    upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-    builder = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-
-    if(workers.length < 2) {
-        var newName = 'worker' + creepsCount;
-        console.log('Spawning new worker: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'worker'}});
-    } else if(upgraders.length < 2) {
-        var newName = 'upgrader' + creepsCount;
-        console.log('Spawning new upgrader: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'upgrader'}});
-    } else if(builder.length < 2) {
-        var newName = 'builder' + creepsCount;
-        console.log('Spawning new builder: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
-            {memory: {role: 'builder'}});
-    }
-
-    if(Game.spawns['Spawn1'].spawning) {
-        var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
-        Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Spawn1'].pos.x + 1,
-            Game.spawns['Spawn1'].pos.y,
-            {align: 'left', opacity: 0.8});
-    }
-  
-    // Перебор крипов
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if(creep.memory.role == 'worker') {
-            roleHarvester.run(creep);
-        } else if(creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-        } else if(creep.memory.role == 'builder') {
-            roleBuilder.run(creep);
-        }
-    }
-}
-
-
-function defendRoom(roomName) {
-    var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
-    if(hostiles.length > 0) {
-        var username = hostiles[0].owner.username;
-        Game.notify(`User ${username} spotted in room ${roomName}`);
-        var towers = Game.rooms[roomName].find(
-            FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-        towers.forEach(tower => tower.attack(hostiles[0]));
+        // WORKERS PROCESSING <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<        
     }
 }
