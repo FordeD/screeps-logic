@@ -236,14 +236,14 @@ module.exports = {
         }        
       }
 
-      for(var currQueue in SPAWN_QUEUE) {
-        if (currQueue.role == 'harvester') {
+      for(var i in SPAWN_QUEUE) {
+        if (SPAWN_QUEUE[i].memory.role == 'harvester') {
           ++HARVESTER_QUEUE_COUNT;
           continue;
-        } else if (currQueue.role == 'cl_upgrader') {
+        } else if (SPAWN_QUEUE[i].memory.role == 'cl_upgrader') {
           ++CL_UPGRADER_QUEUE_COUNT;
           continue;
-        } else if (currQueue.role == 'ex_builder') {
+        } else if (SPAWN_QUEUE[i].memory.role == 'ex_builder') {
           ++EX_BUILDER_QUEUE_COUNT;
           continue;
         }
