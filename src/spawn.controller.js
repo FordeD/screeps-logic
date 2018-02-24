@@ -281,6 +281,7 @@ module.exports = {
   },
 
   processing : function(spawn_obj) {
+    SPAWN_NAME = spawn_obj.name;
     SPAWN_OBJ = spawn_obj;
     SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
     if (!SPAWN_QUEUE) {
