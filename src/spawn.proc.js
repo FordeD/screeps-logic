@@ -1,4 +1,4 @@
-var Spawn_1 = require('spawn1_controller');
+var Spawn_1 = require('spawn1.controller');
 
 module.exports = {
   processing : function() {
