@@ -17,53 +17,53 @@ Controller level    - 1
         cl_upgrader         - [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
-const spawn_1_name  = "s1";
-var   s1_obj        = null;
+const SPAWN_1  = "Spawn1";
+var   SPAWN_OBJ = null;
 
-const harvester_1_body   = [MOVE, WORK, WORK,  CARRY];
-const cl_upgrader_1_body = [MOVE, WORK, CARRY, CARRY, CARRY];
+const HARVESTER_BODY = [MOVE, WORK, WORK,  CARRY];
+const CL_UPGRADER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
 
 
-const harvester_max    = 4;
-const cl_upgrader_max  = 4;
+const HARVESTER_MAX_COUNT    = 4;
+const CL_UPGRADER_MAX_COUNT  = 4;
 
-var harvester_count    = 0;
-var cl_upgrader_count  = 0;
+var HARVESTER_COUNT    = 0;
+var CL_UPGRADER_COUNT  = 0;
 
 module.exports.loop = function()
 {
-    if(Game.spawns[spawn_1_name])
+    if(Game.spawns[SPAWN_1])
     {
-        s1_obj = Game.spawns[spawn_1_name];
+        SPAWN_OBJ = Game.spawns[SPAWN_1];
         
         // CHECK AND CREATE WORKERS  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        if( !s1_obj.spawning && s1_obj.energy >= 300)
+        if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300)
         {
-            harvester_count    = 0;
-            cl_upgrader_count  = 0;
+            HARVESTER_COUNT    = 0;
+            CL_UPGRADER_COUNT  = 0;
 
             for(var i in Game.creeps)
             {
                 var cr = Game.creeps[i];
                 if(cr.memory.role == 'harvester')
                 {
-                    ++harvester_count;
+                    ++HARVESTER_COUNT;
                     continue;
                 }
                 
                 if(cr.memory.role == 'cl_upgrader')
                 {
-                    ++cl_upgrader_count;
+                    ++CL_UPGRADER_COUNT;
                     continue;
                 }
             }
             
-            if(harvester_count < harvester_max)
+            if(HARVESTER_COUNT < HARVESTER_MAX_COUNT)
             {
-                if(s1_obj.canCreateCreep(harvester_1_body) == OK)
+                if(SPAWN_OBJ.canCreateCreep(HARVESTER_BODY) == OK)
                 {
                     var res;
-                    res = s1_obj.createCreep(harvester_1_body, null,  {role : 'harvester', isTransfer : false});
+                    res = SPAWN_OBJ.createCreep(HARVESTER_BODY, null,  {role : 'harvester', isTransfer : false});
                     if(_.isString(res))
                         console.log("Creating a harvester '" + res + "' was startes");
                     else
@@ -71,12 +71,12 @@ module.exports.loop = function()
                 }
             }
             else
-            if(cl_upgrader_count < cl_upgrader_max)
+            if(CL_UPGRADER_COUNT < CL_UPGRADER_MAX_COUNT)
             {
-                if(s1_obj.canCreateCreep(cl_upgrader_1_body) == OK)
+                if(SPAWN_OBJ.canCreateCreep(CL_UPGRADER_BODY) == OK)
                 {
                     var res;
-                    res = s1_obj.createCreep(cl_upgrader_1_body, null,  {role : 'cl_upgrader', isTransfer : false});
+                    res = s1_obj.createCreep(CL_UPGRADER_BODY, null,  {role : 'cl_upgrader', isTransfer : false});
                     if(_.isString(res))
                         console.log("Creating a controller upgrader '" + res + "' was started");
                     else
@@ -87,49 +87,52 @@ module.exports.loop = function()
         
         // WORKERS PROCESSING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         
-        for(var i in Game.creeps)
+        for(var name in Game.creeps)
         {
-            var cr    = Game.creeps[i];
-            var total = _.sum(cr.carry);
+            var creep    = Game.creeps[name];
+            var total = _.sum(creep.carry);
 
 
             if(total == 0 )
-                cr.memory.isTransfer = false;
+            creep.memory.isTransfer = false;
                 
-            if( (total < cr.carryCapacity) && (!cr.memory.isTransfer))
+            if( (total < creep.carryCapacity) && (!creep.memory.isTransfer))
             {
-                var pos = cr.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+                var pos = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
                 if(pos)
                 {
-                    if(cr.harvest(pos) == ERR_NOT_IN_RANGE)
-                        cr.moveTo(pos);
+                    if(creep.harvest(pos) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(pos);
+                    }
                 }
             }
             
-            if(total >= cr.carryCapacity)
-                cr.memory.isTransfer = true;            
+            if(total >= creep.carryCapacity)
+            creep.memory.isTransfer = true;            
 
-            if(cr.memory.isTransfer)
+            if(creep.memory.isTransfer)
             {            
-                switch(cr.memory.role)
+                switch(creep.memory.role)
                 {
                     case 'harvester':
                     {
-                        if(s1_obj.energy < s1_obj.energyCapacity)
+                        if(SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity)
                         {
                             var res;
-                            res = cr.transfer(s1_obj, RESOURCE_ENERGY);
-                            if(res == ERR_NOT_IN_RANGE)
-                                cr.moveTo(s1_obj);
+                            res = creep.transfer(SPAWN_OBJ, RESOURCE_ENERGY);
+                            if(res == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(SPAWN_OBJ);
+                            }
                         }
                         else
                         {
-                            if(cr.room.controller)
+                            if(creep.room.controller)
                             {
                                 
-                                var res = cr.upgradeController(cr.room.controller);
-                                if(res == ERR_NOT_IN_RANGE)
-                                    cr.moveTo(cr.room.controller);
+                                var res = creep.upgradeController(creep.room.controller);
+                                if(res == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(creep.room.controller);
+                                }
                             }
                             
                         }
@@ -137,12 +140,13 @@ module.exports.loop = function()
                     }
                     case 'cl_upgrader':
                     {
-                        if(cr.room.controller)
+                        if(creep.room.controller)
                         {
                             
-                            var res = cr.upgradeController(cr.room.controller);
-                            if(res == ERR_NOT_IN_RANGE)
-                                cr.moveTo(cr.room.controller);
+                            var res = creep.upgradeController(creep.room.controller);
+                            if(res == ERR_NOT_IN_RANGE) {
+                                creep.moveTo(creep.room.controller);
+                            }
                         }
                     }
                 }
