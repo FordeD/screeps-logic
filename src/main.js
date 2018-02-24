@@ -1,3 +1,12 @@
+var spawns_proc = require('spawn_proc');
+
+module.exports.loop = function() {
+    spawns_proc.processing();
+}
+
+
+
+
 /*          CREEP BODY
 MOVE            50
 WORK            100
@@ -22,13 +31,16 @@ var   SPAWN_OBJ = null;
 
 const HARVESTER_BODY = [MOVE, WORK, WORK,  CARRY];
 const CL_UPGRADER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
+const EX_BUILDER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
 
 
 const HARVESTER_MAX_COUNT    = 4;
 const CL_UPGRADER_MAX_COUNT  = 4;
+const EX_BUILDER_MAX_COUNT   = 4;
 
 var HARVESTER_COUNT    = 0;
 var CL_UPGRADER_COUNT  = 0;
+var EX_BUILDER_COUNT   = 0;
 
 module.exports.loop = function()
 {
@@ -93,8 +105,9 @@ module.exports.loop = function()
             var total = _.sum(creep.carry);
 
 
-            if(total == 0 )
-            creep.memory.isTransfer = false;
+            if(total == 0 ) {
+                creep.memory.isTransfer = false;
+            }
                 
             if( (total < creep.carryCapacity) && (!creep.memory.isTransfer))
             {
@@ -102,13 +115,14 @@ module.exports.loop = function()
                 if(pos)
                 {
                     if(creep.harvest(pos) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(pos);
+                        creep.moveTo(pos,{visualizePathStyle: {stroke: '#ffffff'}});
                     }
                 }
             }
             
-            if(total >= creep.carryCapacity)
-            creep.memory.isTransfer = true;            
+            if(total >= creep.carryCapacity) {
+                creep.memory.isTransfer = true;   
+            }         
 
             if(creep.memory.isTransfer)
             {            
@@ -121,7 +135,7 @@ module.exports.loop = function()
                             var res;
                             res = creep.transfer(SPAWN_OBJ, RESOURCE_ENERGY);
                             if(res == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(SPAWN_OBJ);
+                                creep.moveTo(SPAWN_OBJ,{visualizePathStyle: {stroke: '#ffffff'}});
                             }
                         }
                         else
@@ -131,7 +145,7 @@ module.exports.loop = function()
                                 
                                 var res = creep.upgradeController(creep.room.controller);
                                 if(res == ERR_NOT_IN_RANGE) {
-                                    creep.moveTo(creep.room.controller);
+                                    creep.moveTo(creep.room.controller,{visualizePathStyle: {stroke: '#ffffff'}});
                                 }
                             }
                             
@@ -145,7 +159,7 @@ module.exports.loop = function()
                             
                             var res = creep.upgradeController(creep.room.controller);
                             if(res == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(creep.room.controller);
+                                creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
                             }
                         }
                     }
