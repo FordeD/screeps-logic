@@ -76,7 +76,7 @@ module.exports.loop = function()
                 if(SPAWN_OBJ.canCreateCreep(CL_UPGRADER_BODY) == OK)
                 {
                     var res;
-                    res = s1_obj.createCreep(CL_UPGRADER_BODY, null,  {role : 'cl_upgrader', isTransfer : false});
+                    res = SPAWN_OBJ.createCreep(CL_UPGRADER_BODY, null,  {role : 'cl_upgrader', isTransfer : false});
                     if(_.isString(res))
                         console.log("Creating a controller upgrader '" + res + "' was started");
                     else
