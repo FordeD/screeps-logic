@@ -271,8 +271,6 @@ module.exports = {
     }
     this.check_and_spawnd_creep();
     this.creep_doing();
-
-    console.log('QUEUE', SPAWN_QUEUE);
     this.spawnQueqe();
   }
 };
