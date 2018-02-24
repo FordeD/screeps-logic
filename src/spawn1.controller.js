@@ -209,7 +209,7 @@ module.exports = {
   },
 
   check_and_spawnd_creep:function() {
-    if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300 ) {
+    if( SPAWN_QUEUE.length < SPAWN_QUEUE_MAX ) {
       HARVESTER_COUNT    = 0;
       CL_UPGRADER_COUNT  = 0;
       EX_BUILDER_COUNT   = 0;
