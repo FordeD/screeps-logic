@@ -17,7 +17,7 @@ Controller level    - 1
         cl_upgrader         - [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
-const SPAWN_1  = "Spawn1";
+const SPAWN_NAME  = "Spawn1";
 var   SPAWN_OBJ = null;
 
 const HARVESTER_BODY = [MOVE, WORK, WORK,  CARRY];
@@ -34,7 +34,7 @@ var CL_UPGRADER_COUNT  = 0;
 var EX_BUILDER_COUNT   = 0;
 
 module.exports.loop = {
-  create_harvester : function() {
+  create_harvester:function() {
     var res;
     res = SPAWN_OBJ.createCreep(HARVESTER_BODY, null,  {role : 'harvester', isTransfer : false});
     if(_.isString(res)) {
@@ -44,7 +44,7 @@ module.exports.loop = {
     } 
   },
 
-  create_controller_upgrader : function() {
+  create_controller_upgrader:function() {
     var res;
     res = SPAWN_OBJ.createCreep(CL_UPGRADER_BODY, null,  {role : 'cl_upgrader', isTransfer : false});
     if(_.isString(res)) {
@@ -54,7 +54,7 @@ module.exports.loop = {
     }
   },
 
-  create_builder_extension : function() {
+  create_builder_extension:function() {
     var res;
     res = SPAWN_OBJ.createCreep(EX_BUILDER_BODY, null,  {role : 'ex_builder', isTransfer : false, isBuilding : false});
     if(_.isString(res)) {
@@ -64,7 +64,7 @@ module.exports.loop = {
     }
   },
 
-  harvester_doing : function(creep) {
+  harvester_doing:function(creep) {
     var total   = _.sum(creep.carry);    
 
     if(total == 0 ) {
@@ -113,7 +113,7 @@ module.exports.loop = {
     }    
   },
 
-  cl_upgrader_doing : function(creep) {
+  cl_upgrader_doing:function(creep) {
     var total   = _.sum(creep.carry);
     if(total == 0 ) {
       creep.memory.isTransfer = false;
@@ -146,7 +146,7 @@ module.exports.loop = {
     }    
   },
 
-  ex_builder_doing : function(creep) {
+  ex_builder_doing:function(creep) {
     var total = _.sum(creep.carry);
     
     if(total == 0 ) {
@@ -200,7 +200,7 @@ module.exports.loop = {
     }    
   },
 
-  check_and_spawnd_creep : function() {
+  check_and_spawnd_creep:function() {
     if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300 ) {
       HARVESTER_COUNT    = 0;
       CL_UPGRADER_COUNT  = 0;
@@ -235,7 +235,7 @@ module.exports.loop = {
     }     
   },
 
-  creep_doing : function() {
+  creep_doing:function() {
     for(var name in Game.creeps) {
       var creep = Game.creeps[name];
       if(creep.memory.role == 'harvester') {
@@ -253,8 +253,8 @@ module.exports.loop = {
     }      
   },
 
-  processing : function() {
-    SPAWN_OBJ = Game.spawns.SPAWN_1;
+  processing:function() {
+    SPAWN_OBJ = Game.spawns[SPAWN_NAME];
     this.check_and_spawnd_creep();
     this.creep_doing();
   }
