@@ -88,9 +88,9 @@ module.exports = {
     if(creep.memory.isTransfer) {
       //console.log(total + ":" + s1_obj.energy + ":" + s1_obj.energyCapacity + ":" + s1_obj.spawning)
       if(SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity) {
-        res = creep.transfer(s1_obj, RESOURCE_ENERGY);
+        res = creep.transfer(SPAWN_OBJ, RESOURCE_ENERGY);
         if(res == ERR_NOT_IN_RANGE) {
-          creep.moveTo(s1_obj, {visualizePathStyle: {stroke: '#ffffff'}});
+          creep.moveTo(SPAWN_OBJ, {visualizePathStyle: {stroke: '#ffffff'}});
         }
       } else {
         var res = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
@@ -103,7 +103,7 @@ module.exports = {
         if(res) {
           if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
           creep.moveTo(res, {visualizePathStyle: {stroke: '#ffffff'}});
-        } else if(creep.room.controller && !s1_obj.spawning) {
+        } else if(creep.room.controller && !SPAWN_OBJ.spawning) {
           var res = creep.upgradeController(creep.room.controller);
           if(res == ERR_NOT_IN_RANGE) {
             creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
