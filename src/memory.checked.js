@@ -5,8 +5,7 @@ module.exports = {
 
   checkCreepsMemory : function() {
     for(var name in Memory.creeps) {
-      var creep = Game.creeps[name];
-      if(!creep) {
+      if(!Game.creeps[name]) {
         console.log('Remove empty creep data '+name);
         delete Memory.creeps[name];
       }   
