@@ -70,6 +70,8 @@ module.exports = {
         console.log(creep.memory.role + " spawn error: " + res);
       }
     }
+
+    SPAWN_OBJ.memory['queue'] = SPAWN_QUEUE;
   },
 
   harvester_doing:function(creep) {
@@ -269,6 +271,8 @@ module.exports = {
     }
     this.check_and_spawnd_creep();
     this.creep_doing();
+
+    console.log('QUEUE', SPAWN_QUEUE);
     this.spawnQueqe();
   }
 };
