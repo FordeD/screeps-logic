@@ -18,7 +18,7 @@ Controller level    - 1
         EX_BUILDER_BODY     = [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
-const SPAWN_NAME  = "Spawn1";
+var   SPAWN_NAME  = "";
 var   SPAWN_OBJ = null;
 var   SPAWN_QUEUE = null;
 
