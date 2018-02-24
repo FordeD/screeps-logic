@@ -33,7 +33,7 @@ var HARVESTER_COUNT    = 0;
 var CL_UPGRADER_COUNT  = 0;
 var EX_BUILDER_COUNT   = 0;
 
-module.exports.loop = {
+module.exports = {
   create_harvester:function() {
     var res;
     res = SPAWN_OBJ.createCreep(HARVESTER_BODY, null,  {role : 'harvester', isTransfer : false});
@@ -253,8 +253,8 @@ module.exports.loop = {
     }      
   },
 
-  processing:function() {
-    SPAWN_OBJ = Game.spawns[SPAWN_NAME];
+  processing : function(spawn_obj) {
+    SPAWN_OBJ = spawn_obj;
     this.check_and_spawnd_creep();
     this.creep_doing();
   }
