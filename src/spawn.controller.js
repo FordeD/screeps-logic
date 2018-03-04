@@ -24,16 +24,30 @@ var   SPAWN_QUEUE = null;
 
 const SPAWN_QUEUE_MAX = 15;
 
-const HARVESTER_BODY = [MOVE, WORK, WORK, CARRY];
-const CL_UPGRADER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
-const EX_BUILDER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
+const HARVESTER_BODY = [
+  [MOVE, WORK, WORK, CARRY],
+  [MOVE, WORK, WORK,  CARRY, CARRY, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, MOVE, WORK, WORK,  CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
+];
+const CL_UPGRADER_BODY = [
+  [MOVE, WORK, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, WORK,  CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, MOVE,  MOVE, MOVE,  WORK,  CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
+];
+const EX_BUILDER_BODY = [
+  [MOVE, WORK, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, WORK,  WORK, CARRY, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, MOVE,  MOVE, MOVE,  WORK,  WORK, CARRY, CARRY, CARRY, CARRY, CARRY]
+];
 
 const HARVESTER_BODY_ECO = [MOVE, WORK, CARRY];
 const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
 
 const HARVESTER_MAX_COUNT    = 5;
 const CL_UPGRADER_MAX_COUNT  = 5;
-const EX_BUILDER_MAX_COUNT   = 5;
+const EX_BUILDER_MAX_COUNT   = 3;
+
+var CREEP_CURRENT_LEVEL = 0;
 
 var HARVESTER_COUNT    = 0;
 var CL_UPGRADER_COUNT  = 0;
@@ -46,21 +60,21 @@ var EX_BUILDER_QUEUE_COUNT   = 0;
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY, memory: {role : 'harvester', isTransfer : false}});
+      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_CURRENT_LEVEL], memory: {role : 'harvester', isTransfer : false}});
       console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_controller_upgrader:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY, memory: {role : 'cl_upgrader', isTransfer : false}});
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_CURRENT_LEVEL], memory: {role : 'cl_upgrader', isTransfer : false}});
       console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY, memory: {role : 'ex_builder', isTransfer : false, isBuilding : false}});
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_CURRENT_LEVEL], memory: {role : 'ex_builder', isTransfer : false, isBuilding : false}});
       console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -75,15 +89,14 @@ module.exports = {
       } else {
         console.log(creep.memory.role + " spawn error: " + res);
       }
-    }
-
-    if (Game.creeps.length = 0 && SPAWN_OBJ.energy < 300) {
+    } else if (Game.creeps.length = 0 && SPAWN_OBJ.energy < 300) {
       res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : 'harvester', isTransfer : false});
       if(_.isString(res)) {
         console.log("Creating a ECO harvester '" + res + "' was started");
       } else {
         console.log("ECO harvester spawn error: " + res);
       }
+      SPAWN_QUEUE = [];
     }
 
     SPAWN_OBJ.memory['queue'] = SPAWN_QUEUE;
@@ -291,6 +304,20 @@ module.exports = {
     }      
   },
 
+  getLevel: function() {
+    max = SPAWN_OBJ.room.energyCapacityAvailable
+    if (max < (300 + 5 * 50)) {
+        CREEP_CURRENT_LEVEL = 0;
+    } else if (max < (300 + 10*50)) {
+        CREEP_CURRENT_LEVEL = 1;
+    } else if (max < (300 + 20*50)) {
+        CREEP_CURRENT_LEVEL = 2;
+    } else {
+        console.log("Update creeps level!")
+        CREEP_CURRENT_LEVEL = 2;
+    }
+  },
+
   processing : function(spawn_obj) {
     SPAWN_NAME = spawn_obj.name;
     SPAWN_OBJ = spawn_obj;
@@ -298,6 +325,7 @@ module.exports = {
     if (!SPAWN_QUEUE) {
       SPAWN_QUEUE = [];
     }
+    this.getLevel();
     this.check_and_spawnd_creep();
     this.creep_doing();
     this.spawnQueqe();
