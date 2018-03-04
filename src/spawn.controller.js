@@ -24,10 +24,12 @@ var   SPAWN_QUEUE = null;
 
 const SPAWN_QUEUE_MAX = 15;
 
-const HARVESTER_BODY = [MOVE, WORK, WORK,  CARRY];
+const HARVESTER_BODY = [MOVE, WORK, WORK, CARRY];
 const CL_UPGRADER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
 const EX_BUILDER_BODY = [MOVE, WORK, CARRY, CARRY, CARRY];
 
+const HARVESTER_BODY_ECO = [MOVE, WORK, CARRY];
+const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
 
 const HARVESTER_MAX_COUNT    = 5;
 const CL_UPGRADER_MAX_COUNT  = 5;
@@ -67,11 +69,20 @@ module.exports = {
     if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300 && SPAWN_QUEUE.length > 0) {
       var creep = SPAWN_QUEUE.shift();
       var res;
-      res = SPAWN_OBJ.createCreep(creep.body, null,  creep.memory);
+      res = SPAWN_OBJ.createCreep(creep.body, null, creep.memory);
       if(_.isString(res)) {
         console.log("Creating a " + creep.memory.role + " '" + res + "' was started. Queue: "+SPAWN_QUEUE.length);
       } else {
         console.log(creep.memory.role + " spawn error: " + res);
+      }
+    }
+
+    if (Game.creeps.length = 0 && SPAWN_OBJ.energy < 300) {
+      res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : 'harvester', isTransfer : false});
+      if(_.isString(res)) {
+        console.log("Creating a ECO harvester '" + res + "' was started");
+      } else {
+        console.log("ECO harvester spawn error: " + res);
       }
     }
 
