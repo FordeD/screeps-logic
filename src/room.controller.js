@@ -413,7 +413,7 @@ module.exports = {
   },
 
   checkHostlesInRoom: function() {
-    var HOSTILES = room.find(FIND_HOSTILE_CREEPS);
+    var HOSTILES = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
     if(HOSTILES.length > 0) {
       ROOM_STATE = ROOM_DEFEND;
       DEFEND_CONTROLLER = require('defend.controller');
