@@ -1,11 +1,7 @@
-var spawns_proc = require('spawn.proc');
+var room_proc = require('room.proc');
 var memory_checked = require('memory.checked');
-var defend_proc = require('defend.proc');
-var atack_proc = require('atack.proc');
 
 module.exports.loop = function() {
+    room_proc.processing();
     memory_checked.checkMemory();
-    defend_proc.processing();
-    spawns_proc.processing();
-    atack_proc.processing();
 }
