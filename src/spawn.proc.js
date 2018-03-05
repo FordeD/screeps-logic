@@ -1,4 +1,4 @@
-var roomController = require('room.controller');
+var roomController = require('spawn.controller');
 
 module.exports = {
   processing : function() {
