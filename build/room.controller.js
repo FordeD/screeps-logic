@@ -239,7 +239,7 @@ module.exports = {
       creep.memory.isBuilding = false;
     }
 
-    if((total < creep.carryCapacity) && (!creep.memory.isTransfer) && (!creep.memory.isBuilding)) {
+    if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
       var res_pos = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
       if(res_pos) {
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE)
@@ -258,14 +258,32 @@ module.exports = {
     }
 
     if(!creep.memory.exTarget) {
-      var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: 'extension' } });
+      var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_EXTENSION } });
       
       if(res) {
         creep.memory.isBuilding = true;
         creep.memory.exTarget = res.id;
       } else {
-        creep.memory.isBuilding = false;
-        creep.memory.isTransfer = true;
+        res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_TOWER } });
+        if(res) {
+          creep.memory.isBuilding = true;
+          creep.memory.exTarget = res.id;
+        } else {
+          res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_WALL } });
+          if(res) {
+            creep.memory.isBuilding = true;
+            creep.memory.exTarget = res.id;
+          } else {
+            res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_RAMPART } });
+            if(res) {
+              creep.memory.isBuilding = true;
+              creep.memory.exTarget = res.id;
+            } else {
+              creep.memory.isBuilding = false;
+              creep.memory.isTransfer = true;
+            }
+          }
+        }
       }
     }
 
@@ -364,7 +382,7 @@ module.exports = {
       }
 
       if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
-        let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
+        let solders = Game.creeps.filter(creep => creep.memory.role == ROLES.solder);
         let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
         for (var i = removed; i > 0; i--) {
           var creep = solders.shift();
@@ -413,7 +431,7 @@ module.exports = {
     } else if (max < (300 + 20*50)) {
         CREEP_LEVEL = 2;
     } else {
-        console.log("Update creeps level!")
+        Game.notify("Update creeps level!");
         CREEP_LEVEL = 2;
     }
   },
