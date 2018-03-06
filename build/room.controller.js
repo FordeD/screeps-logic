@@ -378,25 +378,27 @@ module.exports = {
   creep_doing:function() {
     for(var name in Game.creeps) {
       var creep = Game.creeps[name];
-      var role = creep.memory.role;
-      switch(role) {
-        case ROLES.harvester: {
-          this.harvester_doing(creep);
-          break;
-        }
-        case ROLES.upgrader: {
-          this.cl_upgrader_doing(creep);
-          break;
-        }
-        case ROLES.builder: {
-          this.ex_builder_doing(creep);
-          break;
-        }
-        case ROLES.solder: {
-          if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
-            this.solder_doing(creep);
+      if (creep) {
+        var role = creep.memory.role;
+        switch(role) {
+          case ROLES.harvester: {
+            this.harvester_doing(creep);
+            break;
           }
-          break;
+          case ROLES.upgrader: {
+            this.cl_upgrader_doing(creep);
+            break;
+          }
+          case ROLES.builder: {
+            this.ex_builder_doing(creep);
+            break;
+          }
+          case ROLES.solder: {
+            if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
+              this.solder_doing(creep);
+            }
+            break;
+          }
         }
       }
     }      
