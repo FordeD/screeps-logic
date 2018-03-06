@@ -363,15 +363,15 @@ module.exports = {
         this.create_solder();
       }
 
-      // if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
-      //   let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
-      //   let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
-      //   for (var i = removed; i > 0; i--) {
-      //     var creep = solders.shift();
-      //     creep.suicide();
-      //   }
-      //   SOLDER_COUNT = solders.length;
-      // }
+      if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
+        let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
+        let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
+        for (var i = removed; i > 0; i--) {
+          var creep = solders.shift();
+          creep.suicide();
+        }
+        SOLDER_COUNT = solders.length;
+      }
     }     
   },
 
