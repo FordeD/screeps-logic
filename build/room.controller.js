@@ -458,7 +458,7 @@ module.exports = {
 
     this.checkHostlesInRoom();
     if (DEFEND_CONTROLLER) {
-      let solders = Game.creeps.filter(creep => creep.memory.role == ROLES.solder);
+      var solders = _.filter(Game.creeps, (creep) => creep.memory.role == ROLES.solder);
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders);
     }
 
