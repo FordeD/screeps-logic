@@ -304,25 +304,27 @@ module.exports = {
 
       for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        var role = creep.memory.role;
-        switch(role) {
-          case ROLES.harvester: {
-            ++HARVESTER_COUNT;
-            break;
-          }
-          case ROLES.upgrader: {
-            ++CL_UPGRADER_COUNT;
-            break;
-          }
-          case ROLES.builder: {
-            ++EX_BUILDER_COUNT;
-            break;
-          }
-          case ROLES.solder: {
-            ++SOLDER_COUNT;
-            break;
-          }
-        } 
+        if (creep) {
+          var role = creep.memory.role;
+          switch(role) {
+            case ROLES.harvester: {
+              ++HARVESTER_COUNT;
+              break;
+            }
+            case ROLES.upgrader: {
+              ++CL_UPGRADER_COUNT;
+              break;
+            }
+            case ROLES.builder: {
+              ++EX_BUILDER_COUNT;
+              break;
+            }
+            case ROLES.solder: {
+              ++SOLDER_COUNT;
+              break;
+            }
+          } 
+        }
       }
 
       for(var i in SPAWN_QUEUE) {
