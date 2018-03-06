@@ -382,7 +382,7 @@ module.exports = {
       }
 
       if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
-        let solders = Game.creeps.filter(creep => creep.memory.role == ROLES.solder);
+        let solders = Game.creeps.filter(creep => { if(creep) creep.memory.role == ROLES.solder});
         let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
         for (var i = removed; i > 0; i--) {
           var creep = solders.shift();
