@@ -57,6 +57,8 @@ const SOLDER_BODY = [
   [ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
 ];
 
+const ROLES = {harvester: 'harvester', upgrader: 'cl_upgrader', builder: 'ex_builder', solder: 'solder'};
+
 const HARVESTER_BODY_ECO = [MOVE, WORK, CARRY];
 const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
 
@@ -84,28 +86,28 @@ const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : 'harvester', isTransfer : false}});
+      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false}});
       console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_controller_upgrader:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : 'cl_upgrader', isTransfer : false}});
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false}});
       console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : 'ex_builder', isTransfer : false, isBuilding : false}});
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false}});
       console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_solder:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : 'solder', target: SPAWN_OBJ.room.name}});
+      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_OBJ.room.name}});
       console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -121,12 +123,12 @@ module.exports = {
         }
         case ROOM_DEFEND:
         case ROOM_ATACK: {
-          var creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == "solder"),1);
+          var creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == ROLES.solder),1);
           this.setSpawning(creep);
         }
       }
     } else if (Game.creeps.length = 0 && SPAWN_OBJ.energy < 300) {
-      res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : 'harvester', isTransfer : false});
+      res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false});
       if(_.isString(res)) {
         console.log("Creating a ECO harvester '" + res + "' was started");
       } else {
@@ -149,7 +151,7 @@ module.exports = {
   },
 
   harvester_doing:function(creep) {
-    var total   = _.sum(creep.carry);    
+    var total = _.sum(creep.carry);    
 
     if(total == 0 ) {
       creep.memory.isTransfer = false;
@@ -197,7 +199,7 @@ module.exports = {
   },
 
   cl_upgrader_doing:function(creep) {
-    var total   = _.sum(creep.carry);
+    var total = _.sum(creep.carry);
     if(total == 0 ) {
       creep.memory.isTransfer = false;
     }
@@ -304,19 +306,19 @@ module.exports = {
         var creep = Game.creeps[name];
         var role = creep.memory.role;
         switch(role) {
-          case 'harvester': {
+          case ROLES.harvester: {
             ++HARVESTER_COUNT;
             break;
           }
-          case 'cl_upgrader': {
+          case ROLES.upgrader: {
             ++CL_UPGRADER_COUNT;
             break;
           }
-          case 'ex_builder': {
+          case ROLES.builder: {
             ++EX_BUILDER_COUNT;
             break;
           }
-          case 'solder': {
+          case ROLES.solder: {
             ++SOLDER_COUNT;
             break;
           }
@@ -326,19 +328,19 @@ module.exports = {
       for(var i in SPAWN_QUEUE) {
         var role = SPAWN_QUEUE[i].memory.role;
         switch(role) {
-          case 'harvester': {
+          case ROLES.harvester: {
             ++HARVESTER_QUEUE_COUNT;
             break;
           }
-          case 'cl_upgrader': {
+          case ROLES.upgrader: {
             ++CL_UPGRADER_QUEUE_COUNT;
             break;
           }
-          case 'ex_builder': {
+          case ROLES.builder: {
             ++EX_BUILDER_QUEUE_COUNT;
             break;
           }
-          case 'solder': {
+          case ROLES.solder: {
             ++SOLDER_QUEUE_COUNT;
             break;
           }
@@ -359,15 +361,15 @@ module.exports = {
         this.create_solder();
       }
 
-      if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
-        let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
-        let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
-        for (var i = removed; i > 0; i--) {
-          var creep = solders.shift();
-          creep.suicide();
-        }
-        SOLDER_COUNT = solders.length;
-      }
+      // if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
+      //   let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
+      //   let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
+      //   for (var i = removed; i > 0; i--) {
+      //     var creep = solders.shift();
+      //     creep.suicide();
+      //   }
+      //   SOLDER_COUNT = solders.length;
+      // }
     }     
   },
 
@@ -376,19 +378,19 @@ module.exports = {
       var creep = Game.creeps[name];
       var role = creep.memory.role;
       switch(role) {
-        case 'harvester': {
+        case ROLES.harvester: {
           this.harvester_doing(creep);
           break;
         }
-        case 'cl_upgrader': {
+        case ROLES.upgrader: {
           this.cl_upgrader_doing(creep);
           break;
         }
-        case 'ex_builder': {
+        case ROLES.builder: {
           this.ex_builder_doing(creep);
           break;
         }
-        case 'solder': {
+        case ROLES.solder: {
           if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
             this.solder_doing(creep);
           }
@@ -434,7 +436,7 @@ module.exports = {
 
     this.checkHostlesInRoom();
     if (DEFEND_CONTROLLER) {
-      let solders = Game.creeps.filter(creep => creep.memory.role == "solder");
+      let solders = Game.creeps.filter(creep => creep.memory.role == ROLES.solder);
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders);
     }
 
