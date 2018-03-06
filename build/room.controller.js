@@ -467,8 +467,8 @@ module.exports = {
       SPAWN_QUEUE = [];
     }
 
-    this.spawnQueqe();
     this.check_and_spawnd_creep();
     this.creep_doing();
+    this.spawnQueqe();
   }
 };
