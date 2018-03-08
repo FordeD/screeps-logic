@@ -33,6 +33,7 @@ var   SPAWN_OBJ       = null;
 var   SPAWN_QUEUE     = null;
 var   ROOM_STATE      = 0;
 var   HOSTILES        = null;
+var   SOURCES         = null;
 
 const SPAWN_QUEUE_MAX = 16;
 
@@ -80,34 +81,36 @@ var CL_UPGRADER_QUEUE_COUNT  = 0;
 var EX_BUILDER_QUEUE_COUNT   = 0;
 var SOLDER_QUEUE_COUNT       = 0;
 
+var CREEPS                   = null;
+
 
 const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false}});
+      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_OBJ.name }});
       console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_controller_upgrader:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false}});
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, sourceId : null, owner: SPAWN_OBJ.name }});
       console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false}});
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, sourceId : null, owner: SPAWN_OBJ.name }});
       console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_solder:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_OBJ.room.name}});
+      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_OBJ.room.name, owner: SPAWN_OBJ.name }});
       console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -158,8 +161,16 @@ module.exports = {
     }
     
     if((total < creep.carryCapacity) && (!creep.memory.isTransfer)) {
-      var res_pos = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      for(var index in SOURCES) {
+          let sourceId = SOURCES[index].id;
+          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+          if(harvesters.length > 3) {
+            res_pos = SOURCES[index];
+          }
+      }
       if(res_pos) {
+        creep.memory.sourceId = res_pos.id;
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
         }
@@ -169,6 +180,7 @@ module.exports = {
 
     if(total >= creep.carryCapacity) {
       creep.memory.isTransfer = true;
+      creep.memory.sourceId = null;
     }
 
     if(creep.memory.isTransfer) {
@@ -205,8 +217,16 @@ module.exports = {
     }
     
     if((total < creep.carryCapacity) && (!creep.memory.isTransfer)) {
-      var res_pos = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      for(var index in SOURCES) {
+          let sourceId = SOURCES[index].id;
+          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+          if(harvesters.length > 3) {
+            res_pos = SOURCES[index];
+          }
+      }
       if(res_pos) {
+        creep.memory.sourceId = res_pos.id;
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
         }
@@ -240,10 +260,19 @@ module.exports = {
     }
 
     if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
-      var res_pos = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+      for(var index in SOURCES) {
+          let sourceId = SOURCES[index].id;
+          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+          if(harvesters.length > 3) {
+            res_pos = SOURCES[index];
+          }
+      }
       if(res_pos) {
-        if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE)
+        creep.memory.sourceId = res_pos.id;
+        if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
+        }
         return;
       }
     }
@@ -477,6 +506,8 @@ module.exports = {
     SPAWN_NAME = spawn_obj.name;
     SPAWN_OBJ = spawn_obj;
     SPAWN_ROOM = spawn_obj.room;
+    SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+    CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_OBJ.name);
 
     this.getLevel();
     if (CREEP_LEVEL < 2 && SPAWN_ROOM.controller.level < 5) {
