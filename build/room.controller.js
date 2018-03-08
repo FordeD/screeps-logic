@@ -257,33 +257,13 @@ module.exports = {
       return;
     }
 
-    if(!creep.memory.exTarget) {
-      var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_EXTENSION } });
-      
+    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_WALL,STRUCTURE_RAMPART];
+    for(var index = 0; index < structures.length; index++) {
+      var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: structures[index] } });
       if(res) {
         creep.memory.isBuilding = true;
         creep.memory.exTarget = res.id;
-      } else {
-        res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_TOWER } });
-        if(res) {
-          creep.memory.isBuilding = true;
-          creep.memory.exTarget = res.id;
-        } else {
-          res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_WALL } });
-          if(res) {
-            creep.memory.isBuilding = true;
-            creep.memory.exTarget = res.id;
-          } else {
-            res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: STRUCTURE_RAMPART } });
-            if(res) {
-              creep.memory.isBuilding = true;
-              creep.memory.exTarget = res.id;
-            } else {
-              creep.memory.isBuilding = false;
-              creep.memory.isTransfer = true;
-            }
-          }
-        }
+        break;
       }
     }
 
@@ -294,13 +274,62 @@ module.exports = {
           if(creep.build(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
           }
+        } else if (target.hits < target.hitsMax) {
+          if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, CREEP_MOVE_LINE);
+          }
         }
       } else {
         creep.memory.exTarget = null;
       }
     } else {
-      this.harvester_doing(creep);
+      let repairStructure = [];
+
+      repairStructure = creep.room.find(FIND_STRUCTURES, { 
+        filter: (structure) => { 
+          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
+        }
+      });
+        
+      if (repairStructure.length > 0) {
+        creep.memory.isBuilding = true;
+        creep.memory.exTarget = repairStructure[0].id;
+      } else {
+        creep.memory.isBuilding = false;
+        creep.memory.isTransfer = true;
+        this.harvester_doing(creep);
+      }
     }    
+  },
+
+  setBuilderTarger: function(creep) {
+    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_WALL,STRUCTURE_RAMPART];
+    for(var index = 0; index < structures.length; index++) {
+      var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: structures[index] } });
+      if(res) {
+        creep.memory.isBuilding = true;
+        creep.memory.exTarget = res.id;
+        break;
+      }
+    }
+
+    if(!creep.memory.exTarget) {
+      let repairStructure = [];
+
+      repairStructure = creep.room.find(FIND_STRUCTURES, { 
+        filter: (structure) => { 
+          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
+        }
+      });
+        
+      if (repairStructure.length > 0) {
+        creep.memory.isBuilding = true;
+        creep.memory.exTarget = repairStructure[0].id;
+      } else {
+        creep.memory.isBuilding = false;
+        creep.memory.isTransfer = true;
+      }
+    }
   },
 
   solder_doing: function(creep) {
