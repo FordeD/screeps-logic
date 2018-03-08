@@ -160,17 +160,17 @@ module.exports = {
       creep.memory.isTransfer = false;
     }
     
-    if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.sourceId) {
-      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-      for(var index in SOURCES) {
-          let sourceId = SOURCES[index].id;
-          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-          if(harvesters.length < 3) {
-            res_pos = SOURCES[index];
-          }
-      }
-      if(res_pos) {
-        creep.memory.sourceId = res_pos.id;
+    if(total < creep.carryCapacity && !creep.memory.isTransfer) {
+      if (!creep.memory.sourceId) {
+        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        for(var index in SOURCES) {
+            let sourceId = SOURCES[index].id;
+            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+            if(harvesters.length < 3) {
+              creep.memory.sourceId = SOURCES[index].id;
+            }
+        }
+      } else {
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
         }
@@ -216,17 +216,17 @@ module.exports = {
       creep.memory.isTransfer = false;
     }
     
-    if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.sourceId) {
-      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-      for(var index in SOURCES) {
-          let sourceId = SOURCES[index].id;
-          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-          if(harvesters.length < 3) {
-            res_pos = SOURCES[index];
-          }
-      }
-      if(res_pos) {
-        creep.memory.sourceId = res_pos.id;
+    if(total < creep.carryCapacity && !creep.memory.isTransfer) {
+      if (!creep.memory.sourceId) {
+        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        for(var index in SOURCES) {
+            let sourceId = SOURCES[index].id;
+            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+            if(harvesters.length < 3) {
+              creep.memory.sourceId = SOURCES[index].id;
+            }
+        }
+      } else {
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
         }
@@ -259,17 +259,17 @@ module.exports = {
       creep.memory.isBuilding = false;
     }
 
-    if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding && !creep.memory.sourceId) {
-      var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-      for(var index in SOURCES) {
-          let sourceId = SOURCES[index].id;
-          var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-          if(harvesters.length < 3) {
-            res_pos = SOURCES[index];
-          }
-      }
-      if(res_pos) {
-        creep.memory.sourceId = res_pos.id;
+    if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
+      if (!creep.memory.sourceId) {
+        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
+        for(var index in SOURCES) {
+            let sourceId = SOURCES[index].id;
+            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+            if(harvesters.length < 3) {
+              creep.memory.sourceId = SOURCES[index].id;
+            }
+        }
+      } else {
         if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
           creep.moveTo(res_pos, CREEP_MOVE_LINE);
         }
