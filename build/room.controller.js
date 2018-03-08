@@ -171,8 +171,9 @@ module.exports = {
             }
         }
       } else {
-        if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(res_pos, CREEP_MOVE_LINE);
+        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source, CREEP_MOVE_LINE);
         }
         return;
       }
@@ -227,8 +228,9 @@ module.exports = {
             }
         }
       } else {
-        if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(res_pos, CREEP_MOVE_LINE);
+        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source, CREEP_MOVE_LINE);
         }
         return;
       }
@@ -270,8 +272,9 @@ module.exports = {
             }
         }
       } else {
-        if(creep.harvest(res_pos) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(res_pos, CREEP_MOVE_LINE);
+        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source, CREEP_MOVE_LINE);
         }
         return;
       }
