@@ -173,7 +173,7 @@ module.exports = {
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source, CREEP_MOVE_LINE);
+          creep.moveTo(source[0], CREEP_MOVE_LINE);
         }
         return;
       }
@@ -230,7 +230,7 @@ module.exports = {
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source, CREEP_MOVE_LINE);
+          creep.moveTo(source[0], CREEP_MOVE_LINE);
         }
         return;
       }
@@ -274,7 +274,7 @@ module.exports = {
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source, CREEP_MOVE_LINE);
+          creep.moveTo(source[0], CREEP_MOVE_LINE);
         }
         return;
       }
