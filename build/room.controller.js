@@ -130,7 +130,7 @@ module.exports = {
           this.setSpawning(creep);
         }
       }
-    } else if (Game.creeps.length = 0 && SPAWN_OBJ.energy < 300) {
+    } else if (Game.creeps.length == 0 && SPAWN_OBJ.energy < 300) {
       res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false});
       if(_.isString(res)) {
         console.log("Creating a ECO harvester '" + res + "' was started");
@@ -477,10 +477,10 @@ module.exports = {
 
   getFreeSource: function() {
     for(var index in SOURCES) {
-      let sourceId = SOURCES[index].id;
-      var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-      if(harvesters.length <= 2) {
-        return sourceId;
+      let sourceID = SOURCES[index].id;
+      var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceID);
+      if(harvesters.length < 3 ) {
+        return sourceID;
       }
     }
   },
