@@ -34,6 +34,7 @@ var   SPAWN_QUEUE     = null;
 var   ROOM_STATE      = 0;
 var   HOSTILES        = null;
 var   SOURCES         = null;
+var   STORAGES        = null;
 
 const SPAWN_QUEUE_MAX = 16;
 
@@ -513,6 +514,9 @@ module.exports = {
     SPAWN_OBJ = spawn_obj;
     SPAWN_ROOM = spawn_obj.room;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+    STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
+      filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
+    });
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
 
     this.getLevel();
