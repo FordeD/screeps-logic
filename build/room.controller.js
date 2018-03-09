@@ -262,6 +262,7 @@ module.exports = {
 
     if(total >= creep.carryCapacity) {
       creep.memory.isTransfer = true;
+      creep.memory.sourceId = null;
     }
 
     if(!creep.memory.isTransfer && !creep.memory.isBuilding) {
@@ -305,7 +306,6 @@ module.exports = {
       if (repairStructure.length > 0) {
         creep.memory.isBuilding = true;
         creep.memory.exTarget = repairStructure[0].id;
-        creep.memory.sourceId = null;
       } else {
         creep.memory.isBuilding = false;
         creep.memory.isTransfer = true;
