@@ -162,14 +162,7 @@ module.exports = {
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
       if (!creep.memory.sourceId) {
-        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-        for(var index in SOURCES) {
-            let sourceId = SOURCES[index].id;
-            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-            if(harvesters.length < 3) {
-              creep.memory.sourceId = SOURCES[index].id;
-            }
-        }
+        creep.memory.sourceId = this.getFreeSource();
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -219,14 +212,7 @@ module.exports = {
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
       if (!creep.memory.sourceId) {
-        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-        for(var index in SOURCES) {
-            let sourceId = SOURCES[index].id;
-            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-            if(harvesters.length < 3) {
-              creep.memory.sourceId = SOURCES[index].id;
-            }
-        }
+        creep.memory.sourceId = this.getFreeSource();
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -263,14 +249,7 @@ module.exports = {
 
     if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
       if (!creep.memory.sourceId) {
-        var res_pos = null; //creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-        for(var index in SOURCES) {
-            let sourceId = SOURCES[index].id;
-            var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
-            if(harvesters.length < 3) {
-              creep.memory.sourceId = SOURCES[index].id;
-            }
-        }
+        creep.memory.sourceId = this.getFreeSource();
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -289,7 +268,7 @@ module.exports = {
       return;
     }
 
-    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_WALL,STRUCTURE_RAMPART];
+    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_WALL,STRUCTURE_RAMPART,STRUCTURE_ROAD];
     for(var index = 0; index < structures.length; index++) {
       var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: structures[index] } });
       if(res) {
@@ -316,7 +295,6 @@ module.exports = {
       }
     } else {
       let repairStructure = [];
-
       repairStructure = creep.room.find(FIND_STRUCTURES, { 
         filter: (structure) => { 
           return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
@@ -494,6 +472,16 @@ module.exports = {
     } else {
         Game.notify("Update creeps level!");
         CREEP_LEVEL = 2;
+    }
+  },
+
+  getFreeSource: function() {
+    for(var index in SOURCES) {
+      let sourceId = SOURCES[index].id;
+      var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceId);
+      if(harvesters.length <= 2) {
+        return sourceId;
+      }
     }
   },
 
