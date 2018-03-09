@@ -89,28 +89,28 @@ const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_OBJ.name }});
+      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
       console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_controller_upgrader:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, sourceId : null, owner: SPAWN_OBJ.name }});
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
       console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, sourceId : null, owner: SPAWN_OBJ.name }});
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, sourceId : null, owner: SPAWN_NAME }});
       console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_solder:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_OBJ.room.name, owner: SPAWN_OBJ.name }});
+      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
       console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -464,7 +464,7 @@ module.exports = {
   },
 
   getLevel: function() {
-    max = SPAWN_OBJ.room.energyCapacityAvailable
+    max = SPAWN_ROOM.energyCapacityAvailable;
     if (max < (300 + 5 * 50)) {
         CREEP_LEVEL = 0;
     } else if (max < (300 + 10*50)) {
@@ -500,7 +500,7 @@ module.exports = {
     SPAWN_OBJ = spawn_obj;
     SPAWN_ROOM = spawn_obj.room;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
-    CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_OBJ.name);
+    CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
 
     this.getLevel();
     if (CREEP_LEVEL < 2 && SPAWN_ROOM.controller.level < 5) {
