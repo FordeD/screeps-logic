@@ -194,10 +194,23 @@ module.exports = {
         if(res) {
           if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
           creep.moveTo(res, CREEP_MOVE_LINE);
-        } else if(creep.room.controller && !SPAWN_OBJ.spawning) {
-          var res = creep.upgradeController(creep.room.controller);
-          if(res == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller, CREEP_MOVE_LINE);
+        } else {
+          res = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+            if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+              return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+            }
+            return false;
+          }});
+          if(res) {
+            if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+            creep.moveTo(res, CREEP_MOVE_LINE);
+          } else {
+            if(SPAWN_ROOM.controller && !SPAWN_OBJ.spawning) {
+              var res = creep.upgradeController(SPAWN_ROOM.controller);
+              if(res == ERR_NOT_IN_RANGE) {
+                creep.moveTo(SPAWN_ROOM.controller, CREEP_MOVE_LINE);
+              }
+            }
           }
         }
       }
