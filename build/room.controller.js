@@ -71,6 +71,7 @@ const SOLDER_MAX_COUNT       = [3,1,7,5];
 
 var CREEP_LEVEL              = 0;
 var CONTROLLER_LEVEL         = 0;
+var MIN_SPAWN_ENERGY         = [300,500,700];
 
 var HARVESTER_COUNT          = 0;
 var CL_UPGRADER_COUNT        = 0;
@@ -117,7 +118,7 @@ module.exports = {
   },
 
   spawnQueqe:function() {
-    if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= 300 && SPAWN_QUEUE.length > 0) {
+    if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
       switch(ROOM_STATE) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
@@ -207,10 +208,7 @@ module.exports = {
               creep.moveTo(res, CREEP_MOVE_LINE);
             }
           } else {
-            var res = creep.upgradeController(SPAWN_ROOM.controller);
-            if(res == ERR_NOT_IN_RANGE) {
-              creep.moveTo(SPAWN_ROOM.controller, CREEP_MOVE_LINE);
-            }
+            this.cl_upgrader_doing(creep);
           }
         }
       }
@@ -241,10 +239,10 @@ module.exports = {
     }
 
     if(creep.memory.isTransfer) {
-      if(creep.room.controller) {
-        var res = creep.upgradeController(creep.room.controller);
+      if(SPAWN_ROOM.controller) {
+        var res = creep.upgradeController(SPAWN_ROOM.controller);
         if(res == ERR_NOT_IN_RANGE) {
-          creep.moveTo(creep.room.controller, CREEP_MOVE_LINE);
+          creep.moveTo(SPAWN_ROOM.controller, CREEP_MOVE_LINE);
         }
       } 
       if(creep.carry.energy == 0 ) {
