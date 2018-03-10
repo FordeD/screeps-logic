@@ -183,15 +183,15 @@ module.exports = {
       creep.memory.isTransfer = true;
       creep.memory.sourceId = null;
     }
-
     if(creep.memory.isTransfer) {
+      var res;
       if(SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity) {
         res = creep.transfer(SPAWN_OBJ, RESOURCE_ENERGY);
         if(res == ERR_NOT_IN_RANGE) {
           creep.moveTo(SPAWN_OBJ, CREEP_MOVE_LINE);
         }
       } else {
-        var res = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+        res = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
             if(obj.structureType == STRUCTURE_EXTENSION ) {
               return obj.energy < obj.energyCapacity;
             }
@@ -208,7 +208,7 @@ module.exports = {
             }
             return false;
           }});
-          if(res) {
+          if(res && res.id) {
             if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
               creep.moveTo(res, CREEP_MOVE_LINE);
             }
