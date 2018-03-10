@@ -118,7 +118,7 @@ module.exports = {
   },
 
   spawnQueqe:function() {
-    if( !SPAWN_OBJ.spawning && SPAWN_OBJ.energy >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
+    if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
       switch(ROOM_STATE) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
