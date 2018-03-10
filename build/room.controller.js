@@ -122,7 +122,12 @@ module.exports = {
       switch(ROOM_STATE) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
-          var creep = SPAWN_QUEUE.shift();
+          var creep;
+          if(SPAWN_ROOM.controller.ticksToDowngrade < 2000) {
+            creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == ROLES.upgrader),1);
+          } else {
+            creep = SPAWN_QUEUE.shift();
+          }
           this.setSpawning(creep);
           break;
         }
