@@ -137,8 +137,8 @@ module.exports = {
           this.setSpawning(creep);
         }
       }
-    } else if (Game.creeps.length == 0 && SPAWN_OBJ.energy < 300) {
-      res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false});
+    } else if (!CREEPS.length && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
+      res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME });
       if(_.isString(res)) {
         console.log("Creating a ECO harvester '" + res + "' was started");
       } else {
@@ -377,8 +377,8 @@ module.exports = {
       CL_UPGRADER_COUNT  = 0;
       EX_BUILDER_COUNT   = 0;
 
-      for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
+      for(var name in CREEPS) {
+        var creep = CREEPS[name];
         if (creep) {
           var role = creep.memory.role;
           switch(role) {
@@ -437,22 +437,12 @@ module.exports = {
         console.log("s:" + SOLDER_COUNT + ":"+SOLDER_MAX_COUNT[ROOM_STATE]+" queue:"+SOLDER_QUEUE_COUNT)
         this.create_solder();
       }
-
-      // if (SOLDER_COUNT > SOLDER_MAX_COUNT[ROOM_STATE] && ( ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK )) {
-      //   var solders = _.filter(Game.creeps, (creep) => creep.memory.role == ROLES.solder);
-      //   let removed = SOLDER_COUNT - SOLDER_MAX_COUNT[ROOM_STATE];
-      //   for (var i = removed; i > 0; i--) {
-      //     var creep = solders.shift();
-      //     creep.suicide();
-      //   }
-      //   SOLDER_COUNT = solders.length;
-      // }
     }     
   },
 
   creep_doing:function() {
-    for(var name in Game.creeps) {
-      var creep = Game.creeps[name];
+    for(var name in CREEPS) {
+      var creep = CREEPS[name];
       if (creep) {
         var role = creep.memory.role;
         switch(role) {
@@ -496,7 +486,7 @@ module.exports = {
   getFreeSource: function() {
     for(var index in SOURCES) {
       var sourceID = SOURCES[index].id;
-      var harvesters = _.filter(Game.creeps, (creep) => creep.memory.sourceId == sourceID);
+      var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == sourceID);
       if(harvesters.length < 3 ) {
         return sourceID;
       }
@@ -530,7 +520,7 @@ module.exports = {
 
     this.checkHostlesInRoom();
     if (DEFEND_CONTROLLER) {
-      var solders = _.filter(Game.creeps, (creep) => creep.memory.role == ROLES.solder);
+      var solders = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder);
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders);
     }
 
