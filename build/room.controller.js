@@ -118,7 +118,15 @@ module.exports = {
   },
 
   spawnQueqe:function() {
-    if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
+    if (!CREEPS.length && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
+      res = SPAWN_OBJ.spawnCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME });
+      if(_.isString(res)) {
+        console.log("Creating a ECO harvester '" + res + "' was started");
+      } else {
+        console.log("ECO harvester spawn error: " + res);
+      }
+      SPAWN_QUEUE = [];
+    } else if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
       switch(ROOM_STATE) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
@@ -141,14 +149,6 @@ module.exports = {
           }
         }
       }
-    } else if (!CREEPS.length && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
-      res = SPAWN_OBJ.spawnCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME });
-      if(_.isString(res)) {
-        console.log("Creating a ECO harvester '" + res + "' was started");
-      } else {
-        console.log("ECO harvester spawn error: " + res);
-      }
-      SPAWN_QUEUE = [];
     }
 
     SPAWN_OBJ.memory['queue'] = SPAWN_QUEUE;
