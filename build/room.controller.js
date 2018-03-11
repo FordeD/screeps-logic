@@ -128,13 +128,17 @@ module.exports = {
           } else {
             creep = SPAWN_QUEUE.shift();
           }
-          this.setSpawning(creep);
+          if (creep) {
+            this.setSpawning(creep);
+          }
           break;
         }
         case ROOM_DEFEND:
         case ROOM_ATACK: {
           var creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == ROLES.solder),1);
-          this.setSpawning(creep);
+          if (creep) {
+            this.setSpawning(creep);
+          }
         }
       }
     } else if (!CREEPS.length && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
