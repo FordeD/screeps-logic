@@ -36,7 +36,7 @@ var   HOSTILES        = null;
 var   SOURCES         = null;
 var   STORAGES        = null;
 
-const SPAWN_QUEUE_MAX = 16;
+const SPAWN_QUEUE_MAX = 18;
 
 const HARVESTER_BODY  = [
   [MOVE, WORK, WORK, CARRY],
