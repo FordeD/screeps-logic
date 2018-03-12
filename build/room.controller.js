@@ -435,10 +435,13 @@ module.exports = {
     if(creep.memory.isTransfer) {
       if (creep.memory.exTarget) {
         var target = Game.getObjectById(creep.memory.exTarget);//Game.constructionSites[cr.memory.exTarget];
-        if(target) {
+        if( target && ( (target.structureType == STRUCTURE_TOWER && target.hits <= WALL_HITS_MAX[CONTROLLER_LEVEL]) || (target.structureType != STRUCTURE_TOWER && target.hits >= 2000) ) ) {
           if (creep.repair(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
           }
+        } else {
+          creep.memory.exTarget = null;
+          return;
         }
       } else {
         let repairStructure = [];
