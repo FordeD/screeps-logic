@@ -60,8 +60,8 @@ const SOLDER_BODY = [
 ];
 const REPAIRER_BODY = [
   [MOVE, WORK, CARRY, CARRY, CARRY],
-  [MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
-  [MOVE, MOVE, MOVE, MOVE, MOVE,  WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
+  [MOVE, MOVE, WORK, CARRY, CARRY, CARRY, RANGED_ATTACK],
+  [MOVE, MOVE, MOVE, MOVE, MOVE,  WORK, CARRY, CARRY, CARRY, CARRY, RANGED_ATTACK]
 ];
 
 const ROLES = {harvester: 'harvester', upgrader: 'cl_upgrader', builder: 'ex_builder', solder: 'solder', repairer: 'repairer'};
@@ -99,21 +99,21 @@ const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 module.exports = {
   create_harvester:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
+      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, owner: SPAWN_NAME }});
       console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_controller_upgrader:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
+      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, owner: SPAWN_NAME }});
       console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
   create_builder_extension:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, sourceId : null, owner: SPAWN_NAME }});
+      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: SPAWN_NAME }});
       console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -127,7 +127,7 @@ module.exports = {
 
   create_repairer:function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: REPAIRER_BODY[CREEP_LEVEL], memory: {role : ROLES.repairer, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
+      SPAWN_QUEUE.push({body: REPAIRER_BODY[CREEP_LEVEL], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
       console.log("Add to queue a repairer. Queue: "+SPAWN_QUEUE.length);
     }
   },
@@ -578,7 +578,9 @@ module.exports = {
             break;
           }
           case ROLES.repairer: {
-            this.repairer_doing(creep);
+            if (ROOM_STATE != ROOM_DEFEND) {
+              this.repairer_doing(creep);
+            }
             break;
           }
         }
@@ -638,7 +640,8 @@ module.exports = {
     this.checkHostlesInRoom();
     if (DEFEND_CONTROLLER) {
       var solders = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder);
-      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders);
+      var rangeds = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
+      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders, rangeds);
     }
 
     SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];

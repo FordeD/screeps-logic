@@ -3,7 +3,7 @@ const CREEP_MOVE_ATACK       = {visualizePathStyle: {stroke: '#ee6a50'}};
 const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 
 module.exports = {
-  processing: function(room, hostles, solders) {
+  processing: function(room, hostles, solders, rangeds) {
     HOSLILES = hostles;
     let roomName = room.name;
     var username = HOSLILES[0].owner;
@@ -12,6 +12,7 @@ module.exports = {
         FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
     towers.forEach(tower => tower.attack(HOSLILES[0]));
     solders.forEach(creep => this.solderDefend(creep));
+    rangeds.forEach(creep => this.solderDefend(creep));
   },
 
   solderDefend: function(creep) {
