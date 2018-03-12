@@ -37,6 +37,7 @@ var   SOURCES         = null;
 var   STORAGES        = null;
 
 const SPAWN_QUEUE_MAX = 20;
+const WALL_HITS_MAX = [1000,3000,5000,20000,100000,400000,800000,2900000]
 
 const HARVESTER_BODY  = [
   [MOVE, WORK, WORK, CARRY],
@@ -443,7 +444,7 @@ module.exports = {
         let repairStructure = [];
         repairStructure = creep.room.find(FIND_STRUCTURES, { 
           filter: (structure) => { 
-            return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0);
+            return ((structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL) || (structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType != STRUCTURE_WALL));
           }
         });
           
@@ -624,6 +625,7 @@ module.exports = {
     SPAWN_NAME = spawn_obj.name;
     SPAWN_OBJ = spawn_obj;
     SPAWN_ROOM = spawn_obj.room;
+    CONTROLLER_LEVEL = spawn_obj.controller.level;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
       filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
