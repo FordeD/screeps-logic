@@ -625,7 +625,7 @@ module.exports = {
     SPAWN_NAME = spawn_obj.name;
     SPAWN_OBJ = spawn_obj;
     SPAWN_ROOM = spawn_obj.room;
-    CONTROLLER_LEVEL = spawn_obj.controller.level;
+    CONTROLLER_LEVEL = SPAWN_ROOM.controller.level;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
       filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
