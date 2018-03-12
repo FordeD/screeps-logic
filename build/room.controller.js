@@ -486,6 +486,7 @@ module.exports = {
       HARVESTER_COUNT    = 0;
       CL_UPGRADER_COUNT  = 0;
       EX_BUILDER_COUNT   = 0;
+      REPAIR_COUNT       = 0;
 
       for(var name in CREEPS) {
         var creep = CREEPS[name];
