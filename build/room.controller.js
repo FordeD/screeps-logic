@@ -70,9 +70,9 @@ const HARVESTER_BODY_ECO = [MOVE, WORK, CARRY];
 const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
 
 const HARVESTER_MAX_COUNT    = [5,5,3,3];
-const CL_UPGRADER_MAX_COUNT  = [5,6,2,2];
+const CL_UPGRADER_MAX_COUNT  = [5,4,2,2];
 const EX_BUILDER_MAX_COUNT   = [5,4,4,5];
-const SOLDER_MAX_COUNT       = [3,1,7,7];
+const SOLDER_MAX_COUNT       = [3,3,7,7];
 const REPAIR_MAX_COUNT       = [2,4,4,3];
 
 var CREEP_LEVEL              = 0;
