@@ -212,7 +212,7 @@ module.exports = {
             }
             return false;
           }});
-          if(res && res.id) {
+          if(res.id) {
             if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
               creep.moveTo(res, CREEP_MOVE_LINE);
             }
@@ -231,14 +231,27 @@ module.exports = {
     }
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
-      if (!creep.memory.sourceId) {
-        creep.memory.sourceId = this.getFreeSource();
-      } else {
-        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-        if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source[0], CREEP_MOVE_LINE);
+      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
+        }
+        return false;
+      }});
+      if(store) {
+        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(store);
         }
         return;
+      } else {
+        if (!creep.memory.sourceId) {
+          creep.memory.sourceId = this.getFreeSource();
+        } else {
+          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(source[0], CREEP_MOVE_LINE);
+          }
+          return;
+        }
       }
     }
 
@@ -269,14 +282,27 @@ module.exports = {
     }
 
     if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
-      if (!creep.memory.sourceId) {
-        creep.memory.sourceId = this.getFreeSource();
-      } else {
-        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-        if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source[0], CREEP_MOVE_LINE);
+      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
+        }
+        return false;
+      }});
+      if(store) {
+        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(store);
         }
         return;
+      } else {
+        if (!creep.memory.sourceId) {
+          creep.memory.sourceId = this.getFreeSource();
+        } else {
+          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(source[0], CREEP_MOVE_LINE);
+          }
+          return;
+        }
       }
     }
 
@@ -290,7 +316,7 @@ module.exports = {
       return;
     }
 
-    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_WALL,STRUCTURE_RAMPART,STRUCTURE_ROAD];
+    var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_STORAGE,STRUCTURE_CONTAINER,STRUCTURE_WALL,STRUCTURE_RAMPART,STRUCTURE_ROAD];
     for(var index = 0; index < structures.length; index++) {
       var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: structures[index] } });
       if(res) {
