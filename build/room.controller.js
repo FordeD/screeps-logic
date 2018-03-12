@@ -326,11 +326,6 @@ module.exports = {
       creep.memory.sourceId = null;
     }
 
-    if(!creep.memory.isTransfer && !creep.memory.isBuilding) {
-      console.log(total + " " + creep.memory.isTransfer + " " + creep.memory.isBuilding)
-      return;
-    }
-
     var structures = [STRUCTURE_EXTENSION,STRUCTURE_TOWER,STRUCTURE_STORAGE,STRUCTURE_CONTAINER,STRUCTURE_WALL,STRUCTURE_RAMPART,STRUCTURE_ROAD];
     for(var index = 0; index < structures.length; index++) {
       var res = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES, {filter: { structureType: structures[index] } });
