@@ -510,7 +510,7 @@ module.exports = {
               break;
             }
             case ROLES.repairer: {
-              ++REPAIRER_COUNT;
+              ++REPAIR_COUNT;
               break;
             }
           } 
@@ -537,7 +537,7 @@ module.exports = {
             break;
           }
           case ROLES.repairer: {
-            ++REPAIRER_QUEUE_COUNT;
+            ++REPAIR_QUEUE_COUNT;
             break;
           }
         }
@@ -555,8 +555,8 @@ module.exports = {
       } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[ROOM_STATE]) {
         console.log("s:" + SOLDER_COUNT + ":"+SOLDER_MAX_COUNT[ROOM_STATE]+" queue:"+SOLDER_QUEUE_COUNT)
         this.create_solder();
-      } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[ROOM_STATE]) {
-        console.log("s:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[ROOM_STATE]+" queue:"+REPAIRER_QUEUE_COUNT)
+      } else if((REPAIR_COUNT+REPAIR_QUEUE_COUNT) < REPAIR_MAX_COUNT[ROOM_STATE]) {
+        console.log("s:" + REPAIR_COUNT + ":"+REPAIR_MAX_COUNT[ROOM_STATE]+" queue:"+REPAIR_QUEUE_COUNT)
         this.create_repairer();
       }
     }     
