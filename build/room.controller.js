@@ -343,10 +343,6 @@ module.exports = {
           if(creep.build(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
           }
-        } else if (target.hits < target.hitsMax) {
-          if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target, CREEP_MOVE_LINE);
-          }
         }
       } else {
         creep.memory.exTarget = null;
