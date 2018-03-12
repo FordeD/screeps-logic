@@ -36,7 +36,7 @@ var   HOSTILES        = null;
 var   SOURCES         = null;
 var   STORAGES        = null;
 
-const SPAWN_QUEUE_MAX = 18;
+const SPAWN_QUEUE_MAX = 20;
 
 const HARVESTER_BODY  = [
   [MOVE, WORK, WORK, CARRY],
@@ -58,8 +58,13 @@ const SOLDER_BODY = [
   [ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE],
   [ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
 ];
+const REPAIRER_BODY = [
+  [MOVE, WORK, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY],
+  [MOVE, MOVE, MOVE, MOVE, MOVE,  WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY]
+];
 
-const ROLES = {harvester: 'harvester', upgrader: 'cl_upgrader', builder: 'ex_builder', solder: 'solder'};
+const ROLES = {harvester: 'harvester', upgrader: 'cl_upgrader', builder: 'ex_builder', solder: 'solder', repairer: 'repairer'};
 
 const HARVESTER_BODY_ECO = [MOVE, WORK, CARRY];
 const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
@@ -67,7 +72,8 @@ const CL_UPGRADER_BODY_ECO = [MOVE, WORK, CARRY];
 const HARVESTER_MAX_COUNT    = [5,5,3,3];
 const CL_UPGRADER_MAX_COUNT  = [5,6,2,2];
 const EX_BUILDER_MAX_COUNT   = [5,4,4,5];
-const SOLDER_MAX_COUNT       = [3,1,7,5];
+const SOLDER_MAX_COUNT       = [3,1,7,7];
+const REPAIR_MAX_COUNT       = [2,4,4,3];
 
 var CREEP_LEVEL              = 0;
 var CONTROLLER_LEVEL         = 0;
@@ -77,11 +83,13 @@ var HARVESTER_COUNT          = 0;
 var CL_UPGRADER_COUNT        = 0;
 var EX_BUILDER_COUNT         = 0;
 var SOLDER_COUNT             = 0;
+var REPAIR_COUNT             = 0;
 
 var HARVESTER_QUEUE_COUNT    = 0;
 var CL_UPGRADER_QUEUE_COUNT  = 0;
 var EX_BUILDER_QUEUE_COUNT   = 0;
 var SOLDER_QUEUE_COUNT       = 0;
+var REPAIR_QUEUE_COUNT       = 0;
 
 var CREEPS                   = null;
 
@@ -114,6 +122,13 @@ module.exports = {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
       console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE.length);
+    }
+  },
+
+  create_repairer:function() {
+    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE.push({body: REPAIRER_BODY[CREEP_LEVEL], memory: {role : ROLES.repairer, isTransfer : false, sourceId : null, owner: SPAWN_NAME }});
+      console.log("Add to queue a repairer. Queue: "+SPAWN_QUEUE.length);
     }
   },
 
@@ -217,7 +232,7 @@ module.exports = {
               creep.moveTo(res, CREEP_MOVE_LINE);
             }
           } else {
-            this.cl_upgrader_doing(creep);
+              this.cl_upgrader_doing(creep);
           }
         }
       }
@@ -237,7 +252,7 @@ module.exports = {
         }
         return false;
       }});
-      if(store) {
+      if(store.id) {
         if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(store);
         }
@@ -288,7 +303,7 @@ module.exports = {
         }
         return false;
       }});
-      if(store) {
+      if(store.id) {
         if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(store);
         }
@@ -342,21 +357,9 @@ module.exports = {
         creep.memory.exTarget = null;
       }
     } else {
-      let repairStructure = [];
-      repairStructure = creep.room.find(FIND_STRUCTURES, { 
-        filter: (structure) => { 
-          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0);
-        }
-      });
-        
-      if (repairStructure.length > 0) {
-        creep.memory.isBuilding = true;
-        creep.memory.exTarget = repairStructure[0].id;
-      } else {
-        creep.memory.isBuilding = false;
-        creep.memory.isTransfer = true;
-        this.harvester_doing(creep);
-      }
+      creep.memory.isBuilding = false;
+      creep.memory.isTransfer = true;
+      this.harvester_doing(creep);
     }    
   },
 
@@ -401,6 +404,83 @@ module.exports = {
     }
   },
 
+  repairer_doing: function(creep) {
+    var total = _.sum(creep.carry);
+    if(total == 0 ) {
+      creep.memory.isTransfer = false;
+    }
+    
+    if(total < creep.carryCapacity && !creep.memory.isTransfer) {
+      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
+        }
+        return false;
+      }});
+      if(store.id) {
+        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(store);
+        }
+        return;
+      } else {
+        if (!creep.memory.sourceId) {
+          creep.memory.sourceId = this.getFreeSource();
+        } else {
+          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(source[0], CREEP_MOVE_LINE);
+          }
+          return;
+        }
+      }
+    }
+
+    if(total >= creep.carryCapacity) {
+      creep.memory.isTransfer = true;
+      creep.memory.sourceId = null;
+    }
+
+    if(creep.memory.isTransfer) {
+      if (creep.memory.exTarget) {
+        var target = Game.getObjectById(creep.memory.exTarget);//Game.constructionSites[cr.memory.exTarget];
+        if(target) {
+          if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, CREEP_MOVE_LINE);
+          }
+        }
+      } else {
+        let repairStructure = [];
+        repairStructure = creep.room.find(FIND_STRUCTURES, { 
+          filter: (structure) => { 
+            return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0);
+          }
+        });
+          
+        if (repairStructure.length > 0) {
+          creep.memory.isRepair = true;
+          creep.memory.exTarget = repairStructure[0].id;
+        } else {
+          res = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+            if(obj.structureType == STRUCTURE_TOWER) {
+              return obj.energy < obj.storeCapacity;
+            }
+            return false;
+          }});
+          if(res.id) {
+            if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(res, CREEP_MOVE_LINE);
+            }
+            return;
+          } else {
+            creep.memory.isRepair = false;
+            creep.memory.isTransfer = true;
+            this.harvester_doing(creep);
+          }
+        }
+      }
+    }  
+  },
+
   check_and_spawnd_creep:function() {
     if( SPAWN_QUEUE.length < SPAWN_QUEUE_MAX ) {
       HARVESTER_COUNT    = 0;
@@ -428,6 +508,10 @@ module.exports = {
               ++SOLDER_COUNT;
               break;
             }
+            case ROLES.repairer: {
+              ++REPAIRER_COUNT;
+              break;
+            }
           } 
         }
       }
@@ -451,6 +535,10 @@ module.exports = {
             ++SOLDER_QUEUE_COUNT;
             break;
           }
+          case ROLES.repairer: {
+            ++REPAIRER_QUEUE_COUNT;
+            break;
+          }
         }
       }
       
@@ -466,6 +554,9 @@ module.exports = {
       } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[ROOM_STATE]) {
         console.log("s:" + SOLDER_COUNT + ":"+SOLDER_MAX_COUNT[ROOM_STATE]+" queue:"+SOLDER_QUEUE_COUNT)
         this.create_solder();
+      } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[ROOM_STATE]) {
+        console.log("s:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[ROOM_STATE]+" queue:"+REPAIRER_QUEUE_COUNT)
+        this.create_repairer();
       }
     }     
   },
@@ -492,6 +583,10 @@ module.exports = {
             if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
               this.solder_doing(creep);
             }
+            break;
+          }
+          case ROLES.repairer: {
+            this.repairer_doing(creep);
             break;
           }
         }
@@ -558,7 +653,6 @@ module.exports = {
     if (!SPAWN_QUEUE) {
       SPAWN_QUEUE = [];
     }
-
     this.check_and_spawnd_creep();
     this.creep_doing();
     this.spawnQueqe();
