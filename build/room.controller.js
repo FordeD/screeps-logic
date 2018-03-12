@@ -345,7 +345,7 @@ module.exports = {
       let repairStructure = [];
       repairStructure = creep.room.find(FIND_STRUCTURES, { 
         filter: (structure) => { 
-          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
+          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0);
         }
       });
         
