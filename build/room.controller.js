@@ -434,7 +434,7 @@ module.exports = {
   
         var goneRepair = false;
         for( index in repairStructure) {
-          var obj = withoutEnergyStructures[index];
+          var obj = repairStructure[index];
           if (obj) {
             creep.memory.exTarget = obj.id;
             goneRepair = true;
