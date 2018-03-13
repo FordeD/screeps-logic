@@ -421,13 +421,19 @@ module.exports = {
       } else {
         var repairStructure = [
           creep.room.find(FIND_STRUCTURES, { 
-            filter: (structure) => { 
-              return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL);
+            filter: function(structure) { 
+              if(structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL) {
+                return structure;
+              }
+              return false;
             }
           }),
           creep.room.find(FIND_STRUCTURES, { 
             filter: (structure) => { 
-              return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType != STRUCTURE_WALL);
+              if(structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType == STRUCTURE_WALL) {
+                return structure;
+              }
+              return false;
             }
           })
         ];
