@@ -205,37 +205,42 @@ module.exports = {
     }
     if(creep.memory.isTransfer) {
       var res;
-      if(SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity) {
-        res = creep.transfer(SPAWN_OBJ, RESOURCE_ENERGY);
-        if(res == ERR_NOT_IN_RANGE) {
-          creep.moveTo(SPAWN_OBJ, CREEP_MOVE_LINE);
-        }
-      } else {
-        res = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+      var withoutEnergyStructures = [
+        SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
+        creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
             if(obj.structureType == STRUCTURE_EXTENSION ) {
               return obj.energy < obj.energyCapacity;
             }
             return false;
           }
-        });
-        if(res) {
-          if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-          creep.moveTo(res, CREEP_MOVE_LINE);
-        } else {
-          res = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-            if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-              return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
-            }
-            return false;
-          }});
-          if(res.id) {
-            if(creep.transfer(res, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-              creep.moveTo(res, CREEP_MOVE_LINE);
-            }
-          } else {
-              this.cl_upgrader_doing(creep);
+        }),
+        SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+          if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+            return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
           }
+          return false;
+        }}),
+        SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+          if(obj.structureType == STRUCTURE_TOWER) {
+            return obj.energy < obj.energyCapacity;
+          }
+          return false;
+        }}),
+      ];
+
+      var goneTransfer = false;
+      for( var obj in withoutEnergyStructures) {
+        if (obj.id) {
+          if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(obj, CREEP_MOVE_LINE);
+          }
+          goneTransfer = true;
+          break;
         }
+      }
+
+      if(!goneTransfer) {
+        this.cl_upgrader_doing(creep);
       }
     }    
   },
