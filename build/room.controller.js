@@ -204,7 +204,6 @@ module.exports = {
       creep.memory.sourceId = null;
     }
     if(creep.memory.isTransfer) {
-      var res;
       var withoutEnergyStructures = [
         SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
         creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
@@ -253,27 +252,8 @@ module.exports = {
     }
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
-      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
-        }
-        return false;
-      }});
-      if(store.id) {
-        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(store);
-        }
+      if(!this.creep_get_energy(creep)) {
         return;
-      } else {
-        if (!creep.memory.sourceId) {
-          creep.memory.sourceId = this.getFreeSource();
-        } else {
-          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source[0], CREEP_MOVE_LINE);
-          }
-          return;
-        }
       }
     }
 
@@ -304,27 +284,8 @@ module.exports = {
     }
 
     if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
-      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
-        }
-        return false;
-      }});
-      if(store.id) {
-        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(store);
-        }
+      if(!this.creep_get_energy(creep)) {
         return;
-      } else {
-        if (!creep.memory.sourceId) {
-          creep.memory.sourceId = this.getFreeSource();
-        } else {
-          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source[0], CREEP_MOVE_LINE);
-          }
-          return;
-        }
       }
     }
 
@@ -391,6 +352,32 @@ module.exports = {
     }
   },
 
+  creep_get_energy: function(creep) {
+    var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+      if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+        return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
+      }
+      return false;
+    }});
+    if(store.id) {
+      if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(store);
+      }
+      return;
+    } else {
+      if (!creep.memory.sourceId) {
+        creep.memory.sourceId = this.getFreeSource();
+      } else {
+        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+        if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source[0], CREEP_MOVE_LINE);
+        }
+        return false;
+      }
+    }
+    return true;
+  },
+
   solder_doing: function(creep) {
     if(creep.room.name == creep.memory.target) {
         creep.move(_.sample([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]));
@@ -409,27 +396,8 @@ module.exports = {
     }
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
-      var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-        if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-          return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
-        }
-        return false;
-      }});
-      if(store.id) {
-        if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(store);
-        }
+      if(!this.creep_get_energy(creep)) {
         return;
-      } else {
-        if (!creep.memory.sourceId) {
-          creep.memory.sourceId = this.getFreeSource();
-        } else {
-          var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-          if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source[0], CREEP_MOVE_LINE);
-          }
-          return;
-        }
       }
     }
 
@@ -451,17 +419,30 @@ module.exports = {
           return;
         }
       } else {
-        let repairStructure = [];
-        repairStructure = creep.room.find(FIND_STRUCTURES, { 
-          filter: (structure) => { 
-            return ((structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL) || (structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType != STRUCTURE_WALL));
+        var repairStructure = [
+          creep.room.find(FIND_STRUCTURES, { 
+            filter: (structure) => { 
+              return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL);
+            }
+          }),
+          creep.room.find(FIND_STRUCTURES, { 
+            filter: (structure) => { 
+              return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType != STRUCTURE_WALL);
+            }
+          })
+        ];
+  
+        var goneRepair = false;
+        for( index in repairStructure) {
+          var obj = withoutEnergyStructures[index];
+          if (obj.id) {
+            creep.memory.exTarget = obj.id;
+            goneRepair = true;
+            break;
           }
-        });
-          
-        if (repairStructure.length > 0) {
-          creep.memory.isRepair = true;
-          creep.memory.exTarget = repairStructure[0].id;
-        } else {
+        }
+  
+        if(!goneRepair) {
           res = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
             if(obj.structureType == STRUCTURE_TOWER) {
               return obj.energy < obj.storeCapacity;
