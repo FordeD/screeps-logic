@@ -230,7 +230,7 @@ module.exports = {
       var goneTransfer = false;
       for( index in withoutEnergyStructures) {
         var obj = withoutEnergyStructures[index];
-        if (obj.id) {
+        if (obj) {
           if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(obj, CREEP_MOVE_LINE);
           }
@@ -435,7 +435,7 @@ module.exports = {
         var goneRepair = false;
         for( index in repairStructure) {
           var obj = withoutEnergyStructures[index];
-          if (obj.id) {
+          if (obj) {
             creep.memory.exTarget = obj.id;
             goneRepair = true;
             break;
