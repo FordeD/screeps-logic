@@ -213,13 +213,13 @@ module.exports = {
             return false;
           }
         }),
-        SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
           if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
             return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
           }
           return false;
         }}),
-        SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
+        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
           if(obj.structureType == STRUCTURE_TOWER) {
             return obj.energy < obj.energyCapacity;
           }
@@ -420,20 +420,14 @@ module.exports = {
         }
       } else {
         var repairStructure = [
-          creep.room.find(FIND_STRUCTURES, { 
-            filter: function(structure) { 
-              if(structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL) {
-                return structure;
-              }
-              return false;
+          creep.pos.findClosestByRange(FIND_STRUCTURES, { 
+            filter: (structure) => { 
+              return structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : 2000 && structure.hits > 0 && structure.structureType != STRUCTURE_WALL;
             }
           }),
-          creep.room.find(FIND_STRUCTURES, { 
+          creep.pos.findClosestByRange(FIND_STRUCTURES, { 
             filter: (structure) => { 
-              if(structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType == STRUCTURE_WALL) {
-                return structure;
-              }
-              return false;
+              return structure.hits < ROOM_STATE == ROOM_DEFEND ? 5000 : WALL_HITS_MAX[CONTROLLER_LEVEL] && structure.hits > 0 && structure.structureType == STRUCTURE_WALL;
             }
           })
         ];
