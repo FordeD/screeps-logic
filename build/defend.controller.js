@@ -11,23 +11,28 @@ module.exports = {
     var towers = room.find(
         FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
     towers.forEach(tower => tower.attack(HOSLILES[0]));
-    solders.forEach(creep => this.solderDefend(creep));
-    rangeds.forEach(creep => this.solderDefend(creep));
+    solders.forEach(creep => this.solderDefend(creep, false));
+    rangeds.forEach(creep => this.solderDefend(creep, true));
   },
 
-  solderDefend: function(creep) {
+  solderDefend: function(creep, isRanged) {
     if(creep.room.name == creep.memory.target) {
-      target = creep.pos.findClosestByPath(HOSTLES[0])
+      target = creep.pos.findClosestByPath(HOSTLES[0]);
       if(target) {
-        result = creep.attack(target)
-        if(result == ERR_NOT_IN_RANGE){
-          creep.moveTo(target, CREEP_MOVE_ATACK)
+        if(isRanged) {
+          if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE){
+            creep.moveTo(target, CREEP_MOVE_ATACK);
+          }
+        } else {
+          if(creep.attack(target) == ERR_NOT_IN_RANGE){
+            creep.moveTo(target, CREEP_MOVE_ATACK);
+          }
         }
       }
     } else {
-        var route = Game.map.findRoute(creep.room, creep.memory.target)
+        var route = Game.map.findRoute(creep.room, creep.memory.target);
         if(route.length > 0) {
-          creep.moveTo(creep.pos.findClosestByRange(route[0].exit), CREEP_MOVE_LINE)
+          creep.moveTo(creep.pos.findClosestByRange(route[0].exit), CREEP_MOVE_LINE);
         }
     }
   }
