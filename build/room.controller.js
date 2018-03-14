@@ -666,7 +666,7 @@ module.exports = {
       SPAWN_ROOM = spawn_obj.room;
     }
     CONTROLLER_LEVEL = SPAWN_ROOM.controller.level;
-    notifier.writeLog(LOG_TYPES.DEV, SPAWN_NAME);
+    notifier.writeLog(LOG_TYPES.DEV, 'controller '+SPAWN_NAME);
     return;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
