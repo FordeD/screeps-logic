@@ -410,7 +410,7 @@ module.exports = {
     if(creep.memory.isTransfer) {
       if (creep.memory.exTarget) {
         var target = Game.getObjectById(creep.memory.exTarget);//Game.constructionSites[cr.memory.exTarget];
-        if( target && ( (target.structureType == STRUCTURE_WALL && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) || (target.structureType != STRUCTURE_WALL && target.hits < 2000 || target.hits < target.hitsMax) ) ) {
+        if(this.checkRepairedStructure(target)) {
           if (creep.repair(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
           }
@@ -463,6 +463,22 @@ module.exports = {
         }
       }
     }  
+  },
+
+  checkRepairedStructure: function(target) {
+    if(target) {
+      if(target.structureType == STRUCTURE_WALL && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) {
+        return true;
+      } else if (target.structureType != STRUCTURE_EXTENSION && target.hits < target.hitsMax) {
+        return true;
+      } else if (target.structureType != STRUCTURE_WALL && (target.hits < 2000 || target.hits < target.hitsMax)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   },
 
   check_and_spawnd_creep:function() {
