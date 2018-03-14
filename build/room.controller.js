@@ -713,10 +713,9 @@ module.exports = {
       SPAWN_NAME = spawn_obj.name;
       SPAWN_OBJ = spawn_obj;
       SPAWN_ROOM = spawn_obj.room;
+      notifier.writeLog(LOG_TYPES.DEV, 'updated '+SPAWN_NAME);
     } else {
-      SPAWN_NAME = SPAWN_NAME;
-      SPAWN_OBJ = SPAWN_OBJ;
-      SPAWN_ROOM = SPAWN_ROOM;
+      notifier.writeLog(LOG_TYPES.DEV, 'saved '+SPAWN_NAME);
     }
     this.updateDynamicVariables();
     this.getLevel();
