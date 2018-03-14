@@ -713,6 +713,10 @@ module.exports = {
       SPAWN_NAME = spawn_obj.name;
       SPAWN_OBJ = spawn_obj;
       SPAWN_ROOM = spawn_obj.room;
+    } else {
+      SPAWN_NAME = SPAWN_NAME;
+      SPAWN_OBJ = SPAWN_OBJ;
+      SPAWN_ROOM = SPAWN_ROOM;
     }
     this.updateDynamicVariables();
     this.getLevel();
