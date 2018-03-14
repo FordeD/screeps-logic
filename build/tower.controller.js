@@ -4,7 +4,7 @@ const ROOM_DEFEND     = 2;
 const ROOM_ATACK      = 3;
 
 module.exports = {
-  processing: function(ROOM_STATUS, hostles) {
+  processing: function(ROOM_STATUS, room, hostles) {
     var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
     if (ROOM_STATUS == ROOM_DEFEND && hostles.length > 0) {

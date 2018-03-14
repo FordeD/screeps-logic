@@ -641,7 +641,7 @@ module.exports = {
     if (!TOWER_CONTROLLER) {
       TOWER_CONTROLLER = require('tower.controller');
     }
-    TOWER_CONTROLLER.processing(ROOM_STATE, HOSTILES);
+    TOWER_CONTROLLER.processing(ROOM_STATE, SPAWN_ROOM, HOSTILES);
 
     SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
     if (!SPAWN_QUEUE) {
