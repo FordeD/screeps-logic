@@ -26,7 +26,6 @@ module.exports = {
             if(tower.id == obj.id) {
                 return false;
             }
-            console.log(obj.hits,obj.hitsMax);
             return obj.hits < obj.hitsMax;
           }
         });
