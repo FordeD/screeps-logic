@@ -409,7 +409,7 @@ module.exports = {
     if(creep.memory.isTransfer) {
       if (creep.memory.exTarget) {
         var target = Game.getObjectById(creep.memory.exTarget);//Game.constructionSites[cr.memory.exTarget];
-        if( target && ( (target.structureType == STRUCTURE_WALL && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) || (target.structureType != STRUCTURE_WALL && target.hits < 2000) ) ) {
+        if( target && ( (target.structureType == STRUCTURE_WALL && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) || (target.structureType != STRUCTURE_WALL && target.hits < 2000 || target.hits < target.hitsMax) ) ) {
           if (creep.repair(target) == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
           }
@@ -422,7 +422,7 @@ module.exports = {
         var repairStructure = [
           creep.pos.findClosestByRange(FIND_STRUCTURES, { 
             filter: (structure) => { 
-              return structure.hits < 1500 && structure.hits >= 0 && structure.structureType != STRUCTURE_WALL;
+              return structure.hits < 1000 && structure.hits >= 0 && structure.structureType != STRUCTURE_WALL;
             }
           }),
           creep.pos.findClosestByRange(FIND_STRUCTURES, { 
