@@ -706,7 +706,7 @@ module.exports = {
     COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
     notifier.writeLog(LOG_TYPES.DEV, 'hostiles '+hostiles.length, hostiles);
-    if (hostiles) {
+    if (hostiles.length > 0) {
       HOSTILES[SPAWN_ROOM] = hostiles;
     } else {
       HOSTILES[SPAWN_ROOM] = false;
