@@ -1,7 +1,12 @@
 // includes
-var room_proc = require('room.proc');
-var memory_checked = require('memory.checked');
+global.memory = require('memory.checked');
 global.notifier = require('utils.notifier');
+global.roomProc = require('room.proc');
+
+
+// global variables
+
+global.roomControllers        = [];
 
 
 // CONSTANTS
@@ -77,10 +82,16 @@ global.HEALER_BODY = [
 
 // OTHER CONSTANTS
 
+global.LOG_TYPES = {
+  DEV: 0,
+  ACTION: 1,
+  STATISTIC: 2
+};
+
 global.CREEP_MOVE_ATACK       = {visualizePathStyle: {stroke: '#ee6a50'}};
 global.CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 
 module.exports.loop = function() {
-    room_proc.processing();
-    memory_checked.checkMemory();
+  roomProc.processing();
+  memory.checkMemory();
 }

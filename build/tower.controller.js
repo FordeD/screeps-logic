@@ -1,8 +1,3 @@
-const ROOM_STANDART   = 0;
-const ROOM_EVOLUTION  = 1;
-const ROOM_DEFEND     = 2;
-const ROOM_ATACK      = 3;
-
 module.exports = {
   processing: function(ROOM_STATUS, room, hostles) {
     var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});

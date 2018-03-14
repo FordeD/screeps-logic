@@ -651,11 +651,23 @@ module.exports = {
     }
   },
 
+  getSpawn: function() {
+    if(SPAWN_OBJ) {
+      return SPAWN_OBJ;
+    } else {
+      return false;
+    }
+  },
+
   processing : function(spawn_obj) {
-    SPAWN_NAME = spawn_obj.name;
-    SPAWN_OBJ = spawn_obj;
-    SPAWN_ROOM = spawn_obj.room;
+    if(spawn_obj) {
+      SPAWN_NAME = spawn_obj.name;
+      SPAWN_OBJ = spawn_obj;
+      SPAWN_ROOM = spawn_obj.room;
+    }
     CONTROLLER_LEVEL = SPAWN_ROOM.controller.level;
+    notifier.writeLog(LOG_TYPES.DEV, SPAWN_NAME);
+    return;
     SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
       filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
