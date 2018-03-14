@@ -30,7 +30,7 @@ module.exports = {
             return obj.hits < obj.hitsMax;
           }
         });
-        if(needRepairStructure && tower.energy >= 500) {
+        if(needRepairStructure && tower.energy > 500) {
             tower.repair(needRepairStructure);
         }
     }
