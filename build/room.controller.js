@@ -705,7 +705,11 @@ module.exports = {
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
     COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
-    HOSTILES[SPAWN_ROOM] = hostiles ? hostiles : false;
+    if (hostiles) {
+      HOSTILES[SPAWN_ROOM] = hostiles;
+    } else {
+      HOSTILES[SPAWN_ROOM] = false;
+    }
   },
 
   processing : function(spawn_obj) {
@@ -713,9 +717,6 @@ module.exports = {
       SPAWN_NAME = spawn_obj.name;
       SPAWN_OBJ = spawn_obj;
       SPAWN_ROOM = spawn_obj.room;
-      notifier.writeLog(LOG_TYPES.DEV, 'updated '+SPAWN_NAME);
-    } else {
-      notifier.writeLog(LOG_TYPES.DEV, 'saved '+SPAWN_NAME);
     }
     this.updateDynamicVariables();
     this.getLevel();
