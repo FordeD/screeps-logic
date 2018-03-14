@@ -20,18 +20,14 @@ module.exports = {
       }
     });
     if(woundedCreep) {
-        if (Math.abs(tower.pos.x-woundedCreep.pos.x) < 20 && Math.abs(tower.pos.y-woundedCreep.pos.y) < 20) {
-            tower.heal(woundedCreep);
-        }
+        tower.heal(woundedCreep);
     } else {
         var needRepairStructure = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
             return obj.hits < obj.hitsMax;
           }
         });
         if(needRepairStructure) {
-            if (Math.abs(tower.pos.x-needRepairStructure.pos.x) < 20 && Math.abs(tower.pos.y-needRepairStructure.pos.y) < 20) {
-                tower.repair(needRepairStructure);
-            }
+            tower.repair(needRepairStructure);
         }
     }
   }
