@@ -56,51 +56,51 @@ var COMBAT_CREEPS            = null;
 
 module.exports = {
   create_harvester: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, owner: SPAWN_NAME }});
-      console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: HARVESTER_BODY[CREEP_LEVEL], memory: {role : ROLES.harvester, isTransfer : false, owner: SPAWN_NAME }});
+      console.log("Add to queue a harvester. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_controller_upgrader: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, owner: SPAWN_NAME }});
-      console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: CL_UPGRADER_BODY[CREEP_LEVEL], memory: {role : ROLES.upgrader, isTransfer : false, owner: SPAWN_NAME }});
+      console.log("Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_builder_extension: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: SPAWN_NAME }});
-      console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: EX_BUILDER_BODY[CREEP_LEVEL], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: SPAWN_NAME }});
+      console.log("Add to queue a ex_builder. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_repairer: function() {
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: REPAIRER_BODY[CREEP_LEVEL], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
-      console.log("Add to queue a repairer. Queue: "+SPAWN_QUEUE.length);
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: REPAIRER_BODY[CREEP_LEVEL], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
+      console.log("Add to queue a repairer. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_solder: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
-      console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: SOLDER_BODY[CREEP_LEVEL], memory: {role : ROLES.solder, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
+      console.log("Add to queue a solder. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_ranger: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: RANGER_BODY[CREEP_LEVEL], memory: {role : ROLES.ranger, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
-      console.log("Add to queue a ranger. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: RANGER_BODY[CREEP_LEVEL], memory: {role : ROLES.ranger, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
+      console.log("Add to queue a ranger. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
   create_healer: function() {
-    if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE.push({body: HEALER_BODY[CREEP_LEVEL], memory: {role : ROLES.healer, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
-      console.log("Add to queue a healer. Queue: "+SPAWN_QUEUE.length);
+    if(SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX) {
+      SPAWN_QUEUE[SPAWN_ROOM.name].push({body: HEALER_BODY[CREEP_LEVEL], memory: {role : ROLES.healer, target: SPAWN_ROOM.name, owner: SPAWN_NAME }});
+      console.log("Add to queue a healer. Queue: "+SPAWN_QUEUE[SPAWN_ROOM.name].length);
     }
   },
 
@@ -113,16 +113,16 @@ module.exports = {
       } else {
         console.log("ECO harvester spawn error: " + res);
       }
-      SPAWN_QUEUE = [];
-    } else if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
+      SPAWN_QUEUE[SPAWN_ROOM.name] = [];
+    } else if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE[SPAWN_ROOM.name].length > 0) {
       switch(this.getState()) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
           var creep;
           if(SPAWN_ROOM.controller.ticksToDowngrade < 2000) {
-            creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == ROLES.upgrader),1);
+            creep = SPAWN_QUEUE[SPAWN_ROOM.name].splice(SPAWN_QUEUE[SPAWN_ROOM.name].findIndex(e => e.memory.role == ROLES.upgrader),1);
           } else {
-            creep = SPAWN_QUEUE.shift();
+            creep = SPAWN_QUEUE[SPAWN_ROOM.name].shift();
           }
           if (creep) {
             this.setSpawning(creep);
@@ -131,7 +131,7 @@ module.exports = {
         }
         case ROOM_DEFEND:
         case ROOM_ATACK: {
-          var creep = SPAWN_QUEUE.splice(SPAWN_QUEUE.findIndex(e => e.memory.role == ROLES.solder),1);
+          var creep = SPAWN_QUEUE[SPAWN_ROOM.name].splice(SPAWN_QUEUE[SPAWN_ROOM.name].findIndex(e => e.memory.role == ROLES.solder),1);
           if (creep) {
             this.setSpawning(creep);
           }
@@ -139,7 +139,7 @@ module.exports = {
       }
     }
 
-    SPAWN_OBJ.memory['queue'] = SPAWN_QUEUE;
+    SPAWN_OBJ.memory['queue'] = SPAWN_QUEUE[SPAWN_ROOM.name];
   },
 
   setSpawning: function(creep) {
@@ -472,7 +472,7 @@ module.exports = {
   },
 
   check_and_spawnd_creep: function() {
-    if( SPAWN_QUEUE.length < SPAWN_QUEUE_MAX ) {
+    if( SPAWN_QUEUE[SPAWN_ROOM.name].length < SPAWN_QUEUE_MAX ) {
       HARVESTER_COUNT    = 0;
       CL_UPGRADER_COUNT  = 0;
       EX_BUILDER_COUNT   = 0;
@@ -517,8 +517,8 @@ module.exports = {
         }
       }
 
-      for(var i in SPAWN_QUEUE) {
-        var role = SPAWN_QUEUE[i].memory.role;
+      for(var i in SPAWN_QUEUE[SPAWN_ROOM.name]) {
+        var role = SPAWN_QUEUE[SPAWN_ROOM.name][i].memory.role;
         switch(role) {
           case ROLES.harvester: {
             ++HARVESTER_QUEUE_COUNT;
@@ -692,10 +692,13 @@ module.exports = {
   updateDynamicVariables: function() {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
     SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
-    SPAWN_QUEUE = SPAWN_QUEUE ? SPAWN_QUEUE : SPAWN_OBJ.memory['queue'];
     if (!SPAWN_QUEUE) {
       SPAWN_QUEUE = [];
     }
+    if (!SPAWN_QUEUE[SPAWN_ROOM.name]) {
+      SPAWN_QUEUE[SPAWN_ROOM.name] = [];
+    }
+    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_QUEUE[SPAWN_ROOM.name] ? SPAWN_QUEUE[SPAWN_ROOM.name] : SPAWN_OBJ.memory['queue'];
 
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
 

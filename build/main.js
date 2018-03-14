@@ -24,6 +24,7 @@ global.ROOM_STATES = {
 
 // WORLD VARIABLES
 global.HOSTILES               = [];
+global.SPAWN_QUEUE            = [];
 global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,2900000];
 
 // CREEP CONSTANTS
