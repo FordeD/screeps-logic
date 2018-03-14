@@ -3,25 +3,25 @@ const CREEP_MOVE_ATACK       = {visualizePathStyle: {stroke: '#ee6a50'}};
 const CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 
 module.exports = {
-  processing: function(room, hostles, solders, rangeds) {
+  processing: function(room, hostles, solders, helpers) {
     HOSTILES = hostles;
     let roomName = room.name;
     var username = HOSTILES[0].owner;
     Game.notify(`User ${username} spotted in room ${roomName}`);
-    solders.forEach(creep => this.solderDefend(creep, false));
-    rangeds.forEach(creep => this.solderDefend(creep, true));
+    solders.forEach(creep => this.solderDefend(creep));
+    helpers.forEach(creep => this.solderDefend(creep));
   },
 
-  solderDefend: function(creep, isRanged) {
+  solderDefend: function(creep) {
     if(creep.room.name == creep.memory.target) {
       target = creep.pos.findClosestByPath(HOSTILES[0]);
       if(target) {
-        if(isRanged) {
-          if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE){
+        if(creep.memory.role == 'solder') {
+          if(creep.attack(target) == ERR_NOT_IN_RANGE){
             creep.moveTo(target, CREEP_MOVE_ATACK);
           }
         } else {
-          if(creep.attack(target) == ERR_NOT_IN_RANGE){
+          if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE){
             creep.moveTo(target, CREEP_MOVE_ATACK);
           }
         }
