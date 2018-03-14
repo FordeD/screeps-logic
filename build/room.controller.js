@@ -709,7 +709,7 @@ module.exports = {
     if (hostiles.length > 0) {
       HOSTILES[SPAWN_ROOM] = hostiles;
     } else {
-      HOSTILES[SPAWN_ROOM] = false;
+      HOSTILES[SPAWN_ROOM] = [];
     }
   },
 
