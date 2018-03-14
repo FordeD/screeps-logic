@@ -22,11 +22,15 @@ module.exports = {
     if(woundedCreep) {
         tower.heal(woundedCreep);
     } else {
-        var needRepairStructure = tower.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+        var needRepairStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: function(obj) { 
+            if(tower.id == obj.id) {
+                return false;
+            }
+            console.log(obj.hits,obj.hitsMax);
             return obj.hits < obj.hitsMax;
           }
         });
-        if(needRepairStructure) {
+        if(needRepairStructure && tower.energy >= 500) {
             tower.repair(needRepairStructure);
         }
     }
