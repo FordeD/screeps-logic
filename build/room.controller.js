@@ -604,14 +604,14 @@ module.exports = {
             }
             break;
           }
-          case ROLES.solder: {
+          case ROLES.ranger: {
             let state = this.getState();
             if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
               this.solder_doing(creep);
             }
             break;
           }
-          case ROLES.solder: {
+          case ROLES.healer: {
             let state = this.getState();
             if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
               this.healer_doing(creep);
