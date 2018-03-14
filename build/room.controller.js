@@ -639,7 +639,7 @@ module.exports = {
     }
 
     if (!TOWER_CONTROLLER) {
-      TOWER_CONTROLLER = require('defend.controller');
+      TOWER_CONTROLLER = require('tower.controller');
     }
     TOWER_CONTROLLER.processing(ROOM_STATE, HOSTILES);
 
