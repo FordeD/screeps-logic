@@ -1,7 +1,7 @@
 // includes
 var room_proc = require('room.proc');
 var memory_checked = require('memory.checked');
-global.notifier = require('./utils/notifier.js');
+global.notifier = require('utils.notifier');
 
 
 // CONSTANTS
