@@ -698,7 +698,7 @@ module.exports = {
     if (!SPAWN_QUEUE[SPAWN_ROOM.name]) {
       SPAWN_QUEUE[SPAWN_ROOM.name] = [];
     }
-    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_QUEUE[SPAWN_ROOM.name] ? SPAWN_QUEUE[SPAWN_ROOM.name] : SPAWN_OBJ.memory['queue'];
+    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'];
 
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
 
