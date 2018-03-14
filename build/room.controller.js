@@ -105,7 +105,8 @@ module.exports = {
   },
 
   spawnQueqe: function() {
-    if (!CREEPS.length && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
+    var harvesters = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.harvester);
+    if (!CREEPS.length || harvesters.length == 0 && SPAWN_ROOM.energyAvailable < MIN_SPAWN_ENERGY[CREEP_LEVEL]) {
       res = SPAWN_OBJ.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: SPAWN_NAME });
       if(_.isString(res)) {
         console.log("Creating a ECO harvester '" + res + "' was started");
