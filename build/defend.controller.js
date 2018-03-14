@@ -8,9 +8,6 @@ module.exports = {
     let roomName = room.name;
     var username = HOSLILES[0].owner;
     Game.notify(`User ${username} spotted in room ${roomName}`);
-    var towers = room.find(
-        FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-    towers.forEach(tower => tower.attack(HOSLILES[0]));
     solders.forEach(creep => this.solderDefend(creep, false));
     rangeds.forEach(creep => this.solderDefend(creep, true));
   },

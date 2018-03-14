@@ -21,6 +21,7 @@ Controller level    - 1
 
 var DEFEND_CONTROLLER = null;
 var ATACK_CONTROLLER  = null;
+var TOWER_CONTROLLER  = null;
 
 const ROOM_STANDART   = 0;
 const ROOM_EVOLUTION  = 1;
@@ -633,9 +634,14 @@ module.exports = {
     this.checkHostlesInRoom();
     if (DEFEND_CONTROLLER) {
       var solders = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder);
-      var rangeds = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
-      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders, rangeds);
+      var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
+      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, solders, rangers);
     }
+
+    if (!TOWER_CONTROLLER) {
+      TOWER_CONTROLLER = require('defend.controller');
+    }
+    TOWER_CONTROLLER.processing(ROOM_STATE, HOSTILES ? HOSTILES : false);
 
     SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
     if (!SPAWN_QUEUE) {
