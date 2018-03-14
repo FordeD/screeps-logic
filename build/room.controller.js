@@ -108,7 +108,7 @@ var CL_UPGRADER_COUNT        = 0;
 var EX_BUILDER_COUNT         = 0;
 var SOLDER_COUNT             = 0;
 var REPAIRER_COUNT           = 0;
-var RANGERER_COUNT           = 0;
+var RANGER_COUNT             = 0;
 var HEALER_COUNT             = 0;
 
 var HARVESTER_QUEUE_COUNT    = 0;
@@ -116,7 +116,7 @@ var CL_UPGRADER_QUEUE_COUNT  = 0;
 var EX_BUILDER_QUEUE_COUNT   = 0;
 var SOLDER_QUEUE_COUNT       = 0;
 var REPAIRER_QUEUE_COUNT     = 0;
-var RANGERER_QUEUE_COUNT     = 0;
+var RANGER_QUEUE_COUNT     = 0;
 var HEALER_QUEUE_COUNT       = 0;
 
 var CREEPS                   = null;
@@ -547,7 +547,7 @@ module.exports = {
       CL_UPGRADER_COUNT  = 0;
       EX_BUILDER_COUNT   = 0;
       REPAIRER_COUNT     = 0;
-      RANGERER_COUNT     = 0;
+      RANGER_COUNT       = 0;
       HEALER_COUNT       = 0;
 
       for(var name in CREEPS) {
@@ -576,7 +576,7 @@ module.exports = {
               break;
             }
             case ROLES.ranger: {
-              ++RANGERER_COUNT;
+              ++RANGER_COUNT;
               break;
             }
             case ROLES.healer: {
@@ -611,7 +611,7 @@ module.exports = {
             break;
           }
           case ROLES.ranger: {
-            ++RANGERER_QUEUE_COUNT;
+            ++RANGER_QUEUE_COUNT;
             break;
           }
           case ROLES.healer: {
