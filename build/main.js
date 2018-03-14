@@ -23,7 +23,7 @@ global.ROOM_STATES = {
 };
 
 // WORLD VARIABLES
-global.HOSTILES               = null;
+global.HOSTILES               = [];
 global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,2900000];
 
 // CREEP CONSTANTS
