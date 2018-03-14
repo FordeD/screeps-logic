@@ -641,7 +641,7 @@ module.exports = {
     if (!TOWER_CONTROLLER) {
       TOWER_CONTROLLER = require('defend.controller');
     }
-    TOWER_CONTROLLER.processing(ROOM_STATE, HOSTILES ? HOSTILES : false);
+    TOWER_CONTROLLER.processing(ROOM_STATE, HOSTILES);
 
     SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
     if (!SPAWN_QUEUE) {
