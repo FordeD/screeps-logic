@@ -1,7 +1,10 @@
 // includes
 global.memory = require('memory.checked');
 global.notifier = require('utils.notifier');
+
 global.roomProc = require('room.proc');
+global.defendController = require('defend.controller');
+global.towerController = require('tower.controller');
 
 
 // global variables
@@ -12,11 +15,15 @@ global.roomControllers        = [];
 // CONSTANTS
 
 // ROOM STATES
-global.ROOM_STANDART          = 0;
-global.ROOM_EVOLUTION         = 1;
-global.ROOM_DEFEND            = 2;
-global.ROOM_ATACK             = 3;
+global.ROOM_STATES = {
+  STARTED: 0,
+  EVOLUTION: 1,
+  DEFEND: 2,
+  ATACK: 3
+};
 
+// WORLD VARIABLES
+global.HOSTILES               = null;
 global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,2900000];
 
 // CREEP CONSTANTS
@@ -24,8 +31,8 @@ global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,29000
 global.HARVESTER_MAX_COUNT    = [5,5,3,3]; 
 global.CL_UPGRADER_MAX_COUNT  = [5,4,2,2];
 global.EX_BUILDER_MAX_COUNT   = [5,4,4,5];
-global.SOLDER_MAX_COUNT       = [3,4,7,7];
 global.REPAIRER_MAX_COUNT     = [5,4,4,3];
+global.SOLDER_MAX_COUNT       = [3,4,7,7];
 global.RANGER_MAX_COUNT       = [3,2,4,2];
 global.HEALER_MAX_COUNT       = [0,1,2,4];
 

@@ -10,7 +10,6 @@ module.exports = {
       if(!controllerSpawn) {
         roomControllers[name].processing(spawn);
       } else {
-        notifier.writeLog(LOG_TYPES.DEV, 'processor '+controllerSpawn.name);
         roomControllers[name].processing();
       }
     }

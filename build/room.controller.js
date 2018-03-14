@@ -114,7 +114,7 @@ module.exports = {
       }
       SPAWN_QUEUE = [];
     } else if( !SPAWN_OBJ.spawning && SPAWN_ROOM.energyAvailable >= MIN_SPAWN_ENERGY[CREEP_LEVEL] && SPAWN_QUEUE.length > 0) {
-      switch(ROOM_STATE) {
+      switch(this.getState()) {
         case ROOM_STANDART:
         case ROOM_EVOLUTION: {
           var creep;
@@ -309,7 +309,7 @@ module.exports = {
 
       repairStructure = creep.room.find(FIND_STRUCTURES, { 
         filter: (structure) => { 
-          return (structure.hits < ROOM_STATE == ROOM_DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
+          return (structure.hits < this.getState() == ROOM_STATES.DEFEND ? 650 : structure.hitsMax && structure.hits > 0);
         }
       });
         
@@ -550,23 +550,23 @@ module.exports = {
         }
       }
       
-      if((HARVESTER_COUNT+HARVESTER_QUEUE_COUNT) < HARVESTER_MAX_COUNT[ROOM_STATE]) {
-        console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT[ROOM_STATE]+" queue:"+HARVESTER_QUEUE_COUNT);
+      if((HARVESTER_COUNT+HARVESTER_QUEUE_COUNT) < HARVESTER_MAX_COUNT[this.getState()]) {
+        console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT[this.getState()]+" queue:"+HARVESTER_QUEUE_COUNT);
         this.create_harvester();
-      } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[ROOM_STATE]) {
-        console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[ROOM_STATE]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
+      } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[this.getState()]) {
+        console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[this.getState()]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
         this.create_controller_upgrader();
-      } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[ROOM_STATE]) {
-        console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[ROOM_STATE]+" queue:"+EX_BUILDER_QUEUE_COUNT);
+      } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[this.getState()]) {
+        console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[this.getState()]+" queue:"+EX_BUILDER_QUEUE_COUNT);
         this.create_builder_extension();
-      } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[ROOM_STATE]) {
-        console.log("r:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[ROOM_STATE]+" queue:"+REPAIRER_QUEUE_COUNT);
+      } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[this.getState()]) {
+        console.log("r:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[this.getState()]+" queue:"+REPAIRER_QUEUE_COUNT);
         this.create_repairer();
-      } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[ROOM_STATE]) {
+      } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[this.getState()]) {
         this.create_solder();
-      } else if((RANGER_COUNT+RANGER_QUEUE_COUNT) < RANGER_MAX_COUNT[ROOM_STATE]) {
+      } else if((RANGER_COUNT+RANGER_QUEUE_COUNT) < RANGER_MAX_COUNT[this.getState()]) {
         this.create_ranger();
-      } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[ROOM_STATE]) {
+      } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[this.getState()]) {
         this.create_healer();
       }
     }     
@@ -591,25 +591,28 @@ module.exports = {
             break;
           }
           case ROLES.repairer: {
-            if (ROOM_STATE != ROOM_DEFEND) {
+            if (this.getState() != ROOM_STATES.DEFEND) {
               this.repairer_doing(creep);
             }
             break;
           }
           case ROLES.solder: {
-            if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
+            let state = this.getState();
+            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
               this.solder_doing(creep);
             }
             break;
           }
           case ROLES.solder: {
-            if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
+            let state = this.getState();
+            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
               this.solder_doing(creep);
             }
             break;
           }
           case ROLES.solder: {
-            if (ROOM_STATE != ROOM_DEFEND || ROOM_STATE != ROOM_ATACK ) {
+            let state = this.getState();
+            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
               this.healer_doing(creep);
             }
             break;
@@ -628,7 +631,7 @@ module.exports = {
     } else if (max < (300 + 20*50)) {
         CREEP_LEVEL = 2;
     } else {
-        Game.notify("Update creeps level!");
+        notifier.infoNotify('Creep level', 'just maximum, need upgrade logic');
         CREEP_LEVEL = 2;
     }
   },
@@ -643,14 +646,14 @@ module.exports = {
     }
   },
 
-  checkHostlesInRoom: function() {
-    HOSTILES = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
+  checkDangerInRoom: function() {
     if(HOSTILES.length > 0) {
-      ROOM_STATE = ROOM_DEFEND;
-      DEFEND_CONTROLLER = require('defend.controller');
+      return true;
     }
+    return false;
   },
 
+  // GETTERS
   getSpawn: function() {
     if(SPAWN_OBJ) {
       return SPAWN_OBJ;
@@ -659,46 +662,74 @@ module.exports = {
     }
   },
 
+  getState: function() {
+    return ROOM_STATE;
+  },
+
+  getSolders: function() {
+    if(COMBAT_CREEPS && COMBAT_CREEPS > 0) {
+      return COMBAT_CREEPS;
+    }
+    return false;
+  },
+
+  // SETTERS
+
+  // METHODS
+  updateState: function() {
+    if (CREEP_LEVEL < 2 && SPAWN_ROOM.controller.level < 2 && CREEPS.length <= 10) {
+      ROOM_STATE = ROOM_STATES.BUILDING;
+    } else if (CREEP_LEVEL >= 2 && SPAWN_ROOM.controller.level >= 3 && CREEPS.length > 10) {
+      ROOM_STATE = ROOM_STATES.EVOLUTION;
+    } else if (HOSTILES[SPAWN_ROOM] && HOSTILES[SPAWN_ROOM].length > 0 ) {
+      ROOM_STATE = ROOM_STATES.DEFEND;
+    } else if (COMBAT_CREEPS && COMBAT_CREEPS.length >= 6) {
+      ROOM_STATE = ROOM_STATES.ATACK;
+    }
+  },
+
+  updateDynamicVariables: function() {
+    CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
+    SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+    SPAWN_QUEUE = SPAWN_QUEUE ? SPAWN_QUEUE : SPAWN_OBJ.memory['queue'];
+    if (!SPAWN_QUEUE) {
+      SPAWN_QUEUE = [];
+    }
+
+    TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
+
+    STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
+      filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
+    });
+
+    CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
+    COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
+    let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
+    HOSTILES[SPAWN_ROOM] = hostiles ? hostiles : false;
+  },
+
   processing : function(spawn_obj) {
     if(spawn_obj) {
       SPAWN_NAME = spawn_obj.name;
       SPAWN_OBJ = spawn_obj;
       SPAWN_ROOM = spawn_obj.room;
     }
-    CONTROLLER_LEVEL = SPAWN_ROOM.controller.level;
-    notifier.writeLog(LOG_TYPES.DEV, 'controller '+SPAWN_NAME);
-    return;
-    SOURCES = SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
-    STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
-      filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
-    });
-    CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
-    COMBAT_CREEPS = _.filter(Game.creeps, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
-
+    this.updateDynamicVariables();
     this.getLevel();
-    if (CREEP_LEVEL < 2 && SPAWN_ROOM.controller.level < 5) {
-      ROOM_STATE = ROOM_EVOLUTION;
-    } // else if (CREEP_LEVEL > 5) {
-    //   ROOM_STATE = ROOM_ATACK;
-    // }
+    this.updateState();
 
-    this.checkHostlesInRoom();
-    if (DEFEND_CONTROLLER) {
+    if (this.checkDangerInRoom()) {
+      DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
       var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, COMBAT_CREEPS, rangers);
+      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
     }
 
-    if (!TOWER_CONTROLLER) {
-      TOWER_CONTROLLER = require('tower.controller');
-    }
-    TOWER_CONTROLLER.processing(ROOM_STATE, SPAWN_ROOM, HOSTILES);
-
-    SPAWN_QUEUE = SPAWN_OBJ.memory['queue'];
-    if (!SPAWN_QUEUE) {
-      SPAWN_QUEUE = [];
-    }
     this.check_and_spawnd_creep();
     this.creep_doing();
     this.spawnQueqe();
+    if (!this.checkDangerInRoom()) {
+      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
+    }
   }
 };

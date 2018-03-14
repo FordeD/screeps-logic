@@ -5,6 +5,9 @@ module.exports = {
   wrongNotify: function(object, error) {
     Game.notify(`Object ${object} return with error: ${error}`);
   },
+  infoNotify: function(object, text) {
+    Game.notify(`INFO ${object} : ${text}`);
+  },
   writeLog: function(type, data) {
     switch(type) {
       case LOG_TYPES.DEV: {
