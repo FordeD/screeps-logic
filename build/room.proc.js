@@ -2,15 +2,16 @@ module.exports = {
   processing : function() {
     for(name in Game.spawns) {
       let spawn = Game.spawns[name];
-      if(!roomControllers[name]) {
+      let roomName = spawn.room.name;
+      if(!roomControllers[roomName]) {
         let controller = require('room.controller');
-        roomControllers[name] = controller;
+        roomControllers[roomName] = controller;
       }
-      var controllerSpawn = roomControllers[name].getSpawn();
+      var controllerSpawn = roomControllers[roomName].getSpawn();
       if(!controllerSpawn) {
-        roomControllers[name].processing(spawn);
+        roomControllers[roomName].processing(spawn);
       } else {
-        roomControllers[name].processing();
+        roomControllers[roomName].processing();
       }
     }
   }

@@ -705,10 +705,10 @@ module.exports = {
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
     COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
-    if (!HOSTILES[SPAWN_NAME]) {
-      HOSTILES[SPAWN_NAME] = [];
+    if (!HOSTILES[SPAWN_ROOM.name]) {
+      HOSTILES[SPAWN_ROOM.name] = [];
     }
-    HOSTILES[SPAWN_NAME] = hostiles.length > 0 ? hostiles : false;
+    HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
   },
 
   processing : function(spawn_obj) {
