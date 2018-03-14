@@ -6,10 +6,12 @@ module.exports = {
   processing: function(room, hostles, solders, rangeds) {
     HOSTILES = hostles;
     let roomName = room.name;
-    var username = HOSTILES[0].owner;
-    Game.notify(`User ${username} spotted in room ${roomName}`);
-    solders.forEach(creep => this.solderDefend(creep, false));
-    rangeds.forEach(creep => this.solderDefend(creep, true));
+    if(HOSTILES[0]) {
+      var username = HOSTILES[0].owner;
+      Game.notify(`User ${username} spotted in room ${roomName}`);
+      solders.forEach(creep => this.solderDefend(creep, false));
+      rangeds.forEach(creep => this.solderDefend(creep, true));
+    }
   },
 
   solderDefend: function(creep, isRanged) {
