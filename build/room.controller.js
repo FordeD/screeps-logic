@@ -637,7 +637,7 @@ module.exports = {
         this.create_solder();
       } else if((RANGER_COUNT+RANGER_QUEUE_COUNT) < RANGER_MAX_COUNT[ROOM_STATE]) {
         this.create_ranger();
-      } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_QUEUE_COUNT[ROOM_STATE]) {
+      } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[ROOM_STATE]) {
         this.create_healer();
       }
     }     
