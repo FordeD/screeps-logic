@@ -105,17 +105,17 @@ module.exports = {
           }
         }),
         creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-          if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-            return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+          if(obj.structureType == STRUCTURE_TOWER) {
+            return obj.energy < 500;
           }
           return false;
         }}),
         creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-          if(obj.structureType == STRUCTURE_TOWER) {
-            return obj.energy < obj.energyCapacity;
+          if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+            return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
           }
           return false;
-        }}),
+        }})
       ];
 
       var goneTransfer = false;
