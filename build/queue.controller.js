@@ -85,7 +85,7 @@ module.exports = {
         console.log('i created creep');
       }
     }
-    console.log('update spawn queue');
+    console.log('update spawn queue', !spawnObj.spawning, SPAWN_QUEUE[roomName].length);
     spawnObj.memory['queue'] = SPAWN_QUEUE[roomName];
   },
 
