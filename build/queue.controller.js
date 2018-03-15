@@ -1,6 +1,5 @@
 module.exports = {
   addHarvester: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: HARVESTER_BODY[creepLevel], memory: {role : ROLES.harvester, isTransfer : false, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a harvester. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -8,7 +7,6 @@ module.exports = {
   },
 
   addUpgrader: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: CL_UPGRADER_BODY[creepLevel], memory: {role : ROLES.upgrader, isTransfer : false, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a cl_upgrader. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -16,7 +14,6 @@ module.exports = {
   },
 
   addBuilder: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: EX_BUILDER_BODY[creepLevel], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a ex_builder. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -24,7 +21,6 @@ module.exports = {
   },
 
   addRepairer: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: REPAIRER_BODY[creepLevel], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: roomName, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a repairer. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -32,7 +28,6 @@ module.exports = {
   },
 
   addSolder: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: SOLDER_BODY[creepLevel], memory: {role : ROLES.solder, target: roomName, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a solder. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -40,7 +35,6 @@ module.exports = {
   },
 
   addRanger: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: RANGER_BODY[creepLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a ranger. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -48,7 +42,6 @@ module.exports = {
   },
 
   addHealer: function(roomName, creepLevel, spawnName) {
-    this.checkQueueArray(roomName);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: HEALER_BODY[creepLevel], memory: {role : ROLES.healer, target: roomName, owner: spawnName }});
       console.log("Add to queue " + spawnName + " a healer. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -66,7 +59,6 @@ module.exports = {
       }
       SPAWN_QUEUE[roomName] = [];
     } else {
-      this.checkQueueArray(roomName);
       if( !spawnObj.spawning && spawnRoom.energyAvailable >= MIN_SPAWN_ENERGY[creepLevel] && SPAWN_QUEUE[roomName].length > 0) {
         switch(state) {
           case ROOM_STATES.STARTED:
@@ -103,18 +95,4 @@ module.exports = {
       console.log(creep.memory.role + " spawn error: " + res);
     }
   },
-
-  checkQueueArray: function(roomName, spawnObj) {
-      if (!SPAWN_QUEUE) {
-        SPAWN_QUEUE = [];
-      }
-      if (!SPAWN_QUEUE[roomName]) {
-        SPAWN_QUEUE[roomName] = [];
-      }
-      if (spawnObj) {
-        SPAWN_QUEUE[roomName] = spawnObj.memory['queue'] ? spawnObj.memory['queue'] : [];
-      } else {
-        SPAWN_QUEUE[roomName] = [];
-      }
-  }
 };
