@@ -140,7 +140,7 @@ module.exports = {
         case OK:
         case ERR_FULL:
         case ERR_INVALID_TARGET: {
-          creep.memory.isTransfer = false;
+          creep.memory.isTransfer = true;
         }
       }
     }
