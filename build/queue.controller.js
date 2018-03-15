@@ -70,7 +70,7 @@ module.exports = {
               creep = SPAWN_QUEUE[roomName].shift();
             }
             if (creep) {
-              if(!this.setSpawning(spawnName, creep)) {
+              if(!this.setSpawning(spawnObj, creep)) {
                 SPAWN_QUEUE[roomName].unshift(creep);
               }
             }
@@ -79,7 +79,7 @@ module.exports = {
           case ROOM_STATES.DEFEND: {
             var creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.solder),1);
             if (creep) {
-              if(!this.setSpawning(spawnName, creep)) {
+              if(!this.setSpawning(spawnObj, creep)) {
                 SPAWN_QUEUE[roomName].unshift(creep);
               }
             }
