@@ -58,30 +58,33 @@ module.exports = {
         console.log("ECO harvester spawn in " + spawnName + " error: " + res);
       }
       SPAWN_QUEUE[roomName] = [];
-    } else if( !spawnObj.spawning && spawnRoom.energyAvailable >= MIN_SPAWN_ENERGY[creepLevel] && SPAWN_QUEUE[roomName].length > 0) {
-      switch(state) {
-        case ROOM_STATES.STARTED:
-        case ROOM_STATES.EVOLUTION: {
-          var creep;
-          if(spawnRoom.controller.ticksToDowngrade < 2000) {
-            creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.upgrader),1);
-          } else {
-            creep = SPAWN_QUEUE[roomName].shift();
+    } else if(SPAWN_QUEUE[roomName]) {
+      if( !spawnObj.spawning && spawnRoom.energyAvailable >= MIN_SPAWN_ENERGY[creepLevel] && SPAWN_QUEUE[roomName].length > 0) {
+        switch(state) {
+          case ROOM_STATES.STARTED:
+          case ROOM_STATES.EVOLUTION: {
+            var creep;
+            if(spawnRoom.controller.ticksToDowngrade < 2000) {
+              creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.upgrader),1);
+            } else {
+              creep = SPAWN_QUEUE[roomName].shift();
+            }
+            if (creep) {
+              this.setSpawning(creep);
+            }
+            break;
           }
-          if (creep) {
-            this.setSpawning(creep);
-          }
-          break;
-        }
-        case ROOM_STATES.DEFEND: {
-          var creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.solder),1);
-          if (creep) {
-            this.setSpawning(creep);
+          case ROOM_STATES.DEFEND: {
+            var creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.solder),1);
+            if (creep) {
+              this.setSpawning(creep);
+            }
           }
         }
       }
+    } else {
+      SPAWN_QUEUE[roomName] = [];
     }
-
     spawnObj.memory['queue'] = SPAWN_QUEUE[roomName];
   },
 
