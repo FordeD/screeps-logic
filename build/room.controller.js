@@ -30,6 +30,7 @@ var   SOURCES         = null;
 var   STORAGES        = null;
 
 var CREEP_LEVEL              = 0;
+var CREEP_ENERGY_LEVEL       = 0;
 var CONTROLLER_LEVEL         = 0;
 
 var HARVESTER_COUNT          = 0;
@@ -489,22 +490,22 @@ module.exports = {
       
       if((HARVESTER_COUNT+HARVESTER_QUEUE_COUNT) < HARVESTER_MAX_COUNT[this.getState()]) {
         console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT[this.getState()]+" queue:"+HARVESTER_QUEUE_COUNT);
-        queueController.addHarvester(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addHarvester(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[this.getState()]) {
         console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[this.getState()]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
-        queueController.addUpgrader(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[this.getState()]) {
         console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[this.getState()]+" queue:"+EX_BUILDER_QUEUE_COUNT);
-        queueController.addBuilder(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[this.getState()]) {
         console.log("r:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[this.getState()]+" queue:"+REPAIRER_QUEUE_COUNT);
-        queueController.addRepairer(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addRepairer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[this.getState()]) {
-        queueController.addSolder(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addSolder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((RANGER_COUNT+RANGER_QUEUE_COUNT) < RANGER_MAX_COUNT[this.getState()]) {
-        queueController.addRanger(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addRanger(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[this.getState()]) {
-        queueController.addHealer(SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+        queueController.addHealer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
       }
     }     
   },
@@ -561,6 +562,7 @@ module.exports = {
 
   getLevel: function() {
     max = SPAWN_ROOM.energyCapacityAvailable;
+    CREEP_ENERGY_LEVEL = SPAWN_ROOM.energyAvailable;
     if (max < (300 + 5 * 50)) {
         CREEP_LEVEL = 0;
     } else if (max < (300 + 10*50)) {
