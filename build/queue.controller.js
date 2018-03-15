@@ -59,7 +59,7 @@ module.exports = {
       }
       SPAWN_QUEUE[roomName] = [];
     } else {
-      if( !spawnObj.spawning && spawnRoom.energyAvailable >= MIN_SPAWN_ENERGY[creepLevel] && SPAWN_QUEUE[roomName].length > 0) {
+      if( !spawnObj.spawning ) {
         switch(state) {
           case ROOM_STATES.STARTED:
           case ROOM_STATES.EVOLUTION: {
