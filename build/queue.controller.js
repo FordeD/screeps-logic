@@ -60,6 +60,7 @@ module.exports = {
       SPAWN_QUEUE[roomName] = [];
     } else {
       if( !spawnObj.spawning ) {
+        console.log('i will create creep');
         switch(state) {
           case ROOM_STATES.STARTED:
           case ROOM_STATES.EVOLUTION: {
@@ -81,6 +82,7 @@ module.exports = {
             }
           }
         }
+        console.log('i created creep');
       }
     }
     spawnObj.memory['queue'] = SPAWN_QUEUE[roomName];

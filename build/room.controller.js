@@ -71,10 +71,12 @@ module.exports = {
             }
             return false;
           }});
-          if(creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(storage);
+          if(!creep.memory.putTuStorage) {
+            if(creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(storage);
+            }
+            return;
           }
-          return;
         }
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
@@ -121,8 +123,8 @@ module.exports = {
         if (obj) {
           if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(obj, CREEP_MOVE_LINE);
-            creep.say('move to '+obj.structureType);
             creep.memory.isTransfer = obj.id;
+            creep.memory.putTuStorage = obj.structureType == STRUCTURE_STORAGE || obj.structureType == STRUCTURE_CONTAINER ? true : false;
           }
           goneTransfer = true;
           break;
@@ -142,6 +144,7 @@ module.exports = {
         case ERR_FULL:
         case ERR_INVALID_TARGET: {
           creep.memory.isTransfer = true;
+          creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
         }
       }
     }
