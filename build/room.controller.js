@@ -394,7 +394,7 @@ module.exports = {
 
   checkRepairedStructure: function(target) {
     if(target) {
-      if(target.structureType == STRUCTURE_WALL && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) {
+      if(((target.structureType == STRUCTURE_WALL) || (target.structureType == STRUCTURE_RAMPART)) && target.hits < WALL_HITS_MAX[CONTROLLER_LEVEL]) {
         return true;
       } else if (target.structureType != STRUCTURE_EXTENSION && target.hits < target.hitsMax) {
         return true;
