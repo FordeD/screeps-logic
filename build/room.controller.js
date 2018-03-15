@@ -137,7 +137,9 @@ module.exports = {
           creep.moveTo(currTransfer, CREEP_MOVE_LINE);
           break;
         }
-        case OK: {
+        case OK:
+        case ERR_FULL:
+        case ERR_INVALID_TARGET: {
           creep.memory.isTransfer = false;
         }
       }
