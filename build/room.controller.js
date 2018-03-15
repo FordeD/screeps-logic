@@ -86,71 +86,71 @@ module.exports = {
         return;
       }
     }
-
-    if(total >= 100) {
+    
+    if(total >= creep.carryCapacity) {
       creep.memory.isTransfer = true;
       creep.memory.sourceId = null;
     }
 
     var currTransfer = Game.getObjectById(creep.memory.isTransfer);
     if(creep.memory.isTransfer == true) {
-      if(!currTransfer) {
-        var withoutEnergyStructures = [
-          SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
-          creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
-              if(obj.structureType == STRUCTURE_EXTENSION ) {
-                return obj.energy < obj.energyCapacity;
-              }
-              return false;
-            }
-          }),
-          creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-            if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-              return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
-            }
-            return false;
-          }}),
-          creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-            if(obj.structureType == STRUCTURE_TOWER) {
+      var withoutEnergyStructures = [
+        SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
+        creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+            if(obj.structureType == STRUCTURE_EXTENSION ) {
               return obj.energy < obj.energyCapacity;
             }
             return false;
-          }}),
-        ];
+          }
+        }),
+        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+          if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+            return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+          }
+          return false;
+        }}),
+        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+          if(obj.structureType == STRUCTURE_TOWER) {
+            return obj.energy < obj.energyCapacity;
+          }
+          return false;
+        }}),
+      ];
 
-        var goneTransfer = false;
-        for( index in withoutEnergyStructures) {
-          var obj = withoutEnergyStructures[index];
-          if (obj) {
-            if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-              creep.moveTo(obj, CREEP_MOVE_LINE);
-              creep.memory.isTransfer = obj.id;
-              creep.memory.putTuStorage = obj.structureType == STRUCTURE_STORAGE || obj.structureType == STRUCTURE_CONTAINER ? true : false;
-            }
-            goneTransfer = true;
-            break;
+      var goneTransfer = false;
+      for( index in withoutEnergyStructures) {
+        var obj = withoutEnergyStructures[index];
+        if (obj) {
+          goneTransfer = true;
+          if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(obj, CREEP_MOVE_LINE);
+            creep.memory.isTransfer = obj.id;
+            creep.memory.putTuStorage = obj.structureType == STRUCTURE_STORAGE || obj.structureType == STRUCTURE_CONTAINER ? true : false;
           }
+          break;
         }
+      }
 
-        if(!goneTransfer) {
-          this.cl_upgrader_doing(creep);
+      if(!goneTransfer) {
+        this.cl_upgrader_doing(creep);
+      }
+    } else {
+      switch(creep.transfer(currTransfer, RESOURCE_ENERGY)) {
+        case ERR_NOT_IN_RANGE: {
+          creep.moveTo(currTransfer, CREEP_MOVE_LINE);
+          break;
         }
-      } else {
-        switch(creep.transfer(currTransfer, RESOURCE_ENERGY)) {
-          case ERR_NOT_IN_RANGE: {
-            creep.moveTo(currTransfer, CREEP_MOVE_LINE);
-            break;
-          }
-          case OK: {
-            creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
-          }
-          case ERR_FULL:
-          case ERR_INVALID_TARGET: {
-            creep.memory.isTransfer = true;
-          }
+        case OK: {
+          creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
+        }
+        case ERR_FULL:
+        case ERR_INVALID_TARGET: {
+          creep.memory.isTransfer = true;
         }
       }
     }
+    
+    return;
   },
 
   cl_upgrader_doing: function(creep) {
