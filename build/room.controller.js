@@ -595,13 +595,8 @@ module.exports = {
   updateDynamicVariables: function() {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
     SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
-    if (!SPAWN_QUEUE) {
-      SPAWN_QUEUE = [];
-    }
-    if (!SPAWN_QUEUE[SPAWN_ROOM.name]) {
-      SPAWN_QUEUE[SPAWN_ROOM.name] = [];
-    }
-    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : [];
+    
+    queueController.checkQueueArray(SPAWN_ROOM.name, SPAWN_OBJ);
 
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
 
