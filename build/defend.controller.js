@@ -45,9 +45,6 @@ module.exports = {
             });
             if(!isCreated) {
               spawn.room.createConstructionSite(i, j, STRUCTURE_RAMPART);
-              return false;
-            } else {
-              break;
             }
           }
         }
