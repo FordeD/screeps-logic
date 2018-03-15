@@ -70,14 +70,18 @@ module.exports = {
               creep = SPAWN_QUEUE[roomName].shift();
             }
             if (creep) {
-              this.setSpawning(spawnObj, creep);
+              if(!this.setSpawning(spawnName, creep)) {
+                SPAWN_QUEUE[roomName].unshift(creep);
+              }
             }
             break;
           }
           case ROOM_STATES.DEFEND: {
             var creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.solder),1);
             if (creep) {
-              this.setSpawning(spawnObj, creep);
+              if(!this.setSpawning(spawnName, creep)) {
+                SPAWN_QUEUE[roomName].unshift(creep);
+              }
             }
           }
         }
@@ -89,10 +93,15 @@ module.exports = {
   setSpawning: function(spawnObj, creep) {
     var res;
     res = spawnObj.createCreep(creep.body, null, creep.memory);
+    if(res == ERR_NOT_ENOUGH_ENERGY) {
+      return false;
+    }
     if(_.isString(res)) {
       notifier.infoNotify(creep.memory.role, "Creating '" + res + "' was started. Queue: "+SPAWN_QUEUE[spawnObj.room.name].length);
+      return true;
     } else {
       notifier.wrongNotify(creep.memory.role, " spawn error: " + res);
+      return false;
     }
   },
 };
