@@ -85,6 +85,7 @@ module.exports = {
         console.log('i created creep');
       }
     }
+    console.log('update spawn queue');
     spawnObj.memory['queue'] = SPAWN_QUEUE[roomName];
   },
 
