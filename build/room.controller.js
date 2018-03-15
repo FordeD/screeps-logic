@@ -18,17 +18,10 @@ Controller level    - 1
         EX_BUILDER_BODY     = [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
-
-var DEFEND_CONTROLLER = null;
-var ATACK_CONTROLLER  = null;
-var TOWER_CONTROLLER  = null;
-
 var   SPAWN_NAME      = "";
 var   SPAWN_ROOM      = null;
 var   SPAWN_OBJ       = null;
-var   SPAWN_QUEUE     = null;
 var   ROOM_STATE      = 0;
-var   HOSTILES        = null;
 var   SOURCES         = null;
 var   STORAGES        = null;
 
@@ -595,7 +588,7 @@ module.exports = {
   updateDynamicVariables: function() {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
     SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
-    
+
     queueController.checkQueueArray(SPAWN_ROOM.name, SPAWN_OBJ);
 
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
