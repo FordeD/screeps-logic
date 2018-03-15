@@ -18,6 +18,10 @@ Controller level    - 1
         EX_BUILDER_BODY     = [MOVE, WORK, CARRY, CARRY, CARRY]
 */
 
+var DEFEND_CONTROLLER = null;
+var ATACK_CONTROLLER  = null;
+var TOWER_CONTROLLER  = null;
+
 var   SPAWN_NAME      = "";
 var   SPAWN_ROOM      = null;
 var   SPAWN_OBJ       = null;
