@@ -657,11 +657,13 @@ module.exports = {
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
   },
 
-  processing : function(spawn_obj) {
+  processing : function(spawn_obj, spawnName) {
     if(spawn_obj) {
       SPAWN_NAME = spawn_obj.name;
       SPAWN_OBJ = spawn_obj;
       SPAWN_ROOM = spawn_obj.room;
+    } else {
+      SPAWN_OBJ = Game.spawns[spawnName];
     }
     this.updateDynamicVariables();
     this.getLevel();

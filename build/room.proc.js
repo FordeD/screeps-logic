@@ -7,7 +7,12 @@ module.exports = {
         let controller = require('room.controller');
         roomControllers[roomName] = controller;
       }
-      roomControllers[roomName].processing(spawn);
+      var controllerSpawn = roomControllers[roomName].getSpawn();
+      if(!controllerSpawn) {
+        roomControllers[roomName].processing(spawn);
+      } else {
+        roomControllers[roomName].processing(false, name);
+      }
     }
   }
 };
