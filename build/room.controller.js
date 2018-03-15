@@ -140,11 +140,12 @@ module.exports = {
           creep.moveTo(currTransfer, CREEP_MOVE_LINE);
           break;
         }
-        case OK:
+        case OK: {
+          creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
+        }
         case ERR_FULL:
         case ERR_INVALID_TARGET: {
           creep.memory.isTransfer = true;
-          creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
         }
       }
     }
