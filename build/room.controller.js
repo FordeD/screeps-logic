@@ -132,7 +132,7 @@ module.exports = {
         this.cl_upgrader_doing(creep);
       }
     } else {
-      switch(creep.transfer(currTransfer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+      switch(creep.transfer(currTransfer, RESOURCE_ENERGY)) {
         case ERR_NOT_IN_RANGE: {
           creep.moveTo(currTransfer, CREEP_MOVE_LINE);
           break;
