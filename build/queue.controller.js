@@ -70,14 +70,14 @@ module.exports = {
               creep = SPAWN_QUEUE[roomName].shift();
             }
             if (creep) {
-              this.setSpawning(creep);
+              this.setSpawning(spawnObj, creep);
             }
             break;
           }
           case ROOM_STATES.DEFEND: {
             var creep = SPAWN_QUEUE[roomName].splice(SPAWN_QUEUE[roomName].findIndex(e => e.memory.role == ROLES.solder),1);
             if (creep) {
-              this.setSpawning(creep);
+              this.setSpawning(spawnObj, creep);
             }
           }
         }
