@@ -669,8 +669,8 @@ module.exports = {
     this.getLevel();
     this.updateState();
 
+    DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
     if (this.checkDangerInRoom()) {
-      DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
       var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, COMBAT_CREEPS, rangers);
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
