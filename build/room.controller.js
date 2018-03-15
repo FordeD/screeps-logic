@@ -297,7 +297,7 @@ module.exports = {
 
   healer_doing: function(creep) {
     if(creep.room.name == creep.memory.target) {
-      var hittedCreep = tower.pos.findClosestByRange(FIND_CREEPS, { filter: function(creep) { 
+      var hittedCreep = creep.pos.findClosestByRange(FIND_CREEPS, { filter: function(creep) { 
           return creep.hits < creep.hitsMax;
         }
       });
