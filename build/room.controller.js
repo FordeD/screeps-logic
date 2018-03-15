@@ -490,22 +490,22 @@ module.exports = {
       
       if((HARVESTER_COUNT+HARVESTER_QUEUE_COUNT) < HARVESTER_MAX_COUNT[this.getState()]) {
         console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT[this.getState()]+" queue:"+HARVESTER_QUEUE_COUNT);
-        queueController.addHarvester(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addHarvester(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[this.getState()]) {
         console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[this.getState()]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
-        queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[this.getState()]) {
         console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[this.getState()]+" queue:"+EX_BUILDER_QUEUE_COUNT);
-        queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((REPAIRER_COUNT+REPAIRER_QUEUE_COUNT) < REPAIRER_MAX_COUNT[this.getState()]) {
         console.log("r:" + REPAIRER_COUNT + ":"+REPAIRER_MAX_COUNT[this.getState()]+" queue:"+REPAIRER_QUEUE_COUNT);
-        queueController.addRepairer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addRepairer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((SOLDER_COUNT+SOLDER_QUEUE_COUNT) < SOLDER_MAX_COUNT[this.getState()]) {
-        queueController.addSolder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addSolder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((RANGER_COUNT+RANGER_QUEUE_COUNT) < RANGER_MAX_COUNT[this.getState()]) {
-        queueController.addRanger(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addRanger(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[this.getState()]) {
-        queueController.addHealer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME);
+        queueController.addHealer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       }
     }     
   },
