@@ -61,7 +61,21 @@ module.exports = {
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
       if (!creep.memory.sourceId) {
-        creep.memory.sourceId = this.getFreeSource();
+        let source = this.getFreeSource();
+        if(source) {
+          creep.memory.sourceId = source;
+        } else {
+          var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+            if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+              return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+            }
+            return false;
+          }});
+          if(creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(storage);
+          }
+          return;
+        }
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -75,7 +89,9 @@ module.exports = {
       creep.memory.isTransfer = true;
       creep.memory.sourceId = null;
     }
-    if(creep.memory.isTransfer) {
+
+    var currTransfer = Game.getObjectById(creep.memory.isTransfer);
+    if(creep.memory.isTransfer == true && !currTransfer) {
       var withoutEnergyStructures = [
         SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
         creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
@@ -105,6 +121,7 @@ module.exports = {
         if (obj) {
           if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(obj, CREEP_MOVE_LINE);
+            creep.memory.isTransfer = obj.id;
           }
           goneTransfer = true;
           break;
@@ -114,7 +131,17 @@ module.exports = {
       if(!goneTransfer) {
         this.cl_upgrader_doing(creep);
       }
-    }    
+    } else {
+      switch(creep.transfer(currTransfer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        case ERR_NOT_IN_RANGE: {
+          creep.moveTo(currTransfer, CREEP_MOVE_LINE);
+          break;
+        }
+        case OK: {
+          creep.memory.isTransfer = false;
+        }
+      }
+    }
   },
 
   cl_upgrader_doing: function(creep) {
