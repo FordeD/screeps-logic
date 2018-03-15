@@ -683,5 +683,7 @@ module.exports = {
     if (!this.checkDangerInRoom()) {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
     }
+    DEFEND_CONTROLLER.checkRamparts(SPAWN_OBJ);
+    DEFEND_CONTROLLER.checkTower(SPAWN_OBJ);
   }
 };
