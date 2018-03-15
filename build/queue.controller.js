@@ -1,6 +1,6 @@
 module.exports = {
   addHarvester: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: HARVESTER_BODY[minLevel], memory: {role : ROLES.harvester, isTransfer : false, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a harvester. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -8,7 +8,7 @@ module.exports = {
   },
 
   addUpgrader: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: CL_UPGRADER_BODY[minLevel], memory: {role : ROLES.upgrader, isTransfer : false, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -16,7 +16,7 @@ module.exports = {
   },
 
   addBuilder: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: EX_BUILDER_BODY[minLevel], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a ex_builder. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -24,7 +24,7 @@ module.exports = {
   },
 
   addRepairer: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: REPAIRER_BODY[minLevel], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: roomName, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a repairer. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -32,7 +32,7 @@ module.exports = {
   },
 
   addSolder: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: SOLDER_BODY[minLevel], memory: {role : ROLES.solder, target: roomName, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a solder. Queue: "+SPAWN_QUEUE[roomName].length);
@@ -40,7 +40,7 @@ module.exports = {
   },
 
   addRanger: function(roomName, creepLevel, spawnName) {
-    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => value <= creepLevel);
+    var minLevel = MIN_SPAWN_ENERGY.findIndex(val => val <= creepLevel);
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
       SPAWN_QUEUE[roomName].push({body: RANGER_BODY[creepLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a ranger. Queue: "+SPAWN_QUEUE[roomName].length);
