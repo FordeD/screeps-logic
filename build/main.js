@@ -97,6 +97,10 @@ global.LOG_TYPES = {
   STATISTIC: 2
 };
 
+global.NOTIFY_TIMER_COUNT = {
+  LEVEL: 300
+}
+
 global.CREEP_MOVE_ATACK       = {visualizePathStyle: {stroke: '#ee6a50'}};
 global.CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 

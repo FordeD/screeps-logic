@@ -532,8 +532,12 @@ module.exports = {
     } else if (max < (300 + 20*50)) {
         CREEP_LEVEL = 2;
     } else {
+      let currTime = Game.time;
+      if(!SPAWN_OBJ.memory['notifyTimer'] || currTime - SPAWN_OBJ.memory['notifyTimer'] > NOTIFY_TIMER_COUNT.LEVEL ) {
         notifier.infoNotify('Creep level', 'just maximum, need upgrade logic');
-        CREEP_LEVEL = 2;
+        SPAWN_OBJ.memory['notifyTimer'] = currTime;
+      }
+      CREEP_LEVEL = 2;
     }
   },
 
