@@ -108,13 +108,13 @@ module.exports = {
       if (!SPAWN_QUEUE) {
         SPAWN_QUEUE = [];
       }
-      if (!SPAWN_QUEUE[SPAWN_ROOM.name]) {
-        SPAWN_QUEUE[SPAWN_ROOM.name] = [];
+      if (!SPAWN_QUEUE[roomName]) {
+        SPAWN_QUEUE[roomName] = [];
       }
       if (spawnObj) {
-        SPAWN_QUEUE[SPAWN_ROOM.name] = spawnObj.memory['queue'] ? spawnObj.memory['queue'] : [];
+        SPAWN_QUEUE[roomName] = spawnObj.memory['queue'] ? spawnObj.memory['queue'] : [];
       } else {
-        SPAWN_QUEUE[SPAWN_ROOM.name] = [];
+        SPAWN_QUEUE[roomName] = [];
       }
   }
 };
