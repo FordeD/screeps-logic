@@ -121,6 +121,7 @@ module.exports = {
         if (obj) {
           if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(obj, CREEP_MOVE_LINE);
+            creep.say('move to '+obj.structureType);
             creep.memory.isTransfer = obj.id;
           }
           goneTransfer = true;
@@ -670,7 +671,7 @@ module.exports = {
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
-    
+
     this.check_and_spawnd_creep();
     this.creep_doing();
     if (!this.checkDangerInRoom()) {
