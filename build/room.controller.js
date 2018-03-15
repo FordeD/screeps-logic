@@ -669,9 +669,10 @@ module.exports = {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
     }
 
+    queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
+    
     this.check_and_spawnd_creep();
     this.creep_doing();
-    queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
     if (!this.checkDangerInRoom()) {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
     }
