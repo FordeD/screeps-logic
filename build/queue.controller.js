@@ -48,7 +48,7 @@ module.exports = {
     }
   },
 
-  spawnQueqe: function(spawnObj, spawnRoom, creeps, state) {
+  spawnQueqe: function(spawnObj, spawnRoom, creeps, state, roomName, creepLevel, spawnName) {
     var harvesters = _.filter(creeps, (creep) => creep.memory.role == ROLES.harvester);
     if (!creeps.length || harvesters.length == 0 && spawnRoom.energyAvailable < MIN_SPAWN_ENERGY[creepLevel]) {
       res = spawnObj.createCreep(HARVESTER_BODY_ECO, null, {role : ROLES.harvester, isTransfer : false, sourceId : null, owner: spawnName });
