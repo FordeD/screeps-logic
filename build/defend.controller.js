@@ -39,10 +39,14 @@ module.exports = {
           if(Game.map.getTerrainAt({x:i,y:j}) != 'wall') {
             var isCreated = false;
             ramparts.forEach((rampart) => { 
-              if(rampart.pos.x == i && rampart.pos.y == j) { isCreated = true; break;} 
+              if(rampart.pos.x == i && rampart.pos.y == j) { 
+                isCreated = true; 
+                continue;
+              } 
             });
             if(!isCreated) {
               spawn.room.createConstructionSite(i, j, STRUCTURE_RAMPART);
+              return false;
             }
           }
         }
