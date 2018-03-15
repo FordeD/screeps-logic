@@ -689,5 +689,6 @@ module.exports = {
     }
     DEFEND_CONTROLLER.checkRamparts(SPAWN_OBJ);
     DEFEND_CONTROLLER.checkTower(SPAWN_OBJ);
+    DEFEND_CONTROLLER.checkStorage(SPAWN_OBJ);
   }
 };
