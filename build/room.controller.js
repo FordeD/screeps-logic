@@ -640,7 +640,7 @@ module.exports = {
 
     this.check_and_spawnd_creep();
     this.creep_doing();
-    queueController.spawnQueqe();
+    queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState());
     if (!this.checkDangerInRoom()) {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
     }
