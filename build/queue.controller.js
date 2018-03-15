@@ -3,7 +3,7 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
@@ -19,7 +19,7 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
@@ -35,7 +35,7 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
@@ -51,7 +51,7 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
@@ -67,7 +67,7 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
@@ -83,14 +83,14 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: RANGER_BODY[creepLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: RANGER_BODY[minLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a ranger. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -99,14 +99,14 @@ module.exports = {
     var minLevel;
     for(index in MIN_SPAWN_ENERGY) {
       if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
-        minLevel = MIN_SPAWN_ENERGY[index];
+        minLevel = index;
       }
     } 
     if (!minLevel) {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: HEALER_BODY[lowCreepLevel], memory: {role : ROLES.healer, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: HEALER_BODY[minLevel], memory: {role : ROLES.healer, target: roomName, owner: spawnName }});
       notifier.infoNotify(spawnName, "Add to queue a healer. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
