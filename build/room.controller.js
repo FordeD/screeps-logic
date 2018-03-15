@@ -87,7 +87,7 @@ module.exports = {
       }
     }
 
-    if(total >= creep.carryCapacity) {
+    if(total >= 100) {
       creep.memory.isTransfer = true;
       creep.memory.sourceId = null;
     }
