@@ -671,6 +671,7 @@ module.exports = {
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
     if(!HARVEST_ROOMS) {
+      HARVEST_ROOMS = [];
       var harvestFlags = _.filter(Game.flags, (flag) => flag.memory.owner == SPAWN_NAME);
       for(name in harvestFlags) {
         HARVEST_ROOMS.push(Game.rooms[Game.flags[name]]);
