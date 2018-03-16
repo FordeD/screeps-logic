@@ -668,30 +668,20 @@ module.exports = {
     }
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
+    // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+
     if(!HARVEST_ROOMS) {
       HARVEST_ROOMS = [];
     }
-    var nearRooms = Game.map.describeExits(SPAWN_ROOM.name);
-    for (index in nearRooms) {
-      var currRoom = false;
-      for(name in Game.flags) {
-        var flag = Game.flags[name];
-        if(flag.room = nearRooms[index] && flag.memory['owner'] == SPAWN_ROOM.name) {
-          currRoom = true;
-          HARVEST_ROOMS.push(Game.rooms[flag.room]);
-          break;
-        }
-      }
-      if(!currRoom) {
-        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index);
-        Game.flags[flagName].memory['owner'] = SPAWN_ROOM.name;
-        HARVEST_ROOMS.push(Game.rooms[nearRooms[index]]);
+    for(name in Game.flags) {
+      var flag = Game.flags[name];
+      if(flag.room = nearRooms[index] && flag.memory['owner'] == SPAWN_ROOM.name) {
+        HARVEST_ROOMS.push(Game.rooms[flag.room]);
+        break;
       }
     }
 
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
-
-    // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     for(index in HARVEST_ROOMS) {
       if(SOURCES.length == 0) {
         SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
