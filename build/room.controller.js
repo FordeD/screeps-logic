@@ -668,28 +668,29 @@ module.exports = {
     }
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
-    var harvestFlags = [];
+    if(!HARVEST_ROOMS) {
+      HARVEST_ROOMS = [];
+    }
     var nearRooms = Game.map.describeExits(SPAWN_ROOM.name);
     for (index in nearRooms) {
-      console.log(nearRooms[index]);
-      if(!Game.rooms[nearRooms[index]].flags) {
-        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index, COLOR_YELLOW, COLOR_YELLOW);
-        var currFlag = Game.flags[flagName].memory['owner'] = SPAWN_ROOM.name;
-      }
-    }
-    for(name in Game.flags) {
-      var flag = Game.flags[name];
-      if (flag.memory['owner'] == SPAWN_ROOM.name) {
-        if(!HARVEST_ROOMS) {
-          HARVEST_ROOMS = [];
+      var currRoom = false;
+      for(name in Game.flags) {
+        var flag = Game.flags[name];
+        if(flag.room = nearRooms[index] && flag.memory['owner'] == SPAWN_ROOM.name) {
+          currRoom = true;
+          HARVEST_ROOMS.push(Game.rooms[flag.room]);
+          break;
         }
-        HARVEST_ROOMS.push(Game.rooms[flag.room.name]);
+      }
+      if(!currRoom) {
+        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index, COLOR_YELLOW, COLOR_YELLOW);
+        Game.flags[flagName].memory['owner'] = SPAWN_ROOM.name;
+        HARVEST_ROOMS.push(Game.rooms[nearRooms[index]]);
       }
     }
 
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
 
-    // TODO: добавить перебор комнат на сурсы
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
     for(index in HARVEST_ROOMS) {
       if(SOURCES.length == 0) {
