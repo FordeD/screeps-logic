@@ -675,7 +675,7 @@ module.exports = {
     }
     for(name in Game.flags) {
       var flag = Game.flags[name];
-      if(flag.room = nearRooms[index] && flag.memory['owner'] == SPAWN_ROOM.name) {
+      if(flag.memory['owner'] == SPAWN_ROOM.name) {
         HARVEST_ROOMS.push(Game.rooms[flag.room]);
         break;
       }
