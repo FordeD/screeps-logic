@@ -682,6 +682,10 @@ module.exports = {
     }
 
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
+
+    if(!SOURCES) {
+      SOURCES = [];
+    }
     for(index in HARVEST_ROOMS) {
       if(SOURCES.length == 0) {
         SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
