@@ -28,6 +28,7 @@ var   SPAWN_OBJ       = null;
 var   ROOM_STATE      = 0;
 var   SOURCES         = null;
 var   STORAGES        = null;
+var   HARVEST_ROOMS   = null;
 
 var CREEP_LEVEL              = 0;
 var CREEP_ENERGY_LEVEL       = 0;
@@ -641,6 +642,7 @@ module.exports = {
 
   updateDynamicVariables: function() {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
+    // TODO: добавить перебор комнат на сурсы
     SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
     if (!SPAWN_QUEUE) {
@@ -667,6 +669,14 @@ module.exports = {
       HOSTILES[SPAWN_ROOM.name] = [];
     }
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
+
+    if(!HARVEST_ROOMS) {
+      var harvestFlags = _.filter(Gamepad.flags, (flag) => flag.memory.owner == SPAWN_NAME);
+      for(name in harvestFlags) {
+        HARVEST_ROOMS.push(Game.rooms[Game.flags[name]]);
+      }
+    }
+    HARVEST_ROOMS.unshift(SPAWN_ROOM);
   },
 
   processing : function(spawn_obj, spawnName) {
