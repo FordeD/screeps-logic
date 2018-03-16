@@ -642,8 +642,6 @@ module.exports = {
 
   updateDynamicVariables: function() {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
-    // TODO: добавить перебор комнат на сурсы
-    SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
     if (!SPAWN_QUEUE) {
       SPAWN_QUEUE = [];
@@ -678,6 +676,16 @@ module.exports = {
       }
     }
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
+
+    // TODO: добавить перебор комнат на сурсы
+    // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+    for(index in HARVEST_ROOMS) {
+      if(SOURCES.length == 0) {
+        SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
+      }
+      SOURCES.concat(HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE));
+    }
+    console.log(SOURCES.length);
   },
 
   processing : function(spawn_obj, spawnName) {
