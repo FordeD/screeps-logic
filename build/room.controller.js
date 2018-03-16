@@ -668,13 +668,24 @@ module.exports = {
     }
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
-    if(!HARVEST_ROOMS) {
-      HARVEST_ROOMS = [];
-      var harvestFlags = _.filter(Game.flags, (flag) => flag.memory.owner == SPAWN_NAME);
-      for(name in harvestFlags) {
-        HARVEST_ROOMS.push(Game.rooms[Game.flags[name]]);
+    var harvestFlags = [];
+    var nearRooms = Game.map.describeExits(SPAWN_ROOM.name);
+    for (index in nearRooms) {
+      if(Game.rooms[nearRooms[index].flags.length == 0]) {
+        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index, COLOR_YELLOW, COLOR_YELLOW);
+        var currFlag = Game.flags[flagName].memory['owner'] = SPAWN_ROOM.name;
       }
     }
+    for(name in Game.flags) {
+      var flag = Game.flags[name];
+      if (flag.memory['owner'] == SPAWN_ROOM.name) {
+        if(!HARVEST_ROOMS) {
+          HARVEST_ROOMS = [];
+        }
+        HARVEST_ROOMS.push(Game.rooms[flag.room.name]);
+      }
+    }
+
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
 
     // TODO: добавить перебор комнат на сурсы
