@@ -683,7 +683,7 @@ module.exports = {
         }
       }
       if(!currRoom) {
-        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index, COLOR_YELLOW, COLOR_YELLOW);
+        let flagName = Game.rooms[nearRooms[index]].createFlag(25,25, 'HarvesterFlag_'+index);
         Game.flags[flagName].memory['owner'] = SPAWN_ROOM.name;
         HARVEST_ROOMS.push(Game.rooms[nearRooms[index]]);
       }
