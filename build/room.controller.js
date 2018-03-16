@@ -680,7 +680,6 @@ module.exports = {
         break;
       }
     }
-
     HARVEST_ROOMS.unshift(SPAWN_ROOM);
 
     if(!SOURCES) {
@@ -692,7 +691,6 @@ module.exports = {
       }
       SOURCES.concat(HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE));
     }
-    console.log(SOURCES.length);
   },
 
   processing : function(spawn_obj, spawnName) {
