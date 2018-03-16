@@ -289,7 +289,11 @@ module.exports = {
 
   solder_doing: function(creep) {
     if(creep.room.name == creep.memory.target) {
+      if(creep.pos.x > 45 || creep.pos.Y > 45 || creep.pos.x < 5 || creep.pos.y < 5) {
+        creep.moveTo(SPAWN_OBJ, CREEP_MOVE_LINE);
+      } else {
         creep.move(_.sample([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]));
+      }
     } else {
         var route = Game.map.findRoute(creep.room, creep.memory.target);
         if(route.length > 0) {
@@ -307,7 +311,11 @@ module.exports = {
       if(hittedCreep) {
         creep.heal(hittedCreep);
       } else {
-        creep.move(_.sample([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]));
+        if(creep.pos.x > 45 || creep.pos.Y > 45 || creep.pos.x < 5 || creep.pos.y < 5) {
+          creep.moveTo(SPAWN_OBJ, CREEP_MOVE_LINE);
+        } else {
+          creep.move(_.sample([TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT]));
+        }
       }
   } else {
       var route = Game.map.findRoute(creep.room, creep.memory.target);
