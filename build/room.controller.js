@@ -394,7 +394,7 @@ module.exports = {
         var emptyRoom = _.filter(claimers, (creep) => creep.memory.targetRoom == roomName);
         if(emptyRoom.length == 0) {
           creep.memory.targetRoom = roomName;
-          return;
+          break;
         }
       }
     } else {
@@ -410,6 +410,7 @@ module.exports = {
         }
       }
     }
+    return;
   },
 
   checkCreeps: function() {
