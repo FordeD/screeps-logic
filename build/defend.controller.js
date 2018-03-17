@@ -1,6 +1,6 @@
 module.exports = {
   processing: function(room, hostles, solders) {
-    let hostile = hostles[0];
+    let hostiles = hostles[0];
     let roomName = room.name;
     var userName = hostiles[0].owner;
     notifier.dangerNotify(userName, roomName, hostles.count);
