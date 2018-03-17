@@ -111,6 +111,22 @@ module.exports = {
     }
   },
 
+  addClaimer: function(roomName, creepLevel, spawnName, creepsLevel) {
+    var minLevel;
+    for(index in MIN_SPAWN_ENERGY) {
+      if(MIN_SPAWN_ENERGY[index] <= creepLevel) {
+        minLevel = index;
+      }
+    } 
+    if (!minLevel) {
+      minLevel = creepsLevel;
+    }
+    if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX && CLAIMER_BODY[minLevel]) {
+      SPAWN_QUEUE[roomName].push({body: CLAIMER_BODY[minLevel], memory: {role : ROLES.claimer, isTransfer : false, owner: spawnName, targetRoom: null }});
+      notifier.infoNotify(spawnName, "Add to queue a claimer. Queue: "+SPAWN_QUEUE[roomName].length);
+    }
+  },
+
   spawnQueqe: function(spawnObj, spawnRoom, creeps, state, roomName, creepLevel, spawnName) {
     var harvesters = _.filter(creeps, (creep) => creep.memory.role == ROLES.harvester);
     if (!creeps.length || harvesters.length == 0 && spawnRoom.energyAvailable < MIN_SPAWN_ENERGY[creepLevel]) {

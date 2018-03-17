@@ -1,23 +1,3 @@
-/*          CREEP BODY
-MOVE            50
-WORK            100
-CARRY           50
-ATTACK          80
-RANGED_ATTACK   150
-HEAL            250
-CLAIM           600
-TOUGH           10
-*/
-
-/*
-Controller level    - 1
-    spawn energy        - 300
-        
-        HARVESTER_BODY      = [MOVE, WORK, WORK,  CARRY]
-        CL_UPGRADER_BODY    = [MOVE, WORK, CARRY, CARRY, CARRY]
-        EX_BUILDER_BODY     = [MOVE, WORK, CARRY, CARRY, CARRY]
-*/
-
 var DEFEND_CONTROLLER = null;
 var ATACK_CONTROLLER  = null;
 var TOWER_CONTROLLER  = null;
@@ -41,6 +21,7 @@ var SOLDER_COUNT             = 0;
 var REPAIRER_COUNT           = 0;
 var RANGER_COUNT             = 0;
 var HEALER_COUNT             = 0;
+var CLAIMER_COUNT            = 0;
 
 var HARVESTER_QUEUE_COUNT    = 0;
 var CL_UPGRADER_QUEUE_COUNT  = 0;
@@ -49,10 +30,12 @@ var SOLDER_QUEUE_COUNT       = 0;
 var REPAIRER_QUEUE_COUNT     = 0;
 var RANGER_QUEUE_COUNT       = 0;
 var HEALER_QUEUE_COUNT       = 0;
+var CLAIMER_QUEUE_COUNT       = 0;
 
 var CREEPS                   = null;
 var COMBAT_CREEPS            = null;   
 var WORK_CREEPS              = null;
+var CLAIMERS_CREEPS          = null;
 
 module.exports = {
   harvester_doing: function(creep) {

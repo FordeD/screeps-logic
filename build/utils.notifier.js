@@ -13,7 +13,8 @@ module.exports = {
       let AVERAGE_USED_CPU = USED_CPU / NOTIFY_TIMER_COUNT.CPU;
       USED_CPU = 0;
       this.infoNotify('CPU', 'Max used:'+MAX_USED_CPU+'. Average used:'+AVERAGE_USED_CPU+'. Used in 100 ticks:'+MAX_USED_CPU);
-      this.writeLog('INFO CPU : Max used:'+MAX_USED_CPU+'. Average used:'+AVERAGE_USED_CPU+'. Used in 100 ticks:'+MAX_USED_CPU)
+      this.writeLog('INFO CPU : Max used:'+MAX_USED_CPU+'. Average used:'+AVERAGE_USED_CPU+'. Used in 100 ticks:'+MAX_USED_CPU);
+      CPU_NOTIFY_TIME = currTime;
     }
   },
   wrongNotify: function(object, error) {
