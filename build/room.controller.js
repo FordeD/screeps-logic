@@ -385,6 +385,33 @@ module.exports = {
     }
   },
 
+  claimer_doing: function(creep) {
+    if(!creep.memory.targetRoom) {
+      var claimers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.claimers);
+      
+      for(var index in NEAR_ROOMS) {
+        var roomName = SOURCES[index].id;
+        var emptyRoom = _.filter(claimers, (creep) => creep.memory.targetRoom == roomName);
+        if(emptyRoom.length == 0) {
+          creep.memory.targetRoom = roomName;
+          return;
+        }
+      }
+    } else {
+      if(creep.room == SPAWN_ROOM) {
+        var exitDirection =  Game.map.findExit(SPAWN_ROOM, creep.memory.targetRoom);
+        var route = creep.pos.findClosestByRange(exitDirection);
+        creep.moveTo(route);
+      } else {
+        if(creep.room.controller && !creep.room.controller.my) {
+          if(creep.attackController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(creep.room.controller);
+          }
+        }
+      }
+    }
+  },
+
   checkCreeps: function() {
     HARVESTER_COUNT    = 0;
     CL_UPGRADER_COUNT  = 0;
@@ -392,6 +419,7 @@ module.exports = {
     REPAIRER_COUNT     = 0;
     RANGER_COUNT       = 0;
     HEALER_COUNT       = 0;
+    CLAIMER_COUNT      = 0;
 
     for(var name in CREEPS) {
       var creep = CREEPS[name];
@@ -424,6 +452,10 @@ module.exports = {
           }
           case ROLES.healer: {
             ++HEALER_COUNT;
+            break;
+          }
+          case ROLES.claimer: {
+            ++CLAIMER_COUNT;
             break;
           }
         } 
@@ -461,6 +493,10 @@ module.exports = {
           ++HEALER_QUEUE_COUNT;
           break;
         }
+        case ROLES.claimer: {
+          ++CLAIMER_QUEUE_COUNT;
+          break;
+        }
       }
     }  
   },
@@ -484,8 +520,11 @@ module.exports = {
         console.log("h:" + HARVESTER_COUNT + ":"+HARVESTER_MAX_COUNT[state]+" queue:"+HARVESTER_QUEUE_COUNT);
         queueController.addHarvester(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[state]) {
-        console.log("c:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[state]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
+        console.log("cl:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[state]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
         queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
+      } else if((CLAIMER_COUNT+CLAIMER_QUEUE_COUNT) < CLAIMER_MAX_COUNT[state]) {
+        console.log("c:" + CLAIMER_COUNT + ":"+CLAIMER_MAX_COUNT[state]+" queue:"+CLAIMER_QUEUE_COUNT);
+        queueController.addClaimer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[state]) {
         console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[state]+" queue:"+EX_BUILDER_QUEUE_COUNT);
         queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
