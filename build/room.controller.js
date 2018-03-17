@@ -650,6 +650,7 @@ module.exports = {
     SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : [];
 
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
+    DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
 
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
       filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
@@ -705,7 +706,6 @@ module.exports = {
     this.getLevel();
     this.updateState();
 
-    DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
     if (this.checkDangerInRoom()) {
       if(HOSTILES[SPAWN_ROOM.name].length >= 2) {
         var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
@@ -714,15 +714,17 @@ module.exports = {
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
       DEFEND_CONTROLLER.saveWorkCreeps(WORK_CREEPS);
+    } else {
+      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
 
     this.checkCreeps();
-    this.creepsActions();
-    if (!this.checkDangerInRoom()) {
-      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
+    if(CREEPS.length < CREEPS_MAX_COUNT) {
+      this.checkSpawnCreeps();
     }
+    this.creepsActions();
 
     buildController.processing(SPAWN_OBJ);
   }

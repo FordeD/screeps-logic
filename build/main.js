@@ -31,7 +31,7 @@ global.SPAWN_QUEUE            = [];
 global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,2900000];
 
 // CREEP CONSTANTS
-
+global.CREEPS_MAX_COUNT       = 26;
 global.HARVESTER_MAX_COUNT    = [5,5,3,3]; 
 global.CL_UPGRADER_MAX_COUNT  = [5,4,2,2];
 global.EX_BUILDER_MAX_COUNT   = [5,4,4,5];
