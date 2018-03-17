@@ -483,7 +483,7 @@ module.exports = {
 
   killFiewLiveCreeps: function() {
     let spName = SPAWN_NAME ? SPAWN_NAME : SPAWN_OBJ.name;
-    creeps = _.filter(Game.creeps, (creep) => creep.memory.owner == spName);
+    creeps = _.filter(Game.creeps, (creep) => creep.memory.owner == spName && (creep.memory.role != ROLES.solder || creep.memory.role != ROLES.ranger || creep.memory.role != ROLES.healer));
     for(name in creeps) {
       let creep = creeps[name];
       var total = _.sum(creep.carry);
