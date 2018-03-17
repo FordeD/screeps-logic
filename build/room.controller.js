@@ -585,6 +585,10 @@ module.exports = {
             }
             break;
           }
+          case ROLES.claimer: {
+            this.claimer_doing(creep);
+            break;
+          }
         }
       }
     }      
