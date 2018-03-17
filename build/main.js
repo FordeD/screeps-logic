@@ -4,7 +4,7 @@ global.notifier = require('utils.notifier');
 
 
 global.roomProc = require('room.proc');
-global.builderController = require('build.controller');
+global.buildController = require('build.controller');
 global.defendController = require('defend.controller');
 global.towerController = require('tower.controller');
 global.queueController = require('queue.controller');
