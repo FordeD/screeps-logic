@@ -8,6 +8,7 @@ module.exports = {
     if(used > MAX_USED_CPU) {
       MAX_USED_CPU = used;
     }
+    let currTime = Game.time;
     if(!CPU_NOTIFY_TIME == 0 || currTime - CPU_NOTIFY_TIME > NOTIFY_TIMER_COUNT.CPU ) {
       let AVERAGE_USED_CPU = USED_CPU / NOTIFY_TIMER_COUNT.CPU;
       USED_CPU = 0;
