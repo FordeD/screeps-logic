@@ -757,14 +757,13 @@ module.exports = {
     this.updateState();
 
     if (this.checkDangerInRoom()) {
-      console.log(WORK_CREEPS);
       if(HOSTILES[SPAWN_ROOM.name].length >= 2) {
         var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
         COMBAT_CREEPS.concat(rangers);
       }
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
-      DEFEND_CONTROLLER.saveWorkCreeps(WORK_CREEPS);
+      DEFEND_CONTROLLER.saveWorkCreeps(SPAWN_OBJ, WORK_CREEPS);
     } else {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
