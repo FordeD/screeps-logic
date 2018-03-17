@@ -66,19 +66,6 @@ module.exports = {
         let source = this.getFreeSource();
         if(source) {
           creep.memory.sourceId = source;
-        } else {
-          var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-            if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-              return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
-            }
-            return false;
-          }});
-          if(!creep.memory.putTuStorage) {
-            if(creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-              creep.moveTo(storage);
-            }
-            return;
-          }
         }
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
@@ -96,27 +83,24 @@ module.exports = {
 
     var currTransfer = Game.getObjectById(creep.memory.isTransfer);
     if(creep.memory.isTransfer == true) {
+      var store = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+        return (obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) && obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+      }});
+
+      var extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+        return obj.structureType == STRUCTURE_EXTENSION && obj.energy < obj.energyCapacity
+      }});
+
       var withoutEnergyStructures = [
         SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
-        creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
-            if(obj.structureType == STRUCTURE_EXTENSION ) {
-              return obj.energy < obj.energyCapacity;
-            }
-            return false;
-          }
-        }),
+        CREEPS.length >= SPAWN_QUEUE_MAX-2 ? store : extension,
         creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
           if(obj.structureType == STRUCTURE_TOWER) {
             return obj.energy < 500;
           }
           return false;
         }}),
-        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-          if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
-            return obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
-          }
-          return false;
-        }})
+        CREEPS.length >= SPAWN_QUEUE_MAX-2 ? extension : store
       ];
 
       var goneTransfer = false;
@@ -127,7 +111,6 @@ module.exports = {
           if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(obj, CREEP_MOVE_LINE);
             creep.memory.isTransfer = obj.id;
-            creep.memory.putTuStorage = obj.structureType == STRUCTURE_STORAGE || obj.structureType == STRUCTURE_CONTAINER ? true : false;
           }
           break;
         }
@@ -162,7 +145,7 @@ module.exports = {
     }
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
-      if(!this.creep_get_energy(creep)) {
+      if(!this.creepGetEnergy(creep)) {
         return;
       }
     }
@@ -194,7 +177,7 @@ module.exports = {
     }
 
     if(total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
-      if(!this.creep_get_energy(creep)) {
+      if(!this.creepGetEnergy(creep)) {
         return;
       }
     }
@@ -262,7 +245,7 @@ module.exports = {
     }
   },
 
-  creep_get_energy: function(creep) {
+  creepGetEnergy: function(creep) {
     var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
       if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
         return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
@@ -333,7 +316,7 @@ module.exports = {
     }
     
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
-      if(!this.creep_get_energy(creep)) {
+      if(!this.creepGetEnergy(creep)) {
         return;
       }
     }
@@ -723,7 +706,7 @@ module.exports = {
     if (!this.checkDangerInRoom()) {
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
-    
+
     buildController.processing(SPAWN_OBJ);
   }
 };
