@@ -669,10 +669,12 @@ module.exports = {
       SOURCES = [];
     }
     for(index in HARVEST_ROOMS) {
-      if(SOURCES.length == 0) {
-        SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
+      if(HARVEST_ROOMS[index]) {
+        if(SOURCES.length == 0) {
+          SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
+        }
+        SOURCES.concat(HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE));
       }
-      SOURCES.concat(HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE));
     }
   },
 
