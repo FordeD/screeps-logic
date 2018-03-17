@@ -1,7 +1,6 @@
 module.exports = {
   processing: function(roomStatus, room, hostles) {
     var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-    console.log(hostles);
     if (roomStatus == ROOM_STATES.DEFEND && hostles.length > 0) {
         towers.forEach(tower => tower.attack(hostles[0]));
     } else {
