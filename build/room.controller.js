@@ -487,7 +487,7 @@ module.exports = {
     for(name in creeps) {
       let creep = creeps[name];
       var total = _.sum(creep.carry);
-      if(creep.ticksToLive > 50 && total == 0) {
+      if(creep.ticksToLive < 50 && total == 0) {
         creep.suicide();
       }
     }
