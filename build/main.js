@@ -100,8 +100,13 @@ global.LOG_TYPES = {
 };
 
 global.NOTIFY_TIMER_COUNT = {
-  LEVEL: 300
-}
+  LEVEL: 300,
+  CPU: 100
+};
+global.CPU_NOTIFY_TIME = 0;
+global.USED_CPU = 0;
+global.MAX_USED_CPU = 0;
+global.AVERAGE_USED_CPU = 0;
 
 global.CREEP_MOVE_ATACK       = {visualizePathStyle: {stroke: '#ee6a50'}};
 global.CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
@@ -109,4 +114,5 @@ global.CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 module.exports.loop = function() {
   roomProc.processing();
   memory.checkMemory();
+  notify.cpuNotify();
 }
