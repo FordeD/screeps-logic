@@ -634,13 +634,7 @@ module.exports = {
     SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : false;
 
     if(!SPAWN_OBJ.memory['NearRooms']) {
-      var rooms = Game.map.describeExits(SPAWN_ROOM.name);
-      SPAWN_OBJ.memory['NearRooms'] = [];
-      for(index in rooms) {
-        let roomName = rooms[index];
-        let roomExit = Game.map.findRoute(SPAWN_ROOM, roomName);
-        SPAWN_OBJ.memory['NearRooms'].push({name: roomName, find: roomExit.exit});
-      }
+      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
     }
 
     NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
@@ -667,7 +661,7 @@ module.exports = {
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
     for(index in NEAR_ROOMS) {
-      var roomName = NEAR_ROOMS[index].name;
+      var roomName = NEAR_ROOMS[index];
       for(name in Game.flags) {
         let flag = Game.flags[name];
         let fromName = flag.name.split("-")
