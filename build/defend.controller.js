@@ -1,8 +1,8 @@
 module.exports = {
   processing: function(room, hostles, solders) {
-    let hostiles = hostles;
+    let hostile = hostles[0];
     let roomName = room.name;
-    var userName = hostiles[0].owner;
+    var userName = hostile.owner;
     notifier.dangerNotify(userName, roomName, hostles.length);
     solders.forEach(creep => this.solderDefend(creep, hostile));
     return true;
