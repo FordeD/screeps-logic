@@ -631,10 +631,16 @@ module.exports = {
     if (!SPAWN_QUEUE[SPAWN_ROOM.name]) {
       SPAWN_QUEUE[SPAWN_ROOM.name] = [];
     }
-    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : [];
+    SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : false;
 
     if(!SPAWN_OBJ.memory['NearRooms']) {
-      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
+      var rooms = Game.map.describeExits(SPAWN_ROOM.name);
+      SPAWN_OBJ.memory['NearRooms'] = [];
+      for(index in rooms) {
+        let roomName = rooms[index];
+        let roomExit = Game.map.findRoute(SPAWN_ROOM, roomName);
+        SPAWN_OBJ.memory['NearRooms'].push({name: roomName, find: roomExit.exit});
+      }
     }
 
     NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
@@ -661,24 +667,13 @@ module.exports = {
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
     for(index in NEAR_ROOMS) {
-      var roomIsChecked = false;
-      var roomName = NEAR_ROOMS[index];
+      var roomName = NEAR_ROOMS[index].name;
       for(name in Game.flags) {
         let flag = Game.flags[name];
         let fromName = flag.name.split("-")
         if( ( flag.room == roomName || fromName[0] == SPAWN_NAME ) && !flag.memory['owner']) {
           flag.memory['owner'] = SPAWN_NAME;
-          roomIsChecked = true;
         }
-      }
-      if(!roomIsChecked) {
-        let newRoom = Game.rooms[roomName];
-        let flagsCount = Game.flags.length;
-        //let newFlagName = newRoom.createFlag(24, 24, SPAWN_NAME+'-HarvestRoom'+flagsCount);
-        //if(_.isString(newFlagName)) {
-        //  let flag = Game.flags[newFlagName];
-        //  flag.memory['owner'] = SPAWN_NAME;
-        //}
       }
     }
 
@@ -688,21 +683,22 @@ module.exports = {
     for(name in Game.flags) {
       var flag = Game.flags[name];
       if(flag.memory['owner'] == SPAWN_NAME) {
-        HARVEST_ROOMS.push(Game.rooms[flag.room]);
+        HARVEST_ROOMS.push(flag.room);
         break;
       }
     }
-    HARVEST_ROOMS.unshift(SPAWN_ROOM);
+    HARVEST_ROOMS.unshift(SPAWN_ROOM.name);
 
     if(!SOURCES) {
       SOURCES = [];
     }
     for(index in HARVEST_ROOMS) {
-      if(HARVEST_ROOMS[index]) {
+      var room = Game.rooms[HARVEST_ROOMS[index]];
+      if(room) {
         if(SOURCES.length == 0) {
-          SOURCES = HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE);
+          SOURCES = room.find(FIND_SOURCES_ACTIVE);
         }
-        SOURCES.concat(HARVEST_ROOMS[index].find(FIND_SOURCES_ACTIVE));
+        SOURCES.concat(room.find(FIND_SOURCES_ACTIVE));
       }
     }
   },
