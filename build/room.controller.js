@@ -47,11 +47,31 @@ module.exports = {
         let source = this.getFreeSource();
         if(source) {
           creep.memory.sourceId = source;
+        } else {
+          if(!creep.memory.goneRoom) {
+            
+            for(var index in HARVEST_ROOMS) {
+              var roomName = HARVEST_ROOMS[index];
+              var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.targetRoom == roomName);
+              if(emptyRoom.length < 4) {
+                creep.memory.goneRoom = roomName;
+                break;
+              }
+            }
+          } else {
+            if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
+              var exitDirection =  Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room , creep.memory.targetRoom);
+              var route = creep.pos.findClosestByRange(exitDirection);
+              creep.moveTo(route);
+            } else {
+              let source = this.getFreeSource(creep,true);
+            }
+          }
         }
       } else {
-        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
-        if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source[0], CREEP_MOVE_LINE);
+        var source = Game.getObjectById(creep.memory.sourceId);
+        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source, CREEP_MOVE_LINE);
         }
         return;
       }
@@ -63,59 +83,69 @@ module.exports = {
     }
 
     var currTransfer = Game.getObjectById(creep.memory.isTransfer);
-    if(creep.memory.isTransfer == true) {
-      var store = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-        return (obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) && obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
-      }});
-
-      var extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
-        return obj.structureType == STRUCTURE_EXTENSION && obj.energy < obj.energyCapacity
-      }});
-
-      var withoutEnergyStructures = [
-        SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
-        CREEPS.length >= SPAWN_QUEUE_MAX-2 ? store : extension,
-        creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
-          if(obj.structureType == STRUCTURE_TOWER) {
-            return obj.energy < 500;
-          }
-          return false;
-        }}),
-        CREEPS.length >= SPAWN_QUEUE_MAX-2 ? extension : store
-      ];
-
-      var goneTransfer = false;
-      for( index in withoutEnergyStructures) {
-        var obj = withoutEnergyStructures[index];
-        if (obj) {
-          goneTransfer = true;
-          if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(obj, CREEP_MOVE_LINE);
-            creep.memory.isTransfer = obj.id;
-          }
-          break;
-        }
-      }
-
-      if(!goneTransfer) {
-        this.cl_upgrader_doing(creep);
+    if(creep.room.name != SPAWN_ROOM.name) {
+      creep.memory.goneRoom = SPAWN_ROOM.name
+      if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
+        var exitDirection =  Game.map.findExit(creep.room.name , SPAWN_ROOM.name);
+        var route = creep.pos.findClosestByRange(exitDirection);
+        creep.moveTo(route);
+      } else {
+        let source = this.getFreeSource(creep,true);
       }
     } else {
-      switch(creep.transfer(currTransfer, RESOURCE_ENERGY)) {
-        case ERR_NOT_IN_RANGE: {
-          creep.moveTo(currTransfer, CREEP_MOVE_LINE);
-          break;
+      if(creep.memory.isTransfer == true) {
+        var store = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+          return (obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) && obj.store[RESOURCE_ENERGY] < obj.storeCapacity;
+        }});
+
+        var extension = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, { filter: function(obj) { 
+          return obj.structureType == STRUCTURE_EXTENSION && obj.energy < obj.energyCapacity
+        }});
+
+        var withoutEnergyStructures = [
+          SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
+          CREEPS.length >= SPAWN_QUEUE_MAX-2 ? store : extension,
+          creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+            if(obj.structureType == STRUCTURE_TOWER) {
+              return obj.energy < 500;
+            }
+            return false;
+          }}),
+          CREEPS.length >= SPAWN_QUEUE_MAX-2 ? extension : store
+        ];
+
+        var goneTransfer = false;
+        for( index in withoutEnergyStructures) {
+          var obj = withoutEnergyStructures[index];
+          if (obj) {
+            goneTransfer = true;
+            if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(obj, CREEP_MOVE_LINE);
+              creep.memory.isTransfer = obj.id;
+            }
+            break;
+          }
         }
-        case OK: {
-          creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
+
+        if(!goneTransfer) {
+          this.cl_upgrader_doing(creep);
         }
-        case ERR_FULL:
-        case ERR_INVALID_TARGET: {
-          creep.memory.isTransfer = true;
+      } else {
+        switch(creep.transfer(currTransfer, RESOURCE_ENERGY)) {
+          case ERR_NOT_IN_RANGE: {
+            creep.moveTo(currTransfer, CREEP_MOVE_LINE);
+            break;
+          }
+          case OK: {
+            creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
+          }
+          case ERR_FULL:
+          case ERR_INVALID_TARGET: {
+            creep.memory.isTransfer = true;
+          }
         }
       }
     }
-    
     return;
   },
 
@@ -610,14 +640,38 @@ module.exports = {
     }
   },
 
-  getFreeSource: function() {
-    for(var index in SOURCES) {
-      var sourceID = SOURCES[index].id;
-      var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == sourceID);
-      if(harvesters.length < 3 ) {
-        return sourceID;
+  getFreeSource: function(creep = 0, isOtherRoom = false) {
+    if(!isOtherRoom) {
+      for(var index in SOURCES) {
+        var sourceID = SOURCES[index].id;
+        var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == sourceID);
+        if(harvesters.length < 3 ) {
+          return sourceID;
+        }
+      }
+    } else {
+      if(!SPAWN_OBJ.memory.sources[creep.memory.goneRoom]) {
+        this.setSourcesFromOtherRoom(creep);
+      } 
+      var thisRoomSources = SPAWN_OBJ.memory.sources[creep.room.name];
+      for (index in thisRoomSources) {
+        var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == thisRoomSources[index]);
+        if(harvesters.length < 2 ) {
+          return thisRoomSources[index];
+        }
       }
     }
+  },
+
+  setSourcesFromOtherRoom: function(creep) {
+    let thisRoomSources = creep.room.find(FIND_SOURCES_ACTIVE);
+    SPAWN_OBJ.memory.sources[creep.room.name] = [];
+    for(index in thisRoomSources) {
+      source = thisRoomSources[index].id;
+      SPAWN_OBJ.memory.sources[creep.room.name].push(source);
+    }
+    notifier.infoNotify('SEARCH ROOM', 'Sources:'+SPAWN_OBJ.memory.sources[creep.room.name].length);
+    return true;
   },
 
   checkDangerInRoom: function() {
@@ -679,8 +733,8 @@ module.exports = {
     });
 
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
-    COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
-    WORK_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role != ROLES.solder && creep.memory.role != ROLES.ranger && creep.memory.role != ROLES.repairer);
+    COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger || creep.memory.role == ROLES.healer);
+    WORK_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role != ROLES.solder && creep.memory.role != ROLES.ranger && creep.memory.role != ROLES.healer && creep.memory.role != ROLES.claimer);
 
 
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);

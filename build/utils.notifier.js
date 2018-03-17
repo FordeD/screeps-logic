@@ -32,6 +32,7 @@ module.exports = {
   },
   infoNotify: function(object, text) {
     Game.notify(`INFO ${object} : ${text}`);
+    this.writeLog(LOG_TYPES.DEV, `INFO ${object} : ${text}`);
   },
   writeLog: function(type, data) {
     switch(type) {

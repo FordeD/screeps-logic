@@ -10,7 +10,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: HARVESTER_BODY[minLevel], memory: {role : ROLES.harvester, isTransfer : false, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: HARVESTER_BODY[minLevel], memory: {role : ROLES.harvester, isTransfer : false, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a harvester. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -26,7 +26,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: CL_UPGRADER_BODY[minLevel], memory: {role : ROLES.upgrader, isTransfer : false, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: CL_UPGRADER_BODY[minLevel], memory: {role : ROLES.upgrader, isTransfer : false, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a cl_upgrader. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -42,7 +42,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: EX_BUILDER_BODY[minLevel], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: EX_BUILDER_BODY[minLevel], memory: {role : ROLES.builder, isTransfer : false, isBuilding : false, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a ex_builder. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -58,7 +58,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE.length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: REPAIRER_BODY[minLevel], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: REPAIRER_BODY[minLevel], memory: {role : ROLES.repairer, isTransfer : false, isRepair : false, target: roomName, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a repairer. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -74,7 +74,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: SOLDER_BODY[minLevel], memory: {role : ROLES.solder, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: SOLDER_BODY[minLevel], memory: {role : ROLES.solder, target: roomName, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a solder. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -90,7 +90,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: RANGER_BODY[minLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: RANGER_BODY[minLevel], memory: {role : ROLES.ranger, target: roomName, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a ranger. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -106,7 +106,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX) {
-      SPAWN_QUEUE[roomName].push({body: HEALER_BODY[minLevel], memory: {role : ROLES.healer, target: roomName, owner: spawnName }});
+      SPAWN_QUEUE[roomName].push({body: HEALER_BODY[minLevel], memory: {role : ROLES.healer, target: roomName, owner: spawnName, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a healer. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
@@ -122,7 +122,7 @@ module.exports = {
       minLevel = creepsLevel;
     }
     if(SPAWN_QUEUE[roomName].length < SPAWN_QUEUE_MAX && CLAIMER_BODY[minLevel]) {
-      SPAWN_QUEUE[roomName].push({body: CLAIMER_BODY[minLevel], memory: {role : ROLES.claimer, isTransfer : false, owner: spawnName, targetRoom: null }});
+      SPAWN_QUEUE[roomName].push({body: CLAIMER_BODY[minLevel], memory: {role : ROLES.claimer, isTransfer : false, owner: spawnName, targetRoom: null, goneRoom: null }});
       notifier.infoNotify(spawnName, "Add to queue a claimer. Queue: "+SPAWN_QUEUE[roomName].length);
     }
   },
