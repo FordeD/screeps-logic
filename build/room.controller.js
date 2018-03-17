@@ -390,7 +390,7 @@ module.exports = {
       var claimers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.claimers);
       
       for(var index in NEAR_ROOMS) {
-        var roomName = NEAR_ROOMS[index].id;
+        var roomName = NEAR_ROOMS[index];
         var emptyRoom = _.filter(claimers, (creep) => creep.memory.targetRoom == roomName);
         if(emptyRoom.length == 0) {
           creep.memory.targetRoom = roomName;
