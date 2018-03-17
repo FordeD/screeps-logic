@@ -659,6 +659,7 @@ module.exports = {
 
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
     COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
+    WORK_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role != ROLES.solder || creep.memory.role != ROLES.ranger || creep.memory.role != ROLES.repairer);
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
     if (!HOSTILES) {
       HOSTILES = [];
@@ -707,9 +708,12 @@ module.exports = {
 
     DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
     if (this.checkDangerInRoom()) {
-      var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
-      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES, COMBAT_CREEPS, rangers);
-      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
+      if(HOSTILES[SPAWN_ROOM.name].length >= 2) {
+        var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
+        COMBAT_CREEPS.concat(rangers);
+      }
+      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
+      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
@@ -717,10 +721,9 @@ module.exports = {
     this.check_and_spawnd_creep();
     this.creep_doing();
     if (!this.checkDangerInRoom()) {
-      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES);
+      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
-    DEFEND_CONTROLLER.checkRamparts(SPAWN_OBJ);
-    DEFEND_CONTROLLER.checkTower(SPAWN_OBJ);
-    DEFEND_CONTROLLER.checkStorage(SPAWN_OBJ);
+    
+    buildController.processing(SPAWN_OBJ);
   }
 };
