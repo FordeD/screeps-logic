@@ -387,7 +387,7 @@ module.exports = {
 
   claimer_doing: function(creep) {
     if(!creep.memory.targetRoom) {
-      var claimers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.claimers);
+      var claimers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.claimer);
       
       for(var index in NEAR_ROOMS) {
         var roomName = NEAR_ROOMS[index];
