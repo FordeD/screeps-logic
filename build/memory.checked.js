@@ -17,7 +17,7 @@ module.exports = {
     for(var name in Memory.flags) {
       if(!Game.flags[name]) {
         console.log('Remove empty flag data '+name);
-        delete Memory.creeps[name];
+        delete Memory.flags[name];
       }   
     }
   }
