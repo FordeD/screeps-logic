@@ -660,12 +660,24 @@ module.exports = {
 
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
-    for(name in Game.flags) {
-      let flag = Game.flags[name];
-      for(index in NEAR_ROOMS) {
+    for(index in NEAR_ROOMS) {
+      var roomIsChecked = false;
+      var roomName = NEAR_ROOMS[index];
+      for(name in Game.flags) {
+        let flag = Game.flags[name];
         let fromName = flag.name.split("-")
-        if(flag.room == NEAR_ROOMS[index] || fromName[0] == SPAWN_NAME) {
-          flag.memory['owner'] = SPAWN_ROOM.name;
+        if( ( flag.room == roomName || fromName[0] == SPAWN_NAME ) && !flag.memory['owner']) {
+          flag.memory['owner'] = SPAWN_NAME;
+          roomIsChecked = true;
+        }
+      }
+      if(!roomIsChecked) {
+        let newRoom = Game.rooms[roomName];
+        let flagsCount = Game.flags.length;
+        let newFlagName = newRoom.createFlag(24, 24, SPAWN_NAME+'-HarvestRoom'+flagsCount);
+        if(_.isString(newFlagName)) {
+          let flag = Game.flags[newFlagName];
+          flag.memory['owner'] = SPAWN_NAME;
         }
       }
     }
@@ -675,7 +687,7 @@ module.exports = {
     }
     for(name in Game.flags) {
       var flag = Game.flags[name];
-      if(flag.memory['owner'] == SPAWN_ROOM.name) {
+      if(flag.memory['owner'] == SPAWN_NAME) {
         HARVEST_ROOMS.push(Game.rooms[flag.room]);
         break;
       }
