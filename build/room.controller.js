@@ -524,8 +524,10 @@ module.exports = {
         console.log("cl:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[state]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
         queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((CLAIMER_COUNT+CLAIMER_QUEUE_COUNT) < CLAIMER_MAX_COUNT[state]) {
-        console.log("c:" + CLAIMER_COUNT + ":"+CLAIMER_MAX_COUNT[state]+" queue:"+CLAIMER_QUEUE_COUNT);
-        queueController.addClaimer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
+        if(Game.gcl > 1) {
+          console.log("c:" + CLAIMER_COUNT + ":"+CLAIMER_MAX_COUNT[state]+" queue:"+CLAIMER_QUEUE_COUNT);
+          queueController.addClaimer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
+        }
       } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[state]) {
         console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[state]+" queue:"+EX_BUILDER_QUEUE_COUNT);
         queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
