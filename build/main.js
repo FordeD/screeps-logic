@@ -31,14 +31,14 @@ global.SPAWN_QUEUE            = [];
 global.WALL_HITS_MAX          = [1000,3000,5000,20000,100000,400000,800000,2900000];
 
 // CREEP CONSTANTS
-global.CREEPS_MAX_COUNT       = 32;
-global.HARVESTER_MAX_COUNT    = [5,5,3,3]; 
+global.CREEPS_MAX_COUNT       = 34;
+global.HARVESTER_MAX_COUNT    = [11,11,3,5]; 
 global.CL_UPGRADER_MAX_COUNT  = [5,4,2,2];
 global.EX_BUILDER_MAX_COUNT   = [5,4,4,5];
 global.REPAIRER_MAX_COUNT     = [5,4,4,3];
 global.SOLDER_MAX_COUNT       = [3,4,7,7];
-global.RANGER_MAX_COUNT       = [3,2,4,2];
-global.HEALER_MAX_COUNT       = [0,1,2,4];
+global.RANGER_MAX_COUNT       = [3,2,6,2];
+global.HEALER_MAX_COUNT       = [0,1,4,4];
 global.CLAIMER_MAX_COUNT      = [2,4,4,6];
 
 global.ROLES = {
