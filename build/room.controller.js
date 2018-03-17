@@ -9,6 +9,7 @@ var   ROOM_STATE      = 0;
 var   SOURCES         = null;
 var   STORAGES        = null;
 var   HARVEST_ROOMS   = null;
+var   NEAR_ROOMS      = null;
 
 var CREEP_LEVEL              = 0;
 var CREEP_ENERGY_LEVEL       = 0;
@@ -632,6 +633,12 @@ module.exports = {
     }
     SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : [];
 
+    if(!SPAWN_OBJ.memory['NearRooms']) {
+      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
+    }
+
+    NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
+
     TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
     DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
 
@@ -652,6 +659,16 @@ module.exports = {
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+
+    for(name in Game.flags) {
+      let flag = Game.flags[name];
+      for(index in NEAR_ROOMS) {
+        let fromName = flag.name.split("-")
+        if(flag.room == NEAR_ROOMS[index] || fromName[0] == SPAWN_NAME) {
+          flag.memory['owner'] = SPAWN_ROOM.name;
+        }
+      }
+    }
 
     if(!HARVEST_ROOMS) {
       HARVEST_ROOMS = [];
