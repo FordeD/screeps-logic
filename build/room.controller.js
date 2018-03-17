@@ -52,6 +52,7 @@ var HEALER_QUEUE_COUNT       = 0;
 
 var CREEPS                   = null;
 var COMBAT_CREEPS            = null;   
+var WORK_CREEPS              = null;
 
 module.exports = {
   harvester_doing: function(creep) {
@@ -697,6 +698,7 @@ module.exports = {
       }
       DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
       TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
+      DEFEND_CONTROLLER.saveWorkCreeps(WORK_CREEPS);
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
