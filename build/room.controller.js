@@ -1,7 +1,3 @@
-var DEFEND_CONTROLLER = null;
-var ATACK_CONTROLLER  = null;
-var TOWER_CONTROLLER  = null;
-
 var   SPAWN_NAME      = "";
 var   SPAWN_ROOM      = null;
 var   SPAWN_OBJ       = null;
@@ -523,11 +519,6 @@ module.exports = {
       } else if((CL_UPGRADER_COUNT+CL_UPGRADER_QUEUE_COUNT) < CL_UPGRADER_MAX_COUNT[state]) {
         console.log("cl:" + CL_UPGRADER_COUNT + ":"+CL_UPGRADER_MAX_COUNT[state]+" queue:"+CL_UPGRADER_QUEUE_COUNT);
         queueController.addUpgrader(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
-      } else if((CLAIMER_COUNT+CLAIMER_QUEUE_COUNT) < CLAIMER_MAX_COUNT[state]) {
-        if(Game.gcl > 1) {
-          console.log("c:" + CLAIMER_COUNT + ":"+CLAIMER_MAX_COUNT[state]+" queue:"+CLAIMER_QUEUE_COUNT);
-          queueController.addClaimer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
-        }
       } else if((EX_BUILDER_COUNT+EX_BUILDER_QUEUE_COUNT) < EX_BUILDER_MAX_COUNT[state]) {
         console.log("b:" + EX_BUILDER_COUNT + ":"+EX_BUILDER_MAX_COUNT[state]+" queue:"+EX_BUILDER_QUEUE_COUNT);
         queueController.addBuilder(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
@@ -540,6 +531,9 @@ module.exports = {
         queueController.addRanger(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       } else if((HEALER_COUNT+HEALER_QUEUE_COUNT) < HEALER_MAX_COUNT[state]) {
         queueController.addHealer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
+      } else if((CLAIMER_COUNT+CLAIMER_QUEUE_COUNT) < CLAIMER_MAX_COUNT[state] && GCL > 1) {
+        console.log("c:" + CLAIMER_COUNT + ":"+CLAIMER_MAX_COUNT[state]+" queue:"+CLAIMER_QUEUE_COUNT);
+        queueController.addClaimer(SPAWN_ROOM.name, CREEP_ENERGY_LEVEL, SPAWN_NAME, CREEP_LEVEL);
       }
     }
     return false;
@@ -679,14 +673,6 @@ module.exports = {
     }
     SPAWN_QUEUE[SPAWN_ROOM.name] = SPAWN_OBJ.memory['queue'] ? SPAWN_OBJ.memory['queue'] : false;
 
-    if(!SPAWN_OBJ.memory['NearRooms']) {
-      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
-    }
-
-    NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
-
-    TOWER_CONTROLLER = TOWER_CONTROLLER ? TOWER_CONTROLLER : towerController;
-    DEFEND_CONTROLLER = DEFEND_CONTROLLER ? DEFEND_CONTROLLER : defendController;
 
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
       filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
@@ -695,6 +681,8 @@ module.exports = {
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
     COMBAT_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.solder || creep.memory.role == ROLES.ranger);
     WORK_CREEPS = _.filter(CREEPS, (creep) => creep.memory.role != ROLES.solder && creep.memory.role != ROLES.ranger && creep.memory.role != ROLES.repairer);
+
+
     let hostiles = SPAWN_ROOM.find(FIND_HOSTILE_CREEPS);
     if (!HOSTILES) {
       HOSTILES = [];
@@ -705,6 +693,12 @@ module.exports = {
     HOSTILES[SPAWN_ROOM.name] = hostiles.length > 0 ? hostiles : false;
 
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+
+    if(!SPAWN_OBJ.memory['NearRooms']) {
+      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
+    }
+
+    NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
 
     for(index in NEAR_ROOMS) {
       var roomName = NEAR_ROOMS[index];
@@ -761,11 +755,11 @@ module.exports = {
         var rangers = _.filter(CREEPS, (creep) => creep.memory.role == ROLES.repairer);
         COMBAT_CREEPS.concat(rangers);
       }
-      DEFEND_CONTROLLER.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
-      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
-      DEFEND_CONTROLLER.saveWorkCreeps(SPAWN_OBJ, WORK_CREEPS);
+      defendController.processing(SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name], COMBAT_CREEPS);
+      towerController.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
+      defendController.saveWorkCreeps(SPAWN_OBJ, WORK_CREEPS);
     } else {
-      TOWER_CONTROLLER.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
+      towerController.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);

@@ -112,6 +112,8 @@ global.CLAIMER_BODY = [
 
 // OTHER CONSTANTS
 
+global.GCL = Game.gcl;
+
 global.LOG_TYPES = {
   DEV: 0,
   ACTION: 1,
