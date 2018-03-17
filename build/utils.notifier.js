@@ -2,19 +2,29 @@ module.exports = {
   dangerNotify: function(username, roomName) {
     Game.notify(`User ${username} spotted in room ${roomName}`);
   },
-  cpuNotify: function() {
+  cpuNotify: function(spawnObj) {
     let used = Game.cpu.getUsed();
-    USED_CPU += used;
-    if(used > MAX_USED_CPU) {
-      MAX_USED_CPU = used;
+    if(!spawnObj.memory.USED_CPU) {
+      spawnObj.memory.USED_CPU = 0;
+    }
+    spawnObj.memory.USED_CPU += used;
+
+    if(!spawnObj.memory.MAX_USED_CPU) {
+      spawnObj.memory.MAX_USED_CPU = 0;
+    }
+    if(used > spawnObj.memory.MAX_USED_CPU) {
+      spawnObj.memory.MAX_USED_CPU = used;
     }
     let currTime = Game.time;
-    if(!CPU_NOTIFY_TIME == 0 || currTime - CPU_NOTIFY_TIME > NOTIFY_TIMER_COUNT.CPU ) {
-      let AVERAGE_USED_CPU = USED_CPU / NOTIFY_TIMER_COUNT.CPU;
-      USED_CPU = 0;
-      this.infoNotify('CPU', 'Max used:'+MAX_USED_CPU+'. Average used:'+AVERAGE_USED_CPU+'. Used in 100 ticks:'+MAX_USED_CPU);
-      this.writeLog(LOG_TYPES.DEV, 'INFO CPU : Max used:'+MAX_USED_CPU+'. Average used:'+AVERAGE_USED_CPU+'. Used in 100 ticks:'+MAX_USED_CPU);
-      CPU_NOTIFY_TIME = currTime;
+    if(!spawnObj.memory.CPU_NOTIFY_TIME) {
+      spawnObj.memory.CPU_NOTIFY_TIME = 0;
+    }
+    if(!CPU_NOTIFY_TIME == 0 || currTime - spawnObj.memory.CPU_NOTIFY_TIME > NOTIFY_TIMER_COUNT.CPU ) {
+      spawnObj.memory.AVERAGE_USED_CPU = USED_CPU / NOTIFY_TIMER_COUNT.CPU;
+      spawnObj.memory.USED_CPU = 0;
+      this.infoNotify('CPU', 'Max used:'+spawnObj.memory.MAX_USED_CPU+'. Average used:'+spawnObj.memory.AVERAGE_USED_CPU+'. Used in 100 ticks:'+spawnObj.memory.MAX_USED_CPU);
+      this.writeLog(LOG_TYPES.DEV, 'INFO CPU : Max used:'+spawnObj.memory.MAX_USED_CPU+'. Average used:'+spawnObj.memory.AVERAGE_USED_CPU+'. Used in 100 ticks:'+spawnObj.memory.MAX_USED_CPU);
+      spawnObj.memory.CPU_NOTIFY_TIME = currTime;
     }
   },
   wrongNotify: function(object, error) {

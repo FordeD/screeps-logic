@@ -133,5 +133,7 @@ global.CREEP_MOVE_LINE        = {visualizePathStyle: {stroke: '#ffffff'}};
 module.exports.loop = function() {
   roomProc.processing();
   memory.checkMemory();
-  notifier.cpuNotify();
+
+  let mainSpawn = Game.spawns['Spawn1'];
+  notifier.cpuNotify(mainSpawn);
 }
