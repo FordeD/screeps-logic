@@ -674,11 +674,11 @@ module.exports = {
       if(!roomIsChecked) {
         let newRoom = Game.rooms[roomName];
         let flagsCount = Game.flags.length;
-        let newFlagName = newRoom.createFlag(24, 24, SPAWN_NAME+'-HarvestRoom'+flagsCount);
-        if(_.isString(newFlagName)) {
-          let flag = Game.flags[newFlagName];
-          flag.memory['owner'] = SPAWN_NAME;
-        }
+        //let newFlagName = newRoom.createFlag(24, 24, SPAWN_NAME+'-HarvestRoom'+flagsCount);
+        //if(_.isString(newFlagName)) {
+        //  let flag = Game.flags[newFlagName];
+        //  flag.memory['owner'] = SPAWN_NAME;
+        //}
       }
     }
 
