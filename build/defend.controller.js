@@ -2,7 +2,6 @@ module.exports = {
   processing: function(room, hostles, solders) {
     let hostiles = hostles[0];
     let roomName = room.name;
-    console.log(hostiles[0].name);
     var userName = hostiles[0].owner;
     notifier.dangerNotify(userName, roomName, hostles.length);
     solders.forEach(creep => this.solderDefend(creep, hostile));
