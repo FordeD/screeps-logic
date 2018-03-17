@@ -20,7 +20,7 @@ module.exports = {
       spawnObj.memory.CPU_NOTIFY_TIME = 0;
     }
     if(!CPU_NOTIFY_TIME == 0 || currTime - spawnObj.memory.CPU_NOTIFY_TIME > NOTIFY_TIMER_COUNT.CPU ) {
-      spawnObj.memory.AVERAGE_USED_CPU = USED_CPU / NOTIFY_TIMER_COUNT.CPU;
+      spawnObj.memory.AVERAGE_USED_CPU = spawnObj.memory.USED_CPU / NOTIFY_TIMER_COUNT.CPU;
       spawnObj.memory.USED_CPU = 0;
       this.infoNotify('CPU', 'Max used:'+spawnObj.memory.MAX_USED_CPU+'. Average used:'+spawnObj.memory.AVERAGE_USED_CPU+'. Used in 100 ticks:'+spawnObj.memory.MAX_USED_CPU);
       this.writeLog(LOG_TYPES.DEV, 'INFO CPU : Max used:'+spawnObj.memory.MAX_USED_CPU+'. Average used:'+spawnObj.memory.AVERAGE_USED_CPU+'. Used in 100 ticks:'+spawnObj.memory.MAX_USED_CPU);
