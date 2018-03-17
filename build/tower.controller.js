@@ -1,7 +1,7 @@
 module.exports = {
   processing: function(roomStatus, room, hostles) {
     var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-
+    console.log(hostles);
     if (roomStatus == ROOM_STATES.DEFEND && hostles.length > 0) {
         towers.forEach(tower => tower.attack(hostles[0]));
     } else {
@@ -14,7 +14,9 @@ module.exports = {
         return creep.hits < creep.hitsMax;
       }
     });
-    if(!woundedCreep) {
+    if(woundedCreep) {
+        tower.heal(woundedCreep);
+    } else {
         var needRepairStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, { filter: function(obj) { 
             if(tower.id == obj.id) {
                 return false;
@@ -25,8 +27,6 @@ module.exports = {
         if(needRepairStructure && tower.energy > 500) {
             tower.repair(needRepairStructure);
         }
-    } else {
-        tower.heal(woundedCreep);
     }
   }
 }
