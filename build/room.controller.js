@@ -125,6 +125,7 @@ module.exports = {
             if(creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
               creep.moveTo(obj, CREEP_MOVE_LINE);
               creep.memory.isTransfer = obj.id;
+              creep.memory.goneRoom = false;
             }
             break;
           }
