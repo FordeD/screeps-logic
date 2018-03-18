@@ -65,6 +65,9 @@ module.exports = {
               creep.moveTo(route);
             } else {
               let source = this.getFreeSource(creep,true);
+              if(source) {
+                creep.memory.sourceId = source;
+              }
             }
           }
         }
