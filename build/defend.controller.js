@@ -10,17 +10,16 @@ module.exports = {
 
   solderDefend: function(creep, hostile) {
     if(creep.room.name == creep.memory.target) {
-      target = creep.pos.findClosestByPath(hostile);
-      if(target) {
-        if(creep.memory.role == 'solder') {
-          if(creep.attack(target) == ERR_NOT_IN_RANGE){
-            creep.moveTo(target, CREEP_MOVE_ATACK);
-          }
-        } else {
-          if(creep.rangedAttack(target) == ERR_NOT_IN_RANGE){
-            creep.moveTo(target, CREEP_MOVE_ATACK);
-          }
+      if(creep.memory.role == ROLES.solder) {
+        if(creep.attack(hostile) == ERR_NOT_IN_RANGE){
+          creep.moveTo(hostile, CREEP_MOVE_ATACK);
         }
+        return;
+      } else {
+        if(creep.rangedAttack(hostile) == ERR_NOT_IN_RANGE){
+          creep.moveTo(hostile, CREEP_MOVE_ATACK);
+        }
+        return;
       }
     } else {
         var route = Game.map.findRoute(creep.room, creep.memory.target);

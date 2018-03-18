@@ -599,19 +599,19 @@ module.exports = {
             break;
           }
           case ROLES.solder: {
-            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
+            if (state != ROOM_STATES.DEFEND && state != ROOM_STATES.ATACK ) {
               this.solder_doing(creep);
             }
             break;
           }
           case ROLES.ranger: {
-            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
+            if (state != ROOM_STATES.DEFEND && state != ROOM_STATES.ATACK ) {
               this.solder_doing(creep);
             }
             break;
           }
           case ROLES.healer: {
-            if (state != ROOM_STATES.DEFEND || state != ROOM_STATES.ATACK ) {
+            if (state != ROOM_STATES.DEFEND && state != ROOM_STATES.ATACK ) {
               this.healer_doing(creep);
             }
             break;
