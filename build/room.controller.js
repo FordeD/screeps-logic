@@ -643,7 +643,7 @@ module.exports = {
     }
   },
 
-  getFreeSource: function(creep = 0, isOtherRoom = false) {
+  getFreeSource: function(creep, isOtherRoom) {
     if(!isOtherRoom) {
       for(var index in SOURCES) {
         var sourceID = SOURCES[index].id;
@@ -653,6 +653,9 @@ module.exports = {
         }
       }
     } else {
+      if(!SPAWN_OBJ.memory.sources) {
+        SPAWN_OBJ.memory.sources = [];
+      }
       if(!SPAWN_OBJ.memory.sources[creep.memory.goneRoom]) {
         this.setSourcesFromOtherRoom(creep);
       } 
