@@ -60,7 +60,7 @@ module.exports = {
             }
           } else {
             if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
-              var exitDirection =  Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room , creep.memory.targetRoom);
+              var exitDirection =  Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room , creep.memory.goneRoom);
               var route = creep.pos.findClosestByRange(exitDirection);
               creep.moveTo(route);
             } else {
