@@ -809,6 +809,7 @@ module.exports = {
       defendController.saveWorkCreeps(SPAWN_OBJ, WORK_CREEPS);
     } else {
       towerController.processing(this.getState(), SPAWN_ROOM, HOSTILES[SPAWN_ROOM.name]);
+      this.creepsActions();
     }
 
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
@@ -817,7 +818,6 @@ module.exports = {
     if(CREEPS.length < CREEPS_MAX_COUNT) {
       this.checkSpawnCreeps();
     }
-    this.creepsActions();
 
     buildController.processing(SPAWN_OBJ);
   }
