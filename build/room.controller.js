@@ -108,7 +108,7 @@ module.exports = {
         var withoutEnergyStructures = [
           creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
             if(obj.structureType == STRUCTURE_TOWER) {
-              return obj.energy < 500;
+              return obj.energy < obj.energyCapacity;
             }
             return false;
           }}),
