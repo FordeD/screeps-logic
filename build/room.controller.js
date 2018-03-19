@@ -683,6 +683,7 @@ module.exports = {
 
   checkDangerInRoom: function() {
     if(HOSTILES[SPAWN_ROOM.name].length > 0) {
+      ROOM_STATE = ROOM_STATES.DEFEND;
       return true;
     }
     return false;
