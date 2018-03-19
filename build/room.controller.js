@@ -263,12 +263,12 @@ module.exports = {
 
   creepGetEnergy: function(creep) {
     var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-      if(obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE) {
+      if(obj.structureType == STRUCTURE_STORAGE) {
         return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
       }
       return false;
     }});
-    if(store.id) {
+    if(store[0].id) {
       if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveTo(store);
       }
