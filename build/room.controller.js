@@ -82,11 +82,12 @@ module.exports = {
     if(total >= creep.carryCapacity) {
       creep.memory.isTransfer = true;
       creep.memory.sourceId = null;
+      creep.memory.goneRoom = false;
     }
 
     var currTransfer = Game.getObjectById(creep.memory.isTransfer);
     if(creep.room.name != SPAWN_ROOM.name) {
-      creep.memory.goneRoom = SPAWN_ROOM.name
+      creep.memory.goneRoom = SPAWN_ROOM.name;
       if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
         var exitDirection =  Game.map.findExit(creep.room.name , SPAWN_ROOM.name);
         var route = creep.pos.findClosestByRange(exitDirection);
