@@ -759,7 +759,7 @@ module.exports = {
       SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
     }
 
-    NEAR_ROOMS = NEAR_ROOMS ? NEAR_ROOMS : SPAWN_OBJ.memory['NearRooms'];
+    NEAR_ROOMS = SPAWN_OBJ.memory['NearRooms'];
 
     for(index in NEAR_ROOMS) {
       var roomName = NEAR_ROOMS[index];
