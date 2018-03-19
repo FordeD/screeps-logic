@@ -777,7 +777,7 @@ module.exports = {
     for(name in Game.flags) {
       var flag = Game.flags[name];
       if(flag.memory['owner'] == SPAWN_NAME) {
-        HARVEST_ROOMS.push(flag.room.name);
+        HARVEST_ROOMS.push(flag.room);
         break;
       }
     }
