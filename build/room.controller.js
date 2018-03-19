@@ -49,10 +49,10 @@ module.exports = {
           creep.memory.sourceId = source;
         } else {
           if(!creep.memory.goneRoom) {
-            for(var index in HARVEST_ROOMS) {
-              var roomName = HARVEST_ROOMS[index];
+            for(var index in NEAR_ROOMS) {
+              var roomName = NEAR_ROOMS[index];
               var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.targetRoom == roomName);
-              if(emptyRoom.length < 4 && roomName != SPAWN_ROOM.name) {
+              if(emptyRoom.length < 4) {
                 creep.memory.goneRoom = roomName;
                 break;
               }
