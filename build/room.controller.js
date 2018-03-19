@@ -772,30 +772,16 @@ module.exports = {
       }
     }
 
-    if(!HARVEST_ROOMS) {
-      HARVEST_ROOMS = [];
-    }
+    HARVEST_ROOMS = [];
     for(name in Game.flags) {
       var flag = Game.flags[name];
       if(flag.memory['owner'] == SPAWN_NAME) {
-        HARVEST_ROOMS.push(flag.room);
+        HARVEST_ROOMS.push(flag.room.name);
         break;
       }
     }
-    HARVEST_ROOMS.unshift(SPAWN_ROOM.name);
 
-    if(!SOURCES) {
-      SOURCES = [];
-    }
-    for(index in HARVEST_ROOMS) {
-      var room = Game.rooms[HARVEST_ROOMS[index]];
-      if(room) {
-        if(SOURCES.length == 0) {
-          SOURCES = room.find(FIND_SOURCES_ACTIVE);
-        }
-        SOURCES.concat(room.find(FIND_SOURCES_ACTIVE));
-      }
-    }
+    SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
   },
 
   processing : function(spawn_obj, spawnName) {
