@@ -49,7 +49,6 @@ module.exports = {
           creep.memory.sourceId = source;
         } else {
           if(!creep.memory.goneRoom) {
-            
             for(var index in HARVEST_ROOMS) {
               var roomName = HARVEST_ROOMS[index];
               var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.targetRoom == roomName);
@@ -142,6 +141,7 @@ module.exports = {
           }
           case OK: {
             creep.memory.putTuStorage = currTransfer.structureType == STRUCTURE_STORAGE || currTransfer.structureType == STRUCTURE_CONTAINER ? true : false;
+            creep.memory.goneRoom = false;
           }
           case ERR_FULL:
           case ERR_INVALID_TARGET: {
