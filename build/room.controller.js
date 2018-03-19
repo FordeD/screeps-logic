@@ -227,7 +227,7 @@ module.exports = {
     } else {
       creep.memory.isBuilding = false;
       creep.memory.isTransfer = true;
-      this.cl_upgrader_doing(creep);
+      this.repairer_doing(creep);
     }    
   },
 
