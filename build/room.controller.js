@@ -269,8 +269,8 @@ module.exports = {
       return false;
     }});
     if(store[0].id) {
-      if(creep.withdraw(store, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(store);
+      if(creep.withdraw(store[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(store[0]);
       }
       return;
     } else {
