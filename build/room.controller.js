@@ -687,6 +687,7 @@ module.exports = {
       ROOM_STATE = ROOM_STATES.DEFEND;
       return true;
     }
+    ROOM_STATE = ROOM_STATES.EVOLUTION;
     return false;
   },
 
