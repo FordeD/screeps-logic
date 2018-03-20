@@ -106,14 +106,14 @@ module.exports = {
         }});
 
         var withoutEnergyStructures = [
+          SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
+          CREEPS.length >= SPAWN_QUEUE_MAX-2 ? store : extension,
           creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
             if(obj.structureType == STRUCTURE_TOWER) {
               return obj.energy < obj.energyCapacity;
             }
             return false;
           }}),
-          SPAWN_OBJ.energy < SPAWN_OBJ.energyCapacity ? SPAWN_OBJ : false,
-          CREEPS.length >= SPAWN_QUEUE_MAX-2 ? store : extension,
           CREEPS.length >= SPAWN_QUEUE_MAX-2 ? extension : store
         ];
 
