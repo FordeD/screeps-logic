@@ -31,7 +31,23 @@ module.exports = {
   },
 
   saveWorkCreeps: function(spawn, creeps) {
-    creeps.forEach(creep => creep.moveTo(spawn, CREEP_MOVE_LINE));
+    creeps.forEach(creep => {
+      if(creep.carryCapacity > 0) {
+        var tower = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
+          if(obj.structureType == STRUCTURE_TOWER) {
+            return obj.energy < obj.energyCapacity;
+          }
+          return false;
+        }});
+        if (tower) {
+          if(creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(tower, CREEP_MOVE_LINE);
+          }
+        }
+      } else {
+        creep.moveTo(spawn, CREEP_MOVE_LINE);
+      }
+    });
     return true;
   }
 }
