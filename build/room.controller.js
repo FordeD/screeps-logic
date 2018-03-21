@@ -217,8 +217,11 @@ module.exports = {
       var target = Game.getObjectById(creep.memory.exTarget);//Game.constructionSites[cr.memory.exTarget];
       if(target) {
         if(target.progress < target.progressTotal) {
-          if(creep.build(target) == ERR_NOT_IN_RANGE) {
+          var res = creep.build(target);
+          if(res == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
+          } else if (res == ERR_INVALID_TARGET) {
+            creep.memory.exTarget = null;
           }
         }
       } else {
@@ -227,7 +230,7 @@ module.exports = {
     } else {
       creep.memory.isBuilding = false;
       creep.memory.isTransfer = true;
-      this.repairer_doing(creep);
+      this.harvester_doing(creep);
     }    
   },
 
