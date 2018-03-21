@@ -268,7 +268,7 @@ module.exports = {
       }
       return false;
     }});
-    if(store[0].id) {
+    if(store.length > 0) {
       if(creep.withdraw(store[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveTo(store[0]);
       }
@@ -721,8 +721,6 @@ module.exports = {
       ROOM_STATE = ROOM_STATES.EVOLUTION;
     } else if (HOSTILES[SPAWN_ROOM] && HOSTILES[SPAWN_ROOM].length > 0 ) {
       ROOM_STATE = ROOM_STATES.DEFEND;
-    } else if (COMBAT_CREEPS && COMBAT_CREEPS.length >= 6) {
-      ROOM_STATE = ROOM_STATES.ATACK;
     }
   },
 

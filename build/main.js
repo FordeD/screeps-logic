@@ -52,7 +52,7 @@ global.ROLES = {
   claimer: 'claimer'
 };
 
-global.SPAWN_QUEUE_MAX        = 26;
+global.SPAWN_QUEUE_MAX        = 34;
 global.MIN_SPAWN_ENERGY       = [300,500,700,1400];
 
 /*          CREEP BODY
