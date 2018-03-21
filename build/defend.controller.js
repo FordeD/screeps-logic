@@ -1,6 +1,5 @@
 module.exports = {
   processing: function(room, hostles, solders) {
-    let hostile = hostles[0];
     let roomName = room.name;
     var userName = hostile.owner;
     if(!userName) {
@@ -8,22 +7,42 @@ module.exports = {
     } else {
       notifier.dangerNotify(userName, roomName, hostles.length);
     }
-    solders.forEach(creep => this.solderDefend(creep, hostile));
+    solders.forEach(creep => this.solderDefend(creep, hostles));
     return true;
   },
 
-  solderDefend: function(creep, hostile) {
+  solderDefend: function(creep, hostles) {
     if(creep.room.name == creep.memory.target) {
-      if(creep.memory.role == ROLES.solder) {
-        if(creep.attack(hostile) == ERR_NOT_IN_RANGE){
-          creep.moveTo(hostile, CREEP_MOVE_ATACK);
-        }
-        return;
+      var healers = _.filter(hostles, (hostle) => hostle.body.findIndex(e => e == HEAL) > 0 );
+      let hostile = false;
+      if(healers.length > 0) {
+        hostile = healers[0];
       } else {
-        if(creep.rangedAttack(hostile) == ERR_NOT_IN_RANGE){
-          creep.moveTo(hostile, CREEP_MOVE_ATACK);
+        hostile = hostles[0];
+      }
+      switch(creep.memory.role) {
+        case ROLES.solder: {
+          if(creep.attack(hostile) == ERR_NOT_IN_RANGE){
+            creep.moveTo(hostile, CREEP_MOVE_ATACK);
+          }
+          break;
         }
-        return;
+        case ROLES.ranger: {
+          if(creep.rangedAttack(hostile) == ERR_NOT_IN_RANGE){
+            creep.moveTo(hostile, CREEP_MOVE_ATACK);
+          }
+          break;
+        }
+        case ROLES.healer: {
+          var hittedCreep = creep.pos.findClosestByRange(FIND_CREEPS, { filter: function(creep) { 
+            return creep.hits < creep.hitsMax;
+          }
+          });
+          if(hittedCreep) {
+            creep.heal(hittedCreep);
+          }
+          break;
+        }
       }
     } else {
         var route = Game.map.findRoute(creep.room, creep.memory.target);
