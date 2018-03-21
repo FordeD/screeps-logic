@@ -32,7 +32,7 @@ module.exports = {
 
   saveWorkCreeps: function(spawn, creeps) {
     creeps.forEach(creep => {
-      if(creep.carryCapacity > 0) {
+      if(_.sum(creep.carry) > 0) {
         var tower = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: (obj) => { 
           if(obj.structureType == STRUCTURE_TOWER) {
             return obj.energy < obj.energyCapacity;
