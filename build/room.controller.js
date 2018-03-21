@@ -195,9 +195,9 @@ module.exports = {
           var res = creep.build(target);
           if(res == ERR_NOT_IN_RANGE) {
             creep.moveTo(target, CREEP_MOVE_LINE);
-          } else if (res == ERR_INVALID_TARGET) {
-            creep.memory.exTarget = null;
           }
+        } else {
+          creep.memory.exTarget = null;
         }
       } else {
         creep.memory.exTarget = null;
