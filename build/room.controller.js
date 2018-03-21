@@ -240,12 +240,7 @@ module.exports = {
   },
 
   creepGetEnergy: function(creep) {
-    var store = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
-      if(obj.structureType == STRUCTURE_STORAGE) {
-        return obj.store[RESOURCE_ENERGY] >= creep.carryCapacity;
-      }
-      return false;
-    }});
+    var store = _.filter(STORAGES, (storage) => storage.store[RESOURCE_ENERGY] >= creep.carryCapacity);
     if(store.length > 0) {
       if(creep.withdraw(store[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveTo(store[0]);
@@ -253,7 +248,7 @@ module.exports = {
       return;
     } else {
       if (!creep.memory.sourceId) {
-        creep.memory.sourceId = this.getFreeSource();
+        this.goneGetEnergy(creep);
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if(creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -744,7 +739,7 @@ module.exports = {
 
 
     STORAGES = SPAWN_ROOM.find(FIND_STRUCTURES, { 
-      filter: (obj) => { obj.structureType == STRUCTURE_CONTAINER || obj.structureType == STRUCTURE_STORAGE }
+      filter: (obj) => { obj.structureType == STRUCTURE_STORAGE }
     });
 
     CREEPS = _.filter(Game.creeps, (creep) => creep.memory.owner == SPAWN_NAME);
