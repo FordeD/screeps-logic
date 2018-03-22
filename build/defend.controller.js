@@ -1,12 +1,7 @@
 module.exports = {
   processing: function(room, hostles, solders) {
     let roomName = room.name;
-    var userName = hostile.owner;
-    if(!userName) {
-      notifier.dangerNotify('Invaders creeps', roomName, hostles.length);
-    } else {
-      notifier.dangerNotify(userName, roomName, hostles.length);
-    }
+    notifier.dangerNotify('Other creeps', roomName, hostles.length);
     solders.forEach(creep => this.solderDefend(creep, hostles));
     return true;
   },
