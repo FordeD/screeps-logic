@@ -45,8 +45,6 @@ module.exports = {
             if(!isCreated) {
               spawn.room.createConstructionSite(i, j, STRUCTURE_TOWER);
               return false;
-            } else {
-              return true;
             }
           }
         }
