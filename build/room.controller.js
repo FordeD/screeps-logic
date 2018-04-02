@@ -33,6 +33,7 @@ var CREEPS                   = null;
 var COMBAT_CREEPS            = null;   
 var WORK_CREEPS              = null;
 var CLAIMERS_CREEPS          = null;
+var TOMBSTONES               = null;
 
 module.exports = {
   harvester_doing: function(creep) {
@@ -354,7 +355,7 @@ module.exports = {
         if(!goneRepair) {
           res = SPAWN_ROOM.find(FIND_STRUCTURES, { filter: (obj) => { 
             if(obj.structureType == STRUCTURE_TOWER) {
-              return obj.energy < obj.storeCapacity;
+              return obj.energy < obj.energyCapacity;
             }
             return false;
           }});
@@ -386,6 +387,60 @@ module.exports = {
       }
     } else {
       return false;
+    }
+  },
+
+  // TODO: доделать метод сбора могил
+  putTombstoneResources: function(creep) {
+    if(!creep.memory.goneToTombstone) {
+      if(TOMBSTONES[0] && _.sum(TOMBSTONES[0].store) > 0) {
+        for(index in RESOURCE_TYPES) {
+          var resourceType = RESOURCE_TYPES[index];
+          if(TOMBSTONES[0].store[resourceType] && TOMBSTONES[0].store[resourceType] > 0) {
+            creep.memory.goneToTombstone = TOMBSTONES[0].id;
+            creep.memory.resourceTypeTransfer = resourceType;
+            return true;
+          } else {
+            continue;
+          }
+        }
+        return false;
+      }
+      return false;
+    } else {
+      if(!creep.memory.goneToStorage) {
+        var resourceType = creep.memory.resourceTypeTransfer;
+        if(creep.transfer(STORAGES[0], resourceType) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(STORAGES[0], CREEP_MOVE_LINE);
+          creep.memory.isTransfer = obj.id;
+          creep.memory.goneRoom = false;
+        }
+          for(index in RESOURCE_TYPES) {
+            var resourceType = RESOURCE_TYPES[index];
+            if(creep.carry[resourceType] && creep.carry[resourceType] > 0) {
+              creep.memory.resourceTypeTransfer = resourceType;
+              if(creep.transfer(STORAGES[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(STORAGES[0], CREEP_MOVE_LINE);
+                creep.memory.isTransfer = obj.id;
+                creep.memory.goneRoom = false;
+              }
+            }
+          }
+      } else {
+        let res = creep.transfer(STORAGES[0], creep.memory.resourceTypeTransfer);
+        switch(res) {
+          case ERR_NOT_IN_RANGE: {
+            creep.moveTo(STORAGES[0], CREEP_MOVE_LINE);
+            creep.memory.isTransfer = STORAGES[0].id;
+            creep.memory.goneRoom = false;
+            break;
+          }
+          case OK: {
+            creep.memory.resourceTypeTransfer = false;
+            break;
+          }
+        }
+      }
     }
   },
 
@@ -711,6 +766,10 @@ module.exports = {
       return COMBAT_CREEPS;
     }
     return false;
+  },
+
+  getRoomTombstones: function() {
+    TOMBSTONES = SPAWN_ROOM.find(FIND_TOMBSTONES);
   },
 
   // SETTERS
