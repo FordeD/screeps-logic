@@ -473,14 +473,6 @@ module.exports = {
   },
 
   checkCreeps: function() {
-    HARVESTER_COUNT    = 0;
-    CL_UPGRADER_COUNT  = 0;
-    EX_BUILDER_COUNT   = 0;
-    REPAIRER_COUNT     = 0;
-    RANGER_COUNT       = 0;
-    HEALER_COUNT       = 0;
-    CLAIMER_COUNT      = 0;
-
     for(var name in CREEPS) {
       var creep = CREEPS[name];
       if (creep) {
@@ -844,6 +836,22 @@ module.exports = {
     }
 
     SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
+
+    HARVESTER_COUNT    = 0;
+    CL_UPGRADER_COUNT  = 0;
+    EX_BUILDER_COUNT   = 0;
+    REPAIRER_COUNT     = 0;
+    RANGER_COUNT       = 0;
+    HEALER_COUNT       = 0;
+    CLAIMER_COUNT      = 0;
+
+    HARVESTER_QUEUE_COUNT    = 0;
+    CL_UPGRADER_QUEUE_COUNT  = 0;
+    EX_BUILDER_QUEUE_COUNT   = 0;
+    REPAIRER_QUEUE_COUNT     = 0;
+    RANGER_QUEUE_COUNT       = 0;
+    HEALER_QUEUE_COUNT       = 0;
+    CLAIMER_QUEUE_COUNT      = 0;
   },
 
   processing : function(spawn_obj, spawnName) {
@@ -875,9 +883,7 @@ module.exports = {
     queueController.spawnQueqe(SPAWN_OBJ, SPAWN_ROOM, CREEPS, this.getState(), SPAWN_ROOM.name, CREEP_LEVEL, SPAWN_NAME);
 
     this.checkCreeps();
-    if(CREEPS.length < CREEPS_MAX_COUNT) {
-      this.checkSpawnCreeps();
-    }
+    this.checkSpawnCreeps();
 
     buildController.processing(SPAWN_OBJ);
   }
