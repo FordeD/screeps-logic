@@ -46,6 +46,7 @@ module.exports = {
     if(total < creep.carryCapacity && !creep.memory.isTransfer) {
       if (!creep.memory.sourceId) {
         this.goneGetEnergy(creep);
+        return;
       } else {
         var source = Game.getObjectById(creep.memory.sourceId);
         if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
@@ -692,29 +693,29 @@ module.exports = {
   },
 
   goneGetEnergy: function(creep) {
-    let source = this.getFreeSource();
-    if(source) {
-      creep.memory.sourceId = source;
-    } else {
-      if(!creep.memory.goneRoom) {
+    if(!creep.memory.goneRoom) {
+      let source = this.getFreeSource();
+      if(source) {
+        creep.memory.sourceId = source;
+      } else {
         for(var index in NEAR_ROOMS) {
           var roomName = NEAR_ROOMS[index];
           var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.goneRoom == roomName);
           if(emptyRoom.length < 4) {
             creep.memory.goneRoom = roomName;
-            break;
+            return;
           }
         }
+      }
+    } else {
+      if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
+        var exitDirection =  Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room , creep.memory.goneRoom);
+        var route = creep.pos.findClosestByRange(exitDirection);
+        creep.moveTo(route);
       } else {
-        if(creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
-          var exitDirection =  Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room , creep.memory.goneRoom);
-          var route = creep.pos.findClosestByRange(exitDirection);
-          creep.moveTo(route);
-        } else {
-          let source = this.getFreeSource(creep,true);
-          if(source) {
-            creep.memory.sourceId = source;
-          }
+        let source = this.getFreeSource(creep,true);
+        if(source) {
+          creep.memory.sourceId = source;
         }
       }
     }
