@@ -181,18 +181,46 @@ module.exports = {
     spawn.memory.AVERAGE_USED_CPU = 0;
 
     if (!spawn.memory.CREEP_MOVE_ATACK) {
-      spawn.memory.CREEP_MOVE_ATACK = { visualizePathStyle: { stroke: '#ee6a50' } };
+      spawn.memory.CREEP_MOVE_ATACK = {
+        visualizePathStyle: {
+          fill: '#ee6a50',
+          stroke: '#ee6a50',
+          lineStyle: 'dashed',
+          strokeWidth: .15,
+          opacity: .1
+        }
+      };
     }
     if (!spawn.memory.CREEP_MOVE_LINE) {
-      spawn.memory.CREEP_MOVE_LINE = { visualizePathStyle: { stroke: '#ffffff' }, reusePath: 25 };
+      spawn.memory.CREEP_MOVE_LINE = {
+        visualizePathStyle: {
+          fill: '#ffffff',
+          stroke: '#ffffff',
+          lineStyle: 'dashed',
+          strokeWidth: .15,
+          opacity: .1
+        }, reusePath: 25
+      };
     }
 
     if (!spawn.memory.CREEP_HARVEST_LINE) {
-      spawn.memory.CREEP_HARVEST_LINE = { stroke: '#ffd700' };
+      spawn.memory.CREEP_HARVEST_LINE = {
+        fill: '#ffd700',
+        stroke: '#ffd700',
+        lineStyle: 'dashed',
+        strokeWidth: .15,
+        opacity: .1
+      };
     }
 
     if (!spawn.memory.CREEP_EXIT_LINE) {
-      spawn.memory.CREEP_EXIT_LINE = { stroke: '#4346ff' };
+      spawn.memory.CREEP_EXIT_LINE = {
+        fill: '#4346ff',
+        stroke: '#4346ff',
+        lineStyle: 'dashed',
+        strokeWidth: .15,
+        opacity: .1
+      };
     }
 
     if (!spawn.memory.RESOURCE_TYPES) {
