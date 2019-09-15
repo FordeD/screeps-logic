@@ -24,8 +24,8 @@ module.exports = {
         var source = Game.getObjectById(creep.memory.sourceId);
         if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
           // creep.moveTo(source, SPAWN_MEMORY.CREEP_MOVE_LINE);
-          if (creep.moveTo(source, { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
-            creep.moveTo(source, { reusePath: 100, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE })
+          if (creep.moveTo(source, { noPathFinding: true, visualizePathStyle: SPAWN_MEMORY.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
+            creep.moveTo(source, { reusePath: 100, visualizePathStyle: SPAWN_MEMORY.CREEP_HARVEST_LINE })
           }
         }
         return;
@@ -45,8 +45,8 @@ module.exports = {
         var exitDirection = Game.map.findExit(creep.room.name, SPAWN_ROOM.name);
         var route = creep.pos.findClosestByRange(exitDirection);
         // creep.moveTo(route);
-        if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
-          creep.moveTo(route, { reusePath: 50, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE });
+        if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: SPAWN_MEMORY.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
+          creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_MEMORY.CREEP_EXIT_LINE });
         }
 
       } else {
