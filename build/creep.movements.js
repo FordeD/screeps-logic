@@ -1,0 +1,144 @@
+module.exports = {
+  creepGetEnergy: function (creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, STORAGES, SOURCES, CREEPS) {
+    var store = _.filter(STORAGES, (storage) => storage.store[RESOURCE_ENERGY] >= creep.carryCapacity);
+    if (store.length > 0) {
+      if (creep.withdraw(store[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        creep.moveTo(store[0]);
+      }
+      return;
+    } else {
+      if (!creep.memory.sourceId) {
+        this.goneGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, SOURCES, CREEPS);
+      } else {
+        var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
+        if (creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source[0], SPAWN_OBJ.memory.CREEP_MOVE_LINE);
+        }
+        return false;
+      }
+    }
+    return true;
+  },
+
+  goneGetEnergy: function (creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, SOURCES, CREEPS) {
+    if (!creep.memory.goneRoom) {
+      let source = this.getFreeSource(creep, false, SPAWN_OBJ, SOURCES, CREEPS);
+      if (source) {
+        creep.memory.sourceId = source;
+      } else {
+        for (var index in NEAR_ROOMS) {
+          var roomName = NEAR_ROOMS[index];
+          var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.goneRoom == roomName);
+          if (emptyRoom.length < 4) {
+            creep.memory.goneRoom = roomName;
+            return;
+          }
+        }
+      }
+    } else {
+      if (creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
+        var exitDirection = Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room, creep.memory.goneRoom);
+        var route = creep.pos.findClosestByRange(exitDirection);
+        creep.moveTo(route);
+      } else {
+        let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
+        if (source) {
+          creep.memory.sourceId = source;
+        }
+      }
+    }
+  },
+
+  getFreeSource: function (creep, isOtherRoom, SPAWN_OBJ, SOURCES, CREEPS) {
+    if (!isOtherRoom) {
+      for (var index in SOURCES) {
+        var sourceID = SOURCES[index].id;
+        var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == sourceID);
+        if (harvesters.length < 2) {
+          return sourceID;
+        }
+      }
+    } else {
+      if (!SPAWN_OBJ.memory.sources) {
+        SPAWN_OBJ.memory.sources = [];
+      }
+      if (!SPAWN_OBJ.memory.sources[creep.memory.goneRoom]) {
+        this.setSourcesFromOtherRoom(creep, SPAWN_OBJ);
+      }
+      var thisRoomSources = SPAWN_OBJ.memory.sources[creep.room.name];
+      for (index in thisRoomSources) {
+        var harvesters = _.filter(CREEPS, (creep) => creep.memory.sourceId == thisRoomSources[index]);
+        if (harvesters.length < 2) {
+          return thisRoomSources[index];
+        }
+      }
+    }
+  },
+
+  setSourcesFromOtherRoom: function (creep, SPAWN_OBJ) {
+    let thisRoomSources = creep.room.find(FIND_SOURCES_ACTIVE);
+    SPAWN_OBJ.memory.sources[creep.room.name] = [];
+    for (index in thisRoomSources) {
+      source = thisRoomSources[index].id;
+      SPAWN_OBJ.memory.sources[creep.room.name].push(source);
+    }
+    if (SPAWN_OBJ.memory.sources[creep.room.name].length > 0) {
+      notifier.infoNotify(SPAWN_OBJ, 'SEARCH ROOM', 'Sources:' + SPAWN_OBJ.memory.sources[creep.room.name].length);
+    }
+    return true;
+  },
+
+  // TODO: доделать метод сбора могил
+  putTombstoneResources: function (creep, TOMBSTONES, STORAGES) {
+    if (!creep.memory.goneToTombstone) {
+      if (TOMBSTONES[0] && _.sum(TOMBSTONES[0].store) > 0) {
+        for (index in RESOURCE_TYPES) {
+          var resourceType = RESOURCE_TYPES[index];
+          if (TOMBSTONES[0].store[resourceType] && TOMBSTONES[0].store[resourceType] > 0) {
+            creep.memory.goneToTombstone = TOMBSTONES[0].id;
+            creep.memory.resourceTypeTransfer = resourceType;
+            return true;
+          } else {
+            continue;
+          }
+        }
+        return false;
+      }
+      return false;
+    } else {
+      if (!creep.memory.goneToStorage) {
+        var resourceType = creep.memory.resourceTypeTransfer;
+        if (creep.transfer(STORAGES[0], resourceType) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(STORAGES[0], SPAWN_OBJ.memory.CREEP_MOVE_LINE);
+          creep.memory.isTransfer = obj.id;
+          creep.memory.goneRoom = false;
+        }
+        for (index in RESOURCE_TYPES) {
+          var resourceType = RESOURCE_TYPES[index];
+          if (creep.carry[resourceType] && creep.carry[resourceType] > 0) {
+            creep.memory.resourceTypeTransfer = resourceType;
+            if (creep.transfer(STORAGES[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(STORAGES[0], SPAWN_OBJ.memory.CREEP_MOVE_LINE);
+              creep.memory.isTransfer = obj.id;
+              creep.memory.goneRoom = false;
+            }
+          }
+        }
+      } else {
+        let res = creep.transfer(STORAGES[0], creep.memory.resourceTypeTransfer);
+        switch (res) {
+          case ERR_NOT_IN_RANGE: {
+            creep.moveTo(STORAGES[0], SPAWN_OBJ.memory.CREEP_MOVE_LINE);
+            creep.memory.isTransfer = STORAGES[0].id;
+            creep.memory.goneRoom = false;
+            break;
+          }
+          case OK: {
+            creep.memory.resourceTypeTransfer = false;
+            break;
+          }
+        }
+      }
+    }
+  }
+}
