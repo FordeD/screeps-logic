@@ -13,7 +13,7 @@ module.exports = {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if (creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
           if (creep.moveTo(source[0], { noPathFinding: true, visualizePathStyle: SPAWN_OBJ.memory.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
-            creep.moveTo(source[0], { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_HARVEST_LINE })
+            creep.moveTo(source[0], { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_HARVEST_LINE });
           }
         }
         return false;
@@ -43,7 +43,9 @@ module.exports = {
         var route = creep.pos.findClosestByRange(exitDirection);
         // creep.moveTo(route);
         if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
-          creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE })
+          if (creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE }) != OK) {
+            creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+          }
         }
       } else {
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
