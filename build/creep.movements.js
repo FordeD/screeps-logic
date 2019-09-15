@@ -43,11 +43,14 @@ module.exports = {
         var route = creep.pos.findClosestByRange(exitDirection);
         // creep.moveTo(route);
         if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
-          if (creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE }) != OK) {
+          let moveResult = creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+          console.log(moveResult);
+          if (moveResult != OK) {
             creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
           }
         }
       } else {
+        creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
         if (source) {
           creep.memory.sourceId = source;
