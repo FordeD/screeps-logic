@@ -86,7 +86,7 @@ module.exports = {
           if (obj) {
             goneTransfer = true;
             if (creep.transfer(obj, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-              creep.moveTo(obj, SPAWN_MEMORY.CREEP_MOVE_LINE);
+              creep.moveTo(obj, { reusePath: 25, visualizePathStyle: SPAWN_OBJ.memory.CREEP_TO_SPAWN_LINE });
               creep.memory.isTransfer = obj.id;
               creep.memory.goneRoom = false;
             }

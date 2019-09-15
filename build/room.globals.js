@@ -223,6 +223,16 @@ module.exports = {
       };
     }
 
+    if (!spawn.memory.CREEP_TO_SPAWN_LINE) {
+      spawn.memory.CREEP_TO_SPAWN_LINE = {
+        fill: 'transparent',
+        stroke: '#029557',
+        lineStyle: 'dashed',
+        strokeWidth: .15,
+        opacity: .1
+      };
+    }
+
     if (!spawn.memory.RESOURCE_TYPES) {
       spawn.memory.RESOURCE_TYPES = [
         RESOURCE_ENERGY,
