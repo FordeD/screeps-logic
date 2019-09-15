@@ -183,7 +183,7 @@ module.exports = {
     if (!spawn.memory.CREEP_MOVE_ATACK) {
       spawn.memory.CREEP_MOVE_ATACK = {
         visualizePathStyle: {
-          fill: '#ee6a50',
+          fill: 'transparent',
           stroke: '#ee6a50',
           lineStyle: 'dashed',
           strokeWidth: .15,
@@ -194,7 +194,7 @@ module.exports = {
     if (!spawn.memory.CREEP_MOVE_LINE) {
       spawn.memory.CREEP_MOVE_LINE = {
         visualizePathStyle: {
-          fill: '#ffffff',
+          fill: 'transparent',
           stroke: '#ffffff',
           lineStyle: 'dashed',
           strokeWidth: .15,
@@ -205,7 +205,7 @@ module.exports = {
 
     if (!spawn.memory.CREEP_HARVEST_LINE) {
       spawn.memory.CREEP_HARVEST_LINE = {
-        fill: '#ffd700',
+        fill: 'transparent',
         stroke: '#ffd700',
         lineStyle: 'dashed',
         strokeWidth: .15,
@@ -215,7 +215,7 @@ module.exports = {
 
     if (!spawn.memory.CREEP_EXIT_LINE) {
       spawn.memory.CREEP_EXIT_LINE = {
-        fill: '#4346ff',
+        fill: 'transparent',
         stroke: '#4346ff',
         lineStyle: 'dashed',
         strokeWidth: .15,
