@@ -219,7 +219,7 @@ module.exports = {
         stroke: '#4346ff',
         lineStyle: 'dashed',
         strokeWidth: .15,
-        opacity: .1
+        opacity: .5
       };
     }
 
@@ -229,7 +229,7 @@ module.exports = {
         stroke: '#029557',
         lineStyle: 'dashed',
         strokeWidth: .15,
-        opacity: .4
+        opacity: .5
       };
     }
 
