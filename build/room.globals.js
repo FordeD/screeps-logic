@@ -184,7 +184,15 @@ module.exports = {
       spawn.memory.CREEP_MOVE_ATACK = { visualizePathStyle: { stroke: '#ee6a50' } };
     }
     if (!spawn.memory.CREEP_MOVE_LINE) {
-      spawn.memory.CREEP_MOVE_LINE = { visualizePathStyle: { stroke: '#ffffff' } };
+      spawn.memory.CREEP_MOVE_LINE = { visualizePathStyle: { stroke: '#ffffff' }, reusePath: 25 };
+    }
+
+    if (!spawn.memory.CREEP_HARVEST_LINE) {
+      spawn.memory.CREEP_HARVEST_LINE = { stroke: '#ffd700' };
+    }
+
+    if (!spawn.memory.CREEP_EXIT_LINE) {
+      spawn.memory.CREEP_EXIT_LINE = { stroke: '#4346ff' };
     }
 
     if (!spawn.memory.RESOURCE_TYPES) {

@@ -23,7 +23,10 @@ module.exports = {
       } else {
         var source = Game.getObjectById(creep.memory.sourceId);
         if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source, SPAWN_MEMORY.CREEP_MOVE_LINE);
+          // creep.moveTo(source, SPAWN_MEMORY.CREEP_MOVE_LINE);
+          if (creep.moveTo(source, { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
+            creep.moveTo(source, { reusePath: 100, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE })
+          }
         }
         return;
       }
@@ -31,7 +34,7 @@ module.exports = {
 
     if (total >= creep.carryCapacity) {
       creep.memory.isTransfer = true;
-      creep.memory.sourceId = null;
+      // creep.memory.sourceId = null;
       creep.memory.goneRoom = false;
     }
 
@@ -41,7 +44,11 @@ module.exports = {
       if (creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
         var exitDirection = Game.map.findExit(creep.room.name, SPAWN_ROOM.name);
         var route = creep.pos.findClosestByRange(exitDirection);
-        creep.moveTo(route);
+        // creep.moveTo(route);
+        if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
+          creep.moveTo(route, { reusePath: 50, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE });
+        }
+
       } else {
         let source = this.getFreeSource(creep, true);
       }

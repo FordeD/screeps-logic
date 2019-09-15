@@ -12,7 +12,9 @@ module.exports = {
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if (creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source[0], SPAWN_OBJ.memory.CREEP_MOVE_LINE);
+          if (creep.moveTo(source[0], { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
+            creep.moveTo(source[0], { reusePath: 50, visualizePathStyle: spawn.memory.CREEP_HARVEST_LINE })
+          }
         }
         return false;
       }
@@ -39,7 +41,10 @@ module.exports = {
       if (creep.room.name == SPAWN_ROOM.name || creep.room.name != creep.memory.goneRoom) {
         var exitDirection = Game.map.findExit(creep.room.name == SPAWN_ROOM.name ? SPAWN_ROOM : creep.room, creep.memory.goneRoom);
         var route = creep.pos.findClosestByRange(exitDirection);
-        creep.moveTo(route);
+        // creep.moveTo(route);
+        if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
+          creep.moveTo(route, { reusePath: 50, visualizePathStyle: spawn.memory.CREEP_EXIT_LINE })
+        }
       } else {
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
         if (source) {
