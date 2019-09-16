@@ -16,7 +16,11 @@ module.exports = {
     }
 
     if (total < creep.carryCapacity && !creep.memory.isTransfer && !creep.memory.isBuilding) {
-      if (!this.movements.creepGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, STORAGES, SOURCES, CREEPS)) {
+      let anyRooms = this.movements.creepGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, STORAGES, SOURCES, CREEPS);
+      if (Array.isArray(anyRooms)) {
+        return anyRooms;
+      }
+      if (!anyRooms) {
         return;
       }
     }

@@ -18,7 +18,10 @@ module.exports = {
 
     if (total < creep.carryCapacity && !creep.memory.isTransfer) {
       if (!creep.memory.sourceId) {
-        this.movements.creepGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, STORAGES, SOURCES, CREEPS)
+        let anyRooms = this.movements.creepGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, STORAGES, SOURCES, CREEPS);
+        if (Array.isArray(anyRooms)) {
+          return anyRooms;
+        }
         return;
       } else {
         var source = Game.getObjectById(creep.memory.sourceId);
@@ -57,6 +60,9 @@ module.exports = {
       } else {
         if (creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
           creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+          if (creep.memory.goneRoom == creep.room.name) {
+            creep.memory.goneRoom = false;
+          }
         }
         let source = this.getFreeSource(creep, true);
       }

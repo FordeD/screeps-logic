@@ -8,7 +8,10 @@ module.exports = {
       return;
     } else {
       if (!creep.memory.sourceId) {
-        this.goneGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, SOURCES, CREEPS);
+        let anyRooms = this.goneGetEnergy(creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, SOURCES, CREEPS);
+        if (Array.isArray(anyRooms)) {
+          return anyRooms;
+        }
       } else {
         var source = _.filter(SOURCES, (source) => source.id == creep.memory.sourceId);
         if (creep.harvest(source[0]) == ERR_NOT_IN_RANGE) {
@@ -29,9 +32,10 @@ module.exports = {
         creep.memory.sourceId = source;
       } else {
         for (var index in NEAR_ROOMS) {
-          var roomName = NEAR_ROOMS[index];
+          var roomName = NEAR_ROOMS[index].name;
+          let sources = NEAR_ROOMS[index].sources.length;
           var emptyRoom = _.filter(WORK_CREEPS, (creep) => creep.memory.goneRoom == roomName);
-          if (emptyRoom.length < 4) {
+          if (emptyRoom.length < (sources > 0 ? sources * 2 : 4)) {
             creep.memory.goneRoom = roomName;
             return;
           }
@@ -54,8 +58,10 @@ module.exports = {
           creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
         }
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
-        if (source) {
+        if (Array.isArray(source) === false) {
           creep.memory.sourceId = source;
+        } else {
+          return source;
         }
       }
     }
@@ -74,7 +80,7 @@ module.exports = {
       if (!SPAWN_OBJ.memory.sources) {
         SPAWN_OBJ.memory.sources = [];
       }
-      if (!SPAWN_OBJ.memory.sources[creep.memory.goneRoom]) {
+      if (SPAWN_OBJ.memory.NearRooms[creep.room.name].sources.length == 0) {
         this.setSourcesFromOtherRoom(creep, SPAWN_OBJ);
       }
       var thisRoomSources = SPAWN_OBJ.memory.sources[creep.room.name];
@@ -84,6 +90,8 @@ module.exports = {
           return thisRoomSources[index];
         }
       }
+
+      return Game.map.describeExits(creep.room.name);
     }
   },
 
@@ -92,10 +100,12 @@ module.exports = {
     SPAWN_OBJ.memory.sources[creep.room.name] = [];
     for (index in thisRoomSources) {
       source = thisRoomSources[index].id;
-      SPAWN_OBJ.memory.sources[creep.room.name].push(source);
-    }
-    if (SPAWN_OBJ.memory.sources[creep.room.name].length > 0) {
-      notifier.infoNotify(SPAWN_OBJ, 'SEARCH ROOM', 'Sources:' + SPAWN_OBJ.memory.sources[creep.room.name].length);
+      var sources = _.filter(SPAWN_OBJ.memory.NearRooms[creep.room.name].sources, (src) => src == source);
+      if (!sources) {
+        SPAWN_OBJ.memory.NearRooms[creep.room.name].sources.push(source);
+        SPAWN_OBJ.memory.sources[creep.room.name].push(source);
+        notifier.infoNotify(SPAWN_OBJ, 'SEARCH ROOM ' + creep.room.name, 'Find source:' + source);
+      }
     }
     return true;
   },

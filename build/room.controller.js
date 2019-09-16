@@ -46,19 +46,31 @@ var HealerController = null;
 
 module.exports = {
   harvester_doing: function (creep) {
-    HarvesterController.processing(creep, this);
+    let anyRooms = HarvesterController.processing(creep, this);
+    if (Array.isArray(anyRooms)) {
+      this.addNearRooms(anyRooms);
+    }
   },
 
   cl_upgrader_doing: function (creep) {
-    UpgraderController.processing(creep, this);
+    let anyRooms = UpgraderController.processing(creep, this);
+    if (Array.isArray(anyRooms)) {
+      this.addNearRooms(anyRooms);
+    }
   },
 
   ex_builder_doing: function (creep) {
-    BuilderController.processing(creep, this);
+    let anyRooms = BuilderController.processing(creep, this);
+    if (Array.isArray(anyRooms)) {
+      this.addNearRooms(anyRooms);
+    }
   },
 
   repairer_doing: function (creep) {
-    RepairerController.processing(creep, this, CONTROLLER_LEVEL);
+    let anyRooms = RepairerController.processing(creep, this, CONTROLLER_LEVEL);
+    if (Array.isArray(anyRooms)) {
+      this.addNearRooms(anyRooms);
+    }
   },
 
   solder_doing: function (creep) {
@@ -337,6 +349,12 @@ module.exports = {
     }
   },
 
+  addNearRooms: function (rooms) {
+    for (index in rooms) {
+      SPAWN_OBJ.memory['NearRooms'].push({ name: rooms[index], sources: [] });
+    }
+  },
+
   updateDynamicVariables: function () {
     CONTROLLER_LEVEL = CONTROLLER_LEVEL ? CONTROLLER_LEVEL : SPAWN_ROOM.controller.level;
 
@@ -355,7 +373,11 @@ module.exports = {
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
     if (!SPAWN_OBJ.memory['NearRooms']) {
-      SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
+      let near = Game.map.describeExits(SPAWN_ROOM.name);
+      for (index in near) {
+        SPAWN_OBJ.memory['NearRooms'].push({ name: near[index], sources: [] });
+      }
+      // SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
     }
 
     NEAR_ROOMS = SPAWN_OBJ.memory['NearRooms'];
