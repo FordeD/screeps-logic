@@ -70,6 +70,8 @@ module.exports = {
     let anyRooms = RepairerController.processing(creep, this, CONTROLLER_LEVEL);
     if (Array.isArray(anyRooms)) {
       this.addNearRooms(anyRooms);
+    } else if (anyRooms == 'BUILD') {
+      this.ex_builder_doing(creep);
     }
   },
 

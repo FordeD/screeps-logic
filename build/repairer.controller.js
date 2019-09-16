@@ -82,6 +82,7 @@ module.exports = {
             return;
           } else {
             creep.memory.isRepair = false;
+            return "BUILD";
           }
         }
       }
