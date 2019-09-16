@@ -28,7 +28,7 @@ module.exports = {
   goneGetEnergy: function (creep, SPAWN_ROOM, SPAWN_OBJ, NEAR_ROOMS, WORK_CREEPS, SOURCES, CREEPS) {
     if (!creep.memory.goneRoom) {
       let source = this.getFreeSource(creep, false, SPAWN_OBJ, SOURCES, CREEPS);
-      if (source) {
+      if (source && typeof source == "string") {
         creep.memory.sourceId = source;
       } else {
         for (var index in NEAR_ROOMS) {
