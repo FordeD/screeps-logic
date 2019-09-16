@@ -58,7 +58,7 @@ module.exports = {
           creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
         }
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
-        if (Array.isArray(source) === false) {
+        if (typeof source == "string") {
           creep.memory.sourceId = source;
         } else {
           return source;
