@@ -92,7 +92,7 @@ module.exports = {
         }
       }
 
-      creep.memory.name = null;
+      creep.memory.goneRoom = null;
       return Game.map.describeExits(creep.room.name);
     }
   },
