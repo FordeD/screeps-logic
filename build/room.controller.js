@@ -374,9 +374,11 @@ module.exports = {
 
     if (!SPAWN_OBJ.memory['NearRooms']) {
       let near = Game.map.describeExits(SPAWN_ROOM.name);
+      let rooms = [];
       for (index in near) {
-        SPAWN_OBJ.memory['NearRooms'].push({ name: near[index], sources: [] });
+        rooms.push({ name: near[index], sources: [] });
       }
+      SPAWN_OBJ.memory['NearRooms'] = rooms;
       // SPAWN_OBJ.memory['NearRooms'] = Game.map.describeExits(SPAWN_ROOM.name);
     }
 
