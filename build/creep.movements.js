@@ -80,9 +80,9 @@ module.exports = {
       if (!SPAWN_OBJ.memory.sources) {
         SPAWN_OBJ.memory.sources = [];
       }
-      if (SPAWN_OBJ.memory.sources.length == 0 || !SPAWN_OBJ.memory.sources[creep.room.name] || SPAWN_OBJ.memory.sources[creep.room.name].length == 0) {
+      if (!SPAWN_OBJ.memory.sources || !SPAWN_OBJ.memory.sources[creep.room.name]) {
         SPAWN_OBJ.memory.sources[creep.room.name] = [];
-        this.setSourcesFromOtherRoom(creep, SPAWN_OBJ);
+        creep.memory.sourceId = this.setSourcesFromOtherRoom(creep, SPAWN_OBJ);
       }
       var thisRoomSources = SPAWN_OBJ.memory.sources[creep.room.name];
       for (index in thisRoomSources) {
@@ -117,7 +117,7 @@ module.exports = {
 
       }
     }
-    return true;
+    return thisRoomSources[0].id;
   },
 
   // TODO: доделать метод сбора могил
