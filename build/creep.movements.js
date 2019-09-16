@@ -101,7 +101,7 @@ module.exports = {
     SPAWN_OBJ.memory.sources[creep.room.name] = [];
     for (index in thisRoomSources) {
       source = thisRoomSources[index].id;
-      var sources = _.filter(SPAWN_OBJ.memory.NearRooms[creep.room.name].sources, (src) => src == source);
+      var sources = _.filter(SPAWN_OBJ.memory.sources[creep.room.name], (src) => src == source);
       if (!sources) {
         var currRoom = _.filter(SPAWN_OBJ.memory.NearRooms, (room) => room.name == creep.room.name);
         if (!currRoom) {
