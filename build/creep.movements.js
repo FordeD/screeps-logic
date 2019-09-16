@@ -102,9 +102,15 @@ module.exports = {
       source = thisRoomSources[index].id;
       var sources = _.filter(SPAWN_OBJ.memory.NearRooms[creep.room.name].sources, (src) => src == source);
       if (!sources) {
-        SPAWN_OBJ.memory.NearRooms[creep.room.name].sources.push(source);
+        var currRoom = _.filter(SPAWN_OBJ.memory.NearRooms, (room) => room.name == creep.room.name);
+        if (!currRoom) {
+          currRoom = { name: creep.room.name, sources: [] }
+        }
+        // SPAWN_OBJ.memory.NearRooms[creep.room.name].sources.push(source);
+        currRoom.sources.push(source);
         SPAWN_OBJ.memory.sources[creep.room.name].push(source);
         notifier.infoNotify(SPAWN_OBJ, 'SEARCH ROOM ' + creep.room.name, 'Find source:' + source);
+
       }
     }
     return true;
