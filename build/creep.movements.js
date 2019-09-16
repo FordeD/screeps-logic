@@ -50,7 +50,9 @@ module.exports = {
           }
         }
       } else {
-        creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+        if (creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
+          creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+        }
         let source = this.getFreeSource(creep, true, SPAWN_OBJ, SOURCES, CREEPS);
         if (source) {
           creep.memory.sourceId = source;

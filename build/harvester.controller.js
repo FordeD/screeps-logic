@@ -49,13 +49,15 @@ module.exports = {
         // creep.moveTo(route);
         if (creep.moveTo(route, { noPathFinding: true, visualizePathStyle: SPAWN_MEMORY.CREEP_EXIT_LINE }) == ERR_NOT_FOUND) {
           let moveResult = creep.moveTo(route, { reusePath: 50, visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
-          console.log(moveResult);
           if (moveResult != OK) {
             creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
           }
         }
 
       } else {
+        if (creep.pos.x == 0 || creep.pos.y == 0 || creep.pos.x == 49 || creep.pos.y == 49) {
+          creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_EXIT_LINE });
+        }
         let source = this.getFreeSource(creep, true);
       }
     } else {
