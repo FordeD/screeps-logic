@@ -21,6 +21,7 @@ module.exports = {
     let currTime = Game.time;
     spawnObj.memory.AVERAGE_USED_CPU = spawnObj.memory.USED_CPU / spawnObj.memory.NOTIFY_TIMER_COUNT.CPU;
     spawnObj.memory.USED_CPU = 0;
+    console.log(spawnObj.memory.CPU_NOTIFY_TIME, spawnObj.memory.CPU_NOTIFY_TIME - currTime);
     if (spawnObj.memory.CPU_NOTIFY_TIME - currTime <= 0) {
       this.infoNotify(spawnObj, 'CPU', 'Max used: ' + spawnObj.memory.MAX_USED_CPU + '. Average used: ' + spawnObj.memory.AVERAGE_USED_CPU + '. Used in 100 ticks: ' + spawnObj.memory.MAX_USED_CPU);
       spawnObj.memory.CPU_NOTIFY_TIME = currTime + spawnObj.memory.NOTIFY_TIMER_COUNT.CPU;

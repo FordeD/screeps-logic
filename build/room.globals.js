@@ -172,7 +172,7 @@ module.exports = {
         CPU: 100
       };
     }
-    if (!spawn.memory.CPU_NOTIFY_TIME || spawn.memory.CPU_NOTIFY_TIME > spawn.memory.NOTIFY_TIMER_COUNT.CPU) {
+    if (!spawn.memory.CPU_NOTIFY_TIME) {
       spawn.memory.CPU_NOTIFY_TIME = 0;
     }
 
