@@ -372,9 +372,9 @@ module.exports = {
 
     // SOURCES = SOURCES ? SOURCES : SPAWN_ROOM.find(FIND_SOURCES_ACTIVE);
 
-    if (!SPAWN_OBJ.memory['NearRooms']) {
-      let near = Game.map.describeExits(SPAWN_ROOM.name);
-      let rooms = [];
+    if (!SPAWN_OBJ.memory['NearRooms'] || typeof SPAWN_OBJ.memory['NearRooms'][0] == "string") {
+      var near = Game.map.describeExits(SPAWN_ROOM.name);
+      var rooms = [];
       for (index in near) {
         rooms.push({ name: near[index], sources: [] });
       }

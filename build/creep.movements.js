@@ -80,7 +80,7 @@ module.exports = {
       if (!SPAWN_OBJ.memory.sources) {
         SPAWN_OBJ.memory.sources = [];
       }
-      if (!SPAWN_OBJ.memory.sources[creep.room.name] || SPAWN_OBJ.memory.sources[creep.room.name].length == 0) {
+      if (SPAWN_OBJ.memory.sources.length == 0 || !SPAWN_OBJ.memory.sources[creep.room.name] || SPAWN_OBJ.memory.sources[creep.room.name].length == 0) {
         SPAWN_OBJ.memory.sources[creep.room.name] = [];
         this.setSourcesFromOtherRoom(creep, SPAWN_OBJ);
       }
@@ -113,6 +113,7 @@ module.exports = {
         currRoom.sources.push(source);
         SPAWN_OBJ.memory.sources[creep.room.name].push(source);
         notifier.infoNotify(SPAWN_OBJ, 'SEARCH ROOM ' + creep.room.name, 'Find source:' + source);
+        console.log(creep.room.name, SPAWN_OBJ.memory.sources[creep.room.name]);
 
       }
     }
