@@ -28,7 +28,7 @@ module.exports = {
         if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
           // creep.moveTo(source, SPAWN_MEMORY.CREEP_MOVE_LINE);
           if (creep.moveTo(source, { noPathFinding: true, visualizePathStyle: SPAWN_MEMORY.CREEP_HARVEST_LINE }) == ERR_NOT_FOUND) {
-            if (creep.moveTo(source, { reusePath: 100, visualizePathStyle: SPAWN_MEMORY.CREEP_HARVEST_LINE }) != OK) {
+            if (creep.moveTo(source, { reusePath: 100, visualizePathStyle: SPAWN_MEMORY.CREEP_HARVEST_LINE }) <= -2) {
               creep.moveTo(25, 25, { visualizePathStyle: SPAWN_OBJ.memory.CREEP_HARVEST_LINE });
             }
           }
