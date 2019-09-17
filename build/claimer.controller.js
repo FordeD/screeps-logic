@@ -16,7 +16,7 @@ module.exports = {
         }
       }
     } else {
-      if (creep.room == SPAWN_ROOM) {
+      if (creep.room.name == SPAWN_ROOM.name) {
         var exitDirection = Game.map.findExit(SPAWN_ROOM, creep.memory.targetRoom);
         var route = creep.pos.findClosestByRange(exitDirection);
         creep.moveTo(route);
